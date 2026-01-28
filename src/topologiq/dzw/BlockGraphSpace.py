@@ -22,6 +22,15 @@ class Coordinates:
     def dot(self, other) -> int:
         return self.x * other.x + self.y * other.y + self.z * other.z
 
+    def get_manhattan_distance(self, other):
+        return abs(self.x - other.x) + abs(self.y - other.y) + abs(self.z - other.z)
+
+    def __iter__(self):
+        return iter((self.x, self.y, self.z))
+
+    def as_tuple(self):
+        return self.x, self.y, self.z
+
     def __str__(self):
         return f"({self.x}, {self.y}, {self.z})"
 
