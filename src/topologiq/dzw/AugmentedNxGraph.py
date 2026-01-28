@@ -83,10 +83,12 @@ class AugmentedNxGraph(nx.Graph):
     def get_edge_type(self, source: int, target: int) -> EdgeType:
         return self.get_edge_data(source, target).get(AugmentedNxGraph.KEY_TYPE)
 
-    # TODO: add edge_type parameter take into account possibilities opened by working with Hadamard pipes
-    def get_candidate_adjacent(self, source: int) -> list[tuple[Coordinates, CubeKind]]:
+    def get_candidate_adjacent(self, source: int, pipe_type: EdgeType) -> list[tuple[Coordinates, CubeKind]]:
         if not self.is_node_realised(source):
-            raise ValueError(f"{source} is not placed and thus has no kind. Cannot determine its adjacent candidates.")
+            raise Exception(f"{source} is not placed and thus has no kind. Cannot determine its adjacent candidates.")
+
+        if self.get_node_type(source) not in [NodeType.X, NodeType.Z]:
+            raise NotImplemented(f"NodeType {self.get_node_type(source)} not supported.")
 
         source_position = self.nodes[source][AugmentedNxGraph.KEY_POSITION]
         source_type = self.nodes[source][AugmentedNxGraph.KEY_TYPE]
@@ -99,14 +101,23 @@ class AugmentedNxGraph(nx.Graph):
                 candidate_coordinates = source_position + step.value
                 # A cube can only have an adjacent cube at a position that is not occupied by another cube
                 if candidate_coordinates not in self.occupied:
-                    # A cube can always have an adjacent cube of the same kind
-                    candidates_adjacent.append( ( candidate_coordinates, source_kind) )
-                    # A cube can always have an adjacent cube of the other color lying in a plane
-                    # that is orthogonal to its own plane along the step
-                    candidate_type = NodeType.flip(source_type)
-                    candidate_plane = BlockGraphSpace.get_orthogonal_plane(source_plane, step)
-                    candidate_kind = CubeKind.convert(candidate_type, candidate_plane)
-                    candidates_adjacent.append( (candidate_coordinates, candidate_kind) )
+                    orthogonal_plane = BlockGraphSpace.get_orthogonal_plane(source_plane, step)
+                    # A cube can always have an adjacent cube of the same color connected by
+                    # - IDENTITY pipe in the same plane
+                    # - HADAMARD pipe in the plane orthogonal along the step
+                    if pipe_type == EdgeType.IDENTITY:
+                        candidate_kind = source_kind
+                    else:
+                        candidate_kind = CubeKind.convert(source_type, orthogonal_plane)
+                    candidates_adjacent.append( (candidate_coordinates , candidate_kind) )
+                    # A cube can always have an adjacent cube of the other color connected by
+                    # - IDENTITY pipe in the plane orthogonal along the step
+                    # - HADAMARD pipe in the same plane
+                    if pipe_type == EdgeType.IDENTITY:
+                        candidate_kind = CubeKind.convert(NodeType.flip(source_type), orthogonal_plane)
+                    else:
+                        candidate_kind = CubeKind.convert(NodeType.flip(source_type), source_plane)
+                    candidates_adjacent.append( (candidate_coordinates , candidate_kind) )
 
         return candidates_adjacent
 
