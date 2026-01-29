@@ -44,7 +44,7 @@ class Step(Enum):
     ZM = Coordinates(0, 0, -1)
 
     def __str__(self):
-        return f"Step-{self.name}"
+        return f"Step.{self.name}"
 
 class Plane(Enum):
     # Represented by vectors
@@ -57,7 +57,7 @@ class Plane(Enum):
         return self.value.dot(step.value) != 0
 
     def __str__(self):
-        return f"Plane-{self.name}"
+        return f"Plane.{self.name}"
 
 class BlockGraphSpace:
     ORIGIN = Coordinates(0, 0, 0)

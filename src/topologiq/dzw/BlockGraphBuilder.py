@@ -6,7 +6,7 @@ import networkx as nx
 
 from topologiq.dzw.AugmentedNxGraph import AugmentedNxGraph
 from topologiq.dzw.BlockGraphSpace import BlockGraphSpace
-from topologiq.dzw.GraphComponents import CubeKind
+from topologiq.dzw.BlockGraphComponents import CubeKind
 from topologiq.scripts.graph_manager import run_pathfinder
 
 class BlockGraphBuilder:
@@ -81,10 +81,10 @@ class BlockGraphBuilder:
                     # Second-pass edge
                     # Path-finding to the position where the existing cube is located ?
                     source_position = self.nx_graph.get_position(source)
-                    source_kind = self.nx_graph.get_node_kind(source)
+                    source_kind = self.nx_graph.get_cube_kind(source)
 
                     target_position = self.nx_graph.get_position(target)
-                    target_kind = self.nx_graph.get_node_kind(target)
+                    target_kind = self.nx_graph.get_cube_kind(target)
 
                     # TODO: deal with the critical beams (cfr. graph_manager.py Lines 301-313)
 
@@ -123,7 +123,7 @@ class BlockGraphBuilder:
             raise Exception(f"{target} is already placed and has a kind.")
 
         source_position = self.nx_graph.get_position(source)
-        source_kind = self.nx_graph.get_node_kind(source)
+        source_kind = self.nx_graph.get_cube_kind(source)
         target_type = self.nx_graph.get_node_type(target)
         edge_type = self.nx_graph.get_edge_type(source, target)
 
