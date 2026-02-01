@@ -7,6 +7,10 @@ class Coordinates:
         self.y = y
         self.z = z
 
+    @staticmethod
+    def from_tuple(t: tuple[int, int, int]):
+        return Coordinates(t[0], t[1], t[2])
+
     def __add__(self, other):
         return Coordinates(self.x + other.x, self.y + other.y, self.z + other.z)
 

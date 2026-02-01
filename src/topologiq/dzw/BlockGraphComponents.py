@@ -1,7 +1,8 @@
 from enum import Enum
 
 from topologiq.dzw.ZxGraphComponents import NodeType, EdgeType
-from topologiq.dzw.BlockGraphSpace import Plane, BlockGraphSpace, Coordinates
+from topologiq.dzw.BlockGraphSpace import Plane, BlockGraphSpace, Coordinates, Step
+
 
 class CubeKind(Enum):
     OOO = 0
@@ -12,6 +13,27 @@ class CubeKind(Enum):
     XZX = 5
     XXZ = 6
     YYY = 7
+
+    @staticmethod
+    def from_string(kind: str):
+        if kind == "xzz":
+            return CubeKind.XZZ
+        elif kind == "zxz":
+            return CubeKind.ZXZ
+        elif kind == "zzx":
+            return CubeKind.ZZX
+        elif kind == "zxx":
+            return CubeKind.ZXX
+        elif kind == "xzx":
+            return CubeKind.XZX
+        elif kind == "xxz":
+            return CubeKind.XXZ
+        elif kind == "yyy":
+            return CubeKind.YYY
+        elif kind == "ooo":
+            return CubeKind.OOO
+        else:
+            raise NotImplementedError(f"Unknown cube kind {kind}")
 
     @staticmethod
     def suitable_kinds(node_type: NodeType):
@@ -35,7 +57,8 @@ class CubeKind(Enum):
         kk_consistent = True  # kind1.compatible(kind2, position1 - position2)
         return md_consistent and kk_consistent
 
-    def get_candidate_constellation(self, pipe_type : EdgeType):
+    def get_candidate_constellation(self, pipe_type : EdgeType = EdgeType.IDENTITY)\
+            -> list[ tuple[Step, 'CubeKind'] ]:
         constellation = []
 
         source_type = self.get_type()

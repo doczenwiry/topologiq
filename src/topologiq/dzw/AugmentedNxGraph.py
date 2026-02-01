@@ -100,7 +100,7 @@ class AugmentedNxGraph(nx.Graph):
         return self.nodes[node_id][AugmentedNxGraph.KEY_CUBE_KIND]
 
     def get_edge_type(self, source: int, target: int) -> EdgeType:
-        return self.get_edge_data(source, target).get(AugmentedNxGraph.KEY_NODE_TYPE)
+        return self.get_edge_data(source, target).get(AugmentedNxGraph.KEY_EDGE_TYPE)
 
     # TODO: move consistency checking to Cube classes (recommendation from J)
     def get_candidate_adjacent(self, source: int, pipe_type: EdgeType) -> list[tuple[Coordinates, CubeKind]]:
@@ -131,17 +131,17 @@ class AugmentedNxGraph(nx.Graph):
 
         # TODO: compute the beams of the new cube
         # TODO: prune the beams of other cubes
-        # Compute beams
-        _, node_beams = check_exits(
-            position.as_tuple(),
-            kind.name,
-            list(self.old_taken),
-            # [position.as_tuple()],
-            [],
-            self,
-            AugmentedNxGraph.OLD_LENGTH_OF_BEAMS,
-        )
-        self.nodes[node_id][AugmentedNxGraph.KEY_BEAMS] = node_beams
+        # # Compute beams
+        # _, node_beams = check_exits(
+        #     position.as_tuple(),
+        #     kind.name,
+        #     list(self.old_taken),
+        #     # [position.as_tuple()],
+        #     [],
+        #     self,
+        #     AugmentedNxGraph.OLD_LENGTH_OF_BEAMS,
+        # )
+        # self.nodes[node_id][AugmentedNxGraph.KEY_BEAMS] = node_beams
 
         self.place_cube(node_id, position, kind)
 
@@ -250,7 +250,7 @@ class AugmentedNxGraph(nx.Graph):
         self.nodes[node_id][AugmentedNxGraph.KEY_POSITION] = position
 
         self.nodes[node_id][AugmentedNxGraph.KEY_OLD_COORDINATES] = position.as_tuple()
-        self.nodes[node_id][AugmentedNxGraph.KEY_OLD_CUBE_KIND] = kind.name
+        self.nodes[node_id][AugmentedNxGraph.KEY_OLD_CUBE_KIND] = kind.name.lower()
 
         self.occupied.add(position)
         self.old_taken.add(position.as_tuple())

@@ -13,7 +13,7 @@ from topologiq.scripts.graph_manager import run_pathfinder
 
 # TODO: remove once rewrite is done
 from topologiq.scripts.pathfinder import pathfinder, get_taken_coords
-from topologiq.utils.utils_greedy_bfs import gen_tent_tgt_coords
+from topologiq.utils.utils_greedy_bfs import gen_tent_tgt_coords, prune_beams
 from topologiq.utils.classes import NodeBeams, PathBetweenNodes
 from topologiq.utils.utils_pathfinder import check_exits
 
@@ -24,13 +24,14 @@ kwargs: dict[str, tuple[int, int] | int] = {
 
 # graph_manager.py
 class BlockGraphBuilder:
-    def __init__(self, pyzx_graph: zx.graph.base.BaseGraph):
-        self.name = "circuit"
+    def __init__(self, pyzx_graph: zx.graph.base.BaseGraph, circuit_name: str = "circuit"):
+        self.name = circuit_name
         self.hide_ports = False # This really belongs in the visualisation layer
         self.min_success_rate = 50
         self.nx_graph = AugmentedNxGraph(pyzx_graph)
         self.number_1st_pass_edges = 0
         self.number_2nd_pass_edges = 0
+        self.node_placement_order = []
 
     def pick_root(self, central_spider: bool = True, deterministic: bool = False) -> int:
         """Pick the spider that will serve as the root of the construction.
@@ -64,7 +65,8 @@ class BlockGraphBuilder:
         # Prepare the root node of the construction.
         if root is None:
             root = self.pick_root()
-        root_kind = random.choice(CubeKind.suitable_kinds(self.nx_graph.nodes[root]['type']))
+        root_kind = CubeKind.suitable_kinds(self.nx_graph.get_node_type(root))[0]
+        #root_kind = random.choice(CubeKind.suitable_kinds(self.nx_graph.get_node_type(root)))
         self.nx_graph.realise_node(root, root_kind, BlockGraphSpace.ORIGIN)
 
         queue : deque[int] = deque([root])
@@ -72,6 +74,7 @@ class BlockGraphBuilder:
         # Proceed with the main loop of the BFS
         while queue:
             source: int = queue.popleft()
+            self.node_placement_order.append(source)
 
             for target in self.nx_graph.neighbors(source):
                 if not self.nx_graph.is_node_realised(target):
@@ -82,13 +85,15 @@ class BlockGraphBuilder:
                     # Try placing target in 3D space and connect it to the source.
                     # cfr. graph_manager.py; place_nxt_block(..) with step in [3, 6, 9]
                     for step in [3, 6, 9]:
-                        realisation_successful = self.place_nxt_block(source, target, init_step = 3)
+                        realisation_successful = self.place_nxt_block(source, target, init_step = step)
 
                         if realisation_successful:
                             self.number_1st_pass_edges += 1
+                            break
                         elif step == 9:
                             # TODO: reporting(..) and animation(..)
-                            raise Exception(f"Edge realisation failure [{source}-{target}]")
+                            # raise Exception(f"Edge realisation failure [{source}-{target}]")
+                            return False
 
                 elif not self.nx_graph.is_edge_realised(source, target):
                     # Second-pass edge
@@ -125,6 +130,8 @@ class BlockGraphBuilder:
 
                     raise NotImplemented("Second-pass edge processing.")
 
+                prune_beams(self.nx_graph, list(self.nx_graph.old_taken))
+
         # Prepare final BlockGraph and return it ?
         return True
 
@@ -135,6 +142,8 @@ class BlockGraphBuilder:
         if self.nx_graph.is_node_realised(target):
             raise Exception(f"{target} is already placed and has a kind.")
 
+        source_beams = self.nx_graph.nodes[source][AugmentedNxGraph.KEY_BEAMS]
+
         source_position = self.nx_graph.get_position(source)
         source_kind = self.nx_graph.get_cube_kind(source)
 
@@ -144,7 +153,7 @@ class BlockGraphBuilder:
 
         # Dealt with in run_finder(..)
         taken_coords_c = list(self.nx_graph.old_taken)
-        if source_position.as_tuple() in taken_coords_c:
+        if source_position in taken_coords_c:
             taken_coords_c.remove(source_position.as_tuple())
 
         # clean_paths, pathfinder_vis_data = self.run_pathfinder(source, target, init_step)
@@ -169,6 +178,7 @@ class BlockGraphBuilder:
 
         for clean_path in clean_paths:
             target_position, target_kind = clean_path[-1]
+            print(f"> Clean path [{target_kind}@{target_position}]: {clean_path}")
             coordinates_in_path = get_taken_coords(clean_path)
             target_unobstructed_exits, target_beams = check_exits(
                 target_position, target_kind,
@@ -181,9 +191,9 @@ class BlockGraphBuilder:
 
             source_beams = self.nx_graph.nodes[source][AugmentedNxGraph.KEY_BEAMS]
 
-            print(f"{target_unobstructed_exits} >= {target_degree - 1} and {any(
-                [clean_path[1][0] in beam for beam in source_beams]
-            )}")
+            # print(f"{target_unobstructed_exits} >= {target_degree - 1} and {any(
+            #     [clean_path[1][0] in beam for beam in source_beams]
+            # )}")
 
             if not (target_unobstructed_exits >= target_degree - 1 and any([clean_path[1][0] in beam for beam in source_beams])):
                 continue
@@ -203,6 +213,7 @@ class BlockGraphBuilder:
                     node_completed = self.nx_graph.nodes[node][AugmentedNxGraph.KEY_OLD_COMPLETED]
                     remaining_edges = node_degree - node_completed
                     if (len(node_beams) - broken + adjust_for_source_node) < remaining_edges:
+                        print(f"> Broken for {node} [L:{len(node_beams)},B:{broken},A:{adjust_for_source_node},R:{remaining_edges}]")
                         critical_broken = True
 
             critical_clash = False
@@ -219,13 +230,15 @@ class BlockGraphBuilder:
                     node_completed = self.nx_graph.nodes[node][AugmentedNxGraph.KEY_OLD_COMPLETED]
                     remaining_edges = node_degree - node_completed
                     if len(node_beams) - clashes < remaining_edges:
+                        print(f"> Clash with {node}")
                         critical_clash = True
 
             if not critical_broken and not critical_clash:
                 all_nodes_in_path = [p for p in clean_path]
 
                 if target_type == NodeType.O:
-                    all_nodes_in_path[-1] = (all_nodes_in_path[-1][0], CubeKind.OOO)
+                    target_kind = CubeKind.OOO.name.lower()
+                    all_nodes_in_path[-1] = (all_nodes_in_path[-1][0], target_kind)
 
                 path_data = {
                     "tgt_coords": target_position,
@@ -239,11 +252,10 @@ class BlockGraphBuilder:
                 }
 
                 viable_paths.append(PathBetweenNodes(**path_data))
-            else:
-                print("Critical issue.")
-                return False
 
-        print(f"Found {len(viable_paths)} viable paths.")
+        # print(f"Found {len(viable_paths)} viable paths.")
+        # for vp in viable_paths:
+        #     print(f">> {vp.tgt_kind}@{vp.tgt_coords} : {vp.all_nodes_in_path}")
 
         winner_path = None
         if viable_paths:
@@ -264,8 +276,8 @@ class BlockGraphBuilder:
         self.nx_graph.nodes[source][AugmentedNxGraph.KEY_OLD_COMPLETED] += 1
         self.nx_graph.nodes[source][AugmentedNxGraph.KEY_REALISED_EDGES] += 1
 
-        self.nx_graph.nodes[target][AugmentedNxGraph.KEY_POSITION] = winner_path.tgt_coords
-        self.nx_graph.nodes[target][AugmentedNxGraph.KEY_CUBE_KIND] = winner_path.tgt_kind
+        self.nx_graph.nodes[target][AugmentedNxGraph.KEY_POSITION] = Coordinates.from_tuple(winner_path.tgt_coords)
+        self.nx_graph.nodes[target][AugmentedNxGraph.KEY_CUBE_KIND] = CubeKind.from_string(winner_path.tgt_kind)
         self.nx_graph.nodes[target][AugmentedNxGraph.KEY_OLD_COMPLETED] += 1
         self.nx_graph.nodes[target][AugmentedNxGraph.KEY_REALISED_EDGES] += 1
         self.nx_graph.nodes[target][AugmentedNxGraph.KEY_BEAMS] = (
@@ -274,7 +286,7 @@ class BlockGraphBuilder:
             else winner_path.tgt_beams
         )
 
-        edge = (source, target) if source < target else (target, source)
+        edge = (source, target) # if source < target else (target, source)
         edge_type = self.nx_graph.get_edge_type(source, target)
 
         self.nx_graph.edge_realisations[edge] = {
@@ -285,7 +297,9 @@ class BlockGraphBuilder:
         }
 
         coordinates_in_path = get_taken_coords(winner_path.all_nodes_in_path)
-        # taken.extend(coordinates_in_path)
+        for taken in coordinates_in_path:
+            self.nx_graph.occupied.add(Coordinates.from_tuple(taken))
+            self.nx_graph.old_taken.add(taken)
 
         return True
 
@@ -410,3 +424,25 @@ class BlockGraphBuilder:
                 beams.append(beam)
 
         return beams
+
+    def write_report(self):
+        print(f"RESULT SHEET. CIRCUIT NAME: {self.name}")
+        print("\n__________________________\n")
+        print("ORIGINAL ZX GRAPH")
+        for node in self.nx_graph.nodes():
+            print(f"Node ID: {node}. Type: {self.nx_graph.get_node_type(node).name}")
+        print("")
+        for edge in self.nx_graph.edges():
+            source = min(edge)
+            target = max(edge)
+            edge_type = self.nx_graph.get_edge_type(source, target)
+            type_name = "SIMPLE" if edge_type == EdgeType.IDENTITY else "HADAMARD"
+            print(f"Edge ID: ({source}, {target}). Type: {type_name}")
+        print("\n__________________________\n")
+        print("3D \"EDGE PATHS\" (Blocks needed to connect two original nodes)")
+        for edge, data in self.nx_graph.edge_realisations.items():
+            print(f"Edge {edge}: {data['path_nodes']}")
+        print("\n__________________________\n")
+        print("LATTICE SURGERY (Graph)")
+        for node in self.node_placement_order:
+            print(f"Node ID: {node}. Info: ({self.nx_graph.get_position(node)}, '{self.nx_graph.get_cube_kind(node).name.lower()}')")
