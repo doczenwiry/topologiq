@@ -146,7 +146,8 @@ class AugmentedNxGraph(nx.Graph):
         self.place_cube(node_id, position, kind)
 
     def is_edge_realised(self, source: int, target: int) -> bool:
-        return (source,target) in self.edge_realisations
+        edge = (source, target) if source < target else (target, source)
+        return edge in self.edge_realisations
 
     def is_path_valid(self, source: int, target: int, path: list[tuple[Coordinates, CubeKind]]) -> bool:
             is_hadamard_path = False

@@ -23,7 +23,7 @@ kwargs: dict[str, tuple[int, int] | int] = {
 }
 
 # graph_manager.py
-class BlockGraphBuilder:
+class ZxGraphWalker:
     def __init__(self, pyzx_graph: zx.graph.base.BaseGraph, circuit_name: str = "circuit"):
         self.name = circuit_name
         self.hide_ports = False # This really belongs in the visualisation layer
@@ -79,21 +79,18 @@ class BlockGraphBuilder:
             for target in self.nx_graph.neighbors(source):
                 if not self.nx_graph.is_node_realised(target):
                     # First-pass edge
-                    # Path-finding to a position where a suitable cube can be placed ?
                     queue.append(target)
 
-                    # Try placing target in 3D space and connect it to the source.
-                    # cfr. graph_manager.py; place_nxt_block(..) with step in [3, 6, 9]
-                    for step in [3, 6, 9]:
-                        realisation_successful = self.place_nxt_block(source, target, init_step = step)
+                    successful = False
+                    step = 3
+                    while step <= 9 and not successful:
+                        successful = self.place_nxt_block(source, target, init_step = step)
+                        step += 3
 
-                        if realisation_successful:
-                            self.number_1st_pass_edges += 1
-                            break
-                        elif step == 9:
-                            # TODO: reporting(..) and animation(..)
-                            # raise Exception(f"Edge realisation failure [{source}-{target}]")
-                            return False
+                    if successful:
+                        self.number_1st_pass_edges += 1
+                    else: # TODO: reporting(..) and animation(..)
+                        raise Exception(f"Edge realisation failure [{source}-{target}]")
 
                 elif not self.nx_graph.is_edge_realised(source, target):
                     # Second-pass edge
@@ -286,7 +283,7 @@ class BlockGraphBuilder:
             else winner_path.tgt_beams
         )
 
-        edge = (source, target) # if source < target else (target, source)
+        edge = (source, target) if source < target else (target, source)
         edge_type = self.nx_graph.get_edge_type(source, target)
 
         self.nx_graph.edge_realisations[edge] = {
