@@ -12,7 +12,7 @@ from topologiq.utils.utils_pathfinder import check_exits
 # TODO: how do we deal with the phase of a spider ?
 # TODO: benchmarking and timing various parts
 # TODO: construction of animation
-class AugmentedNxGraph(nx.Graph):
+class AugmentedNxGraph:
 
     KEY_ZX_NODE = 'zx'
     KEY_ZX_EDGE = 'zx'
@@ -36,6 +36,8 @@ class AugmentedNxGraph(nx.Graph):
     def __init__(self, zx_graph: zx.graph.base.BaseGraph):
         super().__init__()
 
+        self.nx_graph = nx.Graph()
+
         # Keeps track of the coordinates in 3D that are occupied by some cube
         # TODO: Replace with efficient data-structure for crowded space (Binary Space Partitioning ?)
         self.occupied: set[Coordinates] = set()
@@ -47,60 +49,60 @@ class AugmentedNxGraph(nx.Graph):
         self.placement_order : list[int] = []
 
         for node in zx_graph.vertices():
-            self.add_node(node)
+            self.nx_graph.add_node(node)
             # None means this is an extra cube added to realise some edge.
-            self.nodes[node][AugmentedNxGraph.KEY_ZX_NODE] = node
-            self.nodes[node][AugmentedNxGraph.KEY_NODE_TYPE] = NodeType.convert(zx_graph.type(node))
-            self.nodes[node][AugmentedNxGraph.KEY_NUMBER_OF_EDGES] = 0
-            self.nodes[node][AugmentedNxGraph.KEY_REALISED_EDGES] = 0
-            self.nodes[node][AugmentedNxGraph.KEY_CUBE_KIND] = None
-            self.nodes[node][AugmentedNxGraph.KEY_POSITION] = None
-            self.nodes[node][AugmentedNxGraph.KEY_BEAMS] = None
+            self.nx_graph.nodes[node][AugmentedNxGraph.KEY_ZX_NODE] = node
+            self.nx_graph.nodes[node][AugmentedNxGraph.KEY_NODE_TYPE] = NodeType.convert(zx_graph.type(node))
+            self.nx_graph.nodes[node][AugmentedNxGraph.KEY_NUMBER_OF_EDGES] = 0
+            self.nx_graph.nodes[node][AugmentedNxGraph.KEY_REALISED_EDGES] = 0
+            self.nx_graph.nodes[node][AugmentedNxGraph.KEY_CUBE_KIND] = None
+            self.nx_graph.nodes[node][AugmentedNxGraph.KEY_POSITION] = None
+            self.nx_graph.nodes[node][AugmentedNxGraph.KEY_BEAMS] = None
 
-            self.nodes[node][AugmentedNxGraph.KEY_OLD_NODE_TYPE] = zx_graph.type(node).name
-            self.nodes[node][AugmentedNxGraph.KEY_OLD_CUBE_KIND] = None
-            self.nodes[node][AugmentedNxGraph.KEY_OLD_COMPLETED] = 0
-            self.nodes[node][AugmentedNxGraph.KEY_OLD_COORDINATES] = None
+            self.nx_graph.nodes[node][AugmentedNxGraph.KEY_OLD_NODE_TYPE] = zx_graph.type(node).name
+            self.nx_graph.nodes[node][AugmentedNxGraph.KEY_OLD_CUBE_KIND] = None
+            self.nx_graph.nodes[node][AugmentedNxGraph.KEY_OLD_COMPLETED] = 0
+            self.nx_graph.nodes[node][AugmentedNxGraph.KEY_OLD_COORDINATES] = None
 
         for edge in zx_graph.edges():
             source = min(edge)
             target = max(edge)
-            self.add_edge(source, target)
-            self.edges[source, target][AugmentedNxGraph.KEY_EDGE_TYPE] = EdgeType.convert(zx_graph.edge_type(edge))
-            self.edges[source, target][AugmentedNxGraph.KEY_OLD_EDGE_TYPE] = zx_graph.edge_type(edge).name
-            self.edges[source, target][AugmentedNxGraph.KEY_ZX_EDGE] = edge
-            self.nodes[source][AugmentedNxGraph.KEY_NUMBER_OF_EDGES] += 1
-            self.nodes[target][AugmentedNxGraph.KEY_NUMBER_OF_EDGES] += 1
+            self.nx_graph.add_edge(source, target)
+            self.nx_graph.get_edge_data(source, target)[AugmentedNxGraph.KEY_EDGE_TYPE] = EdgeType.convert(zx_graph.edge_type(edge))
+            self.nx_graph.get_edge_data(source, target)[AugmentedNxGraph.KEY_OLD_EDGE_TYPE] = zx_graph.edge_type(edge).name
+            self.nx_graph.get_edge_data(source, target)[AugmentedNxGraph.KEY_ZX_EDGE] = edge
+            self.nx_graph.nodes[source][AugmentedNxGraph.KEY_NUMBER_OF_EDGES] += 1
+            self.nx_graph.nodes[target][AugmentedNxGraph.KEY_NUMBER_OF_EDGES] += 1
 
         # TODO: split any spider with more than 4 edges (cfr. graph_manager.py; prep_3d_g)
         # TODO: does the choice of how to split such spiders affect the minimal achievable volume ?
-        _, max_degree = max(self.degree, key=lambda entry: entry[1])
+        _, max_degree = max(self.nx_graph.degree, key=lambda entry: entry[1])
         if max_degree > 4:
             raise NotImplemented("Enforcement of no-more-than-four-legs condition not implemented.")
 
     def is_boundary(self, node_id: int) -> bool:
-        return self.nodes[node_id][AugmentedNxGraph.KEY_NODE_TYPE] == NodeType.O
+        return self.nx_graph.nodes[node_id][AugmentedNxGraph.KEY_NODE_TYPE] == NodeType.O
 
     def is_spider(self, node_id: int) -> bool:
-        return self.nodes[node_id][AugmentedNxGraph.KEY_NODE_TYPE] != NodeType.O
+        return self.nx_graph.nodes[node_id][AugmentedNxGraph.KEY_NODE_TYPE] != NodeType.O
 
     def get_zx_node(self, node_id: int):
-        return self.nodes[node_id][AugmentedNxGraph.KEY_ZX_NODE]
+        return self.nx_graph.nodes[node_id][AugmentedNxGraph.KEY_ZX_NODE]
 
     def get_zx_edge(self, source: int, target: int):
-        return self.get_edge_data(source, target)[AugmentedNxGraph.KEY_ZX_EDGE]
+        return self.nx_graph.get_edge_data(source, target)[AugmentedNxGraph.KEY_ZX_EDGE]
 
     def get_position(self, node_id: int) -> Coordinates:
-        return self.nodes[node_id][AugmentedNxGraph.KEY_POSITION]
+        return self.nx_graph.nodes[node_id][AugmentedNxGraph.KEY_POSITION]
 
     def get_node_type(self, node_id: int) -> NodeType:
-        return self.nodes[node_id][AugmentedNxGraph.KEY_NODE_TYPE]
+        return self.nx_graph.nodes[node_id][AugmentedNxGraph.KEY_NODE_TYPE]
 
     def get_cube_kind(self, node_id: int) -> CubeKind:
-        return self.nodes[node_id][AugmentedNxGraph.KEY_CUBE_KIND]
+        return self.nx_graph.nodes[node_id][AugmentedNxGraph.KEY_CUBE_KIND]
 
     def get_edge_type(self, source: int, target: int) -> EdgeType:
-        return self.get_edge_data(source, target).get(AugmentedNxGraph.KEY_EDGE_TYPE)
+        return self.nx_graph.get_edge_data(source, target).get(AugmentedNxGraph.KEY_EDGE_TYPE)
 
     # TODO: move consistency checking to Cube classes (recommendation from J)
     def get_candidate_adjacent(self, source: int, pipe_type: EdgeType) -> list[tuple[Step, CubeKind]]:
@@ -141,7 +143,7 @@ class AugmentedNxGraph(nx.Graph):
         #     self,
         #     AugmentedNxGraph.OLD_LENGTH_OF_BEAMS,
         # )
-        # self.nodes[node_id][AugmentedNxGraph.KEY_BEAMS] = node_beams
+        # self.nx_graph.nodes[node_id][AugmentedNxGraph.KEY_BEAMS] = node_beams
 
         self.place_cube(node_id, position, kind)
 
@@ -199,7 +201,7 @@ class AugmentedNxGraph(nx.Graph):
         if not self.is_node_realised(target):
             raise Exception(f"{target} is not placed; cannot connect with a path.")
 
-        if self.edges[source, target] is None:
+        if self.nx_graph.edges[source, target] is None:
             raise Exception(f"No edge {source}-{target} found in the ZX-graph.")
 
         if self.is_edge_realised(source, target):
@@ -217,7 +219,7 @@ class AugmentedNxGraph(nx.Graph):
         previous: int = source
         previous_kind: CubeKind = self.get_cube_kind(source)
         for (current_position, current_kind) in path:
-            current = len(self.nodes)
+            current = len(self.nx_graph.nodes)
             self.add_node(current)
             # Place the current extra node and connect it to the previous node.
             self.place_cube(current, current_position, current_kind)
@@ -239,8 +241,8 @@ class AugmentedNxGraph(nx.Graph):
         self.edge_realisations[edge] = extras
 
         # One more edge has been realised
-        self.nodes[source][AugmentedNxGraph.KEY_REALISED_EDGES] += 1
-        self.nodes[target][AugmentedNxGraph.KEY_REALISED_EDGES] += 1
+        self.nx_graph.nodes[source][AugmentedNxGraph.KEY_REALISED_EDGES] += 1
+        self.nx_graph.nodes[target][AugmentedNxGraph.KEY_REALISED_EDGES] += 1
 
         return True
 
@@ -248,11 +250,11 @@ class AugmentedNxGraph(nx.Graph):
         if position in self.occupied:
             raise Exception(f"Requested {position} is already occupied by another cube.")
 
-        self.nodes[node_id][AugmentedNxGraph.KEY_CUBE_KIND] = kind
-        self.nodes[node_id][AugmentedNxGraph.KEY_POSITION] = position
+        self.nx_graph.nodes[node_id][AugmentedNxGraph.KEY_CUBE_KIND] = kind
+        self.nx_graph.nodes[node_id][AugmentedNxGraph.KEY_POSITION] = position
 
-        self.nodes[node_id][AugmentedNxGraph.KEY_OLD_COORDINATES] = position.as_tuple()
-        self.nodes[node_id][AugmentedNxGraph.KEY_OLD_CUBE_KIND] = kind.name.lower()
+        self.nx_graph.nodes[node_id][AugmentedNxGraph.KEY_OLD_COORDINATES] = position.as_tuple()
+        self.nx_graph.nodes[node_id][AugmentedNxGraph.KEY_OLD_CUBE_KIND] = kind.name.lower()
 
         self.occupied.add(position)
         self.old_taken.add(position.as_tuple())
@@ -264,7 +266,7 @@ class AugmentedNxGraph(nx.Graph):
         if not self.is_node_realised(target):
             raise Exception(f"{target} is not placed and has no kind; cannot connect with a pipe.")
 
-        if self.edges[source, target] is not None:
+        if self.nx_graph.edges[source, target] is not None:
             raise Exception(f"{source} and {target} are already connected by a pipe.")
 
         self.add_edge(

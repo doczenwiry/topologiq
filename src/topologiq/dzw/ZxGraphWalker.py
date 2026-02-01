@@ -1,6 +1,5 @@
 import random
 from collections import deque
-from mimetypes import read_mime_types
 
 import pyzx as zx
 import networkx as nx
@@ -48,16 +47,16 @@ class ZxGraphWalker:
             ID of the spider that has been selected as the root
         """
 
-        if self.nx_graph.number_of_nodes() == 0:
+        if self.nx_graph.nx_graph.number_of_nodes() == 0:
             raise nx.exception.NodeNotFound("Graph is empty.")
 
         # n.b. entries of self.degree are tuples of the form (node_id, degree)
         # TODO: shouldn't we ignore boundaries when computing degree ?
         if central_spider:
-            (_, max_degree) = max(self.nx_graph.degree, key=lambda entry: entry[1])
-            candidates = [node_id for node_id in self.nx_graph.nodes() if self.nx_graph.is_spider(node_id) and self.nx_graph.degree[node_id] == max_degree]
+            (_, max_degree) = max(self.nx_graph.nx_graph.degree, key=lambda entry: entry[1])
+            candidates = [node_id for node_id in self.nx_graph.nx_graph.nodes() if self.nx_graph.is_spider(node_id) and self.nx_graph.nx_graph.degree[node_id] == max_degree]
         else:
-            candidates = [node_id for node_id in self.nx_graph.nodes() if self.nx_graph.is_spider(node_id)]
+            candidates = [node_id for node_id in self.nx_graph.nx_graph.nodes() if self.nx_graph.is_spider(node_id)]
 
         return min(candidates) if deterministic else random.choice(candidates)
 
@@ -76,7 +75,7 @@ class ZxGraphWalker:
             source: int = queue.popleft()
             self.node_placement_order.append(source)
 
-            for target in self.nx_graph.neighbors(source):
+            for target in self.nx_graph.nx_graph.neighbors(source):
                 if not self.nx_graph.is_node_realised(target):
                     # First-pass edge
                     queue.append(target)
@@ -128,7 +127,7 @@ class ZxGraphWalker:
 
                     raise NotImplemented("Second-pass edge processing.")
 
-                prune_beams(self.nx_graph, list(self.nx_graph.old_taken))
+                prune_beams(self.nx_graph.nx_graph, list(self.nx_graph.old_taken))
 
         # Prepare final BlockGraph and return it ?
         return True
@@ -139,8 +138,6 @@ class ZxGraphWalker:
 
         if self.nx_graph.is_node_realised(target):
             raise Exception(f"{target} is already placed and has a kind.")
-
-        source_beams = self.nx_graph.nodes[source][AugmentedNxGraph.KEY_BEAMS]
 
         source_position = self.nx_graph.get_position(source)
         source_kind = self.nx_graph.get_cube_kind(source)
@@ -168,7 +165,7 @@ class ZxGraphWalker:
         )
 
         viable_paths = []
-        target_degree = self.nx_graph.degree[target]
+        target_degree = self.nx_graph.nx_graph.degree[target]
 
         print(f"Found {len(clean_paths)} clean_paths.")
         for cp in clean_paths:
@@ -181,13 +178,13 @@ class ZxGraphWalker:
             target_unobstructed_exits, target_beams = check_exits(
                 target_position, target_kind,
                 taken_coords_c, coordinates_in_path,
-                self.nx_graph, beams_len = AugmentedNxGraph.OLD_LENGTH_OF_BEAMS
+                self.nx_graph.nx_graph, beams_len = AugmentedNxGraph.OLD_LENGTH_OF_BEAMS
             )
 
             if target_type == NodeType.O:
                 target_unobstructed_exits, target_beams = (6, [])
 
-            source_beams = self.nx_graph.nodes[source][AugmentedNxGraph.KEY_BEAMS]
+            source_beams = self.nx_graph.nx_graph.nodes[source][AugmentedNxGraph.KEY_BEAMS]
 
             # print(f"{target_unobstructed_exits} >= {target_degree - 1} and {any(
             #     [clean_path[1][0] in beam for beam in source_beams]
@@ -198,8 +195,8 @@ class ZxGraphWalker:
 
             critical_broken = False
             beams_broken_by_path = 0
-            for node in self.nx_graph.nodes():
-                node_beams = self.nx_graph.nodes[node][AugmentedNxGraph.KEY_BEAMS]
+            for node in self.nx_graph.nx_graph.nodes():
+                node_beams = self.nx_graph.nx_graph.nodes[node][AugmentedNxGraph.KEY_BEAMS]
                 if node_beams is not None:
                     broken = 0
                     for beam in node_beams:
@@ -207,16 +204,16 @@ class ZxGraphWalker:
                             beams_broken_by_path += 1
                             broken += 1
                     adjust_for_source_node = 1 if node == source else 0
-                    node_degree = self.nx_graph.degree[node]
-                    node_completed = self.nx_graph.nodes[node][AugmentedNxGraph.KEY_OLD_COMPLETED]
+                    node_degree = self.nx_graph.nx_graph.degree[node]
+                    node_completed = self.nx_graph.nx_graph.nodes[node][AugmentedNxGraph.KEY_OLD_COMPLETED]
                     remaining_edges = node_degree - node_completed
                     if (len(node_beams) - broken + adjust_for_source_node) < remaining_edges:
                         print(f"> Broken for {node} [L:{len(node_beams)},B:{broken},A:{adjust_for_source_node},R:{remaining_edges}]")
                         critical_broken = True
 
             critical_clash = False
-            for node in self.nx_graph.nodes():
-                node_beams = self.nx_graph.nodes[node][AugmentedNxGraph.KEY_BEAMS]
+            for node in self.nx_graph.nx_graph.nodes():
+                node_beams = self.nx_graph.nx_graph.nodes[node][AugmentedNxGraph.KEY_BEAMS]
                 if node not in [source, target] and node_beams is not None:
                     clashes = 0 # This is inside the following loop in the original code ...
                     for node_beam in node_beams:
@@ -224,8 +221,8 @@ class ZxGraphWalker:
                             node_clashes = sum([(c in node_beam[:9]) for c in target_beam[:9]])
                             if node_clashes > len(target_beams) - target_degree:
                                 clashes += 1
-                    node_degree = self.nx_graph.degree[node]
-                    node_completed = self.nx_graph.nodes[node][AugmentedNxGraph.KEY_OLD_COMPLETED]
+                    node_degree = self.nx_graph.nx_graph.degree[node]
+                    node_completed = self.nx_graph.nx_graph.nodes[node][AugmentedNxGraph.KEY_OLD_COMPLETED]
                     remaining_edges = node_degree - node_completed
                     if len(node_beams) - clashes < remaining_edges:
                         print(f"> Clash with {node}")
@@ -278,15 +275,15 @@ class ZxGraphWalker:
         self.nx_graph.realise_node(target, target_kind, target_position)
         self.nx_graph.realise_edge(source, target, path)
 
-        self.nx_graph.nodes[source][AugmentedNxGraph.KEY_OLD_COMPLETED] += 1
-        self.nx_graph.nodes[target][AugmentedNxGraph.KEY_OLD_COMPLETED] += 1
+        self.nx_graph.nx_graph.nodes[source][AugmentedNxGraph.KEY_OLD_COMPLETED] += 1
+        self.nx_graph.nx_graph.nodes[target][AugmentedNxGraph.KEY_OLD_COMPLETED] += 1
 
         # self.nx_graph.nodes[source][AugmentedNxGraph.KEY_REALISED_EDGES] += 1
         # self.nx_graph.nodes[target][AugmentedNxGraph.KEY_REALISED_EDGES] += 1
 
-        self.nx_graph.nodes[target][AugmentedNxGraph.KEY_BEAMS] = (
+        self.nx_graph.nx_graph.nodes[target][AugmentedNxGraph.KEY_BEAMS] = (
             []
-            if self.nx_graph.nodes[target][AugmentedNxGraph.KEY_OLD_COMPLETED] >= self.nx_graph.degree[target]
+            if self.nx_graph.nx_graph.nodes[target][AugmentedNxGraph.KEY_OLD_COMPLETED] >= self.nx_graph.nx_graph.degree[target]
             else winner_path.tgt_beams
         )
 
@@ -405,13 +402,13 @@ class ZxGraphWalker:
                     break
 
                 beam_crossed = False
-                for node in self.nx_graph.nodes():
-                    other_beams = self.nx_graph.nodes[node][AugmentedNxGraph.KEY_BEAMS]
+                for node in self.nx_graph.nx_graph.nodes():
+                    other_beams = self.nx_graph.nx_graph.nodes[node][AugmentedNxGraph.KEY_BEAMS]
 
                     if other_beams is None:
                         continue
 
-                    for other in self.nx_graph.nodes[node][AugmentedNxGraph.KEY_BEAMS]:
+                    for other in self.nx_graph.nx_graph.nodes[node][AugmentedNxGraph.KEY_BEAMS]:
                         if not any([position in path_coordinates for position in other[:9]]):
                             if current_position in other:
                                 beam_crossed = True
@@ -431,28 +428,36 @@ class ZxGraphWalker:
 
         return beams
 
-    def write_report(self, filename = "ang.txt"):
-        output = open(filename, "w")
+    def prepare_report(self):
+        report = ""
 
-        output.write(f"RESULT SHEET. CIRCUIT NAME: {self.name}\n")
-        output.write("\n__________________________\n")
-        output.write("ORIGINAL ZX GRAPH\n")
-        for node in self.nx_graph.nodes():
-            output.write(f"Node ID: {node}. Type: {self.nx_graph.get_node_type(node).name}\n")
-        output.write("\n")
-        for edge in self.nx_graph.edges():
+        report += f"RESULT SHEET. CIRCUIT NAME: {self.name}\n"
+        report += "\n__________________________\n"
+        report += "ORIGINAL ZX GRAPH\n"
+        for node in self.nx_graph.nx_graph.nodes():
+            report += f"Node ID: {node}. Type: {self.nx_graph.get_node_type(node).name}\n"
+        report += "\n"
+        for edge in self.nx_graph.nx_graph.edges():
             source = min(edge)
             target = max(edge)
             edge_type = self.nx_graph.get_edge_type(source, target)
             type_name = "SIMPLE" if edge_type == EdgeType.IDENTITY else "HADAMARD"
-            output.write(f"Edge ID: ({source}, {target}). Type: {type_name}\n")
-        output.write("\n__________________________\n")
-        output.write("3D \"EDGE PATHS\" (Blocks needed to connect two original nodes)\n")
+            report += f"Edge ID: ({source}, {target}). Type: {type_name}\n"
+        report += "\n__________________________\n"
+        report += "3D \"EDGE PATHS\" (Blocks needed to connect two original nodes)\n"
         for edge, data in self.nx_graph.edge_realisations.items():
-            output.write(f"Edge {edge}: {data['path_nodes']}\n")
-        output.write("\n__________________________\n")
-        output.write("LATTICE SURGERY (Graph)\n")
+            report += f"Edge {edge}: {data['path_nodes']}\n"
+        report += "\n__________________________\n"
+        report += "LATTICE SURGERY (Graph)\n"
         for node in self.node_placement_order:
-            output.write(f"Node ID: {node}. Info: ({self.nx_graph.get_position(node)}, '{self.nx_graph.get_cube_kind(node).name.lower()}')\n")
+            report += f"Node ID: {node}. Info: ({self.nx_graph.get_position(node)}, '{self.nx_graph.get_cube_kind(node).name.lower()}')\n"
 
+        return report
+
+    def print_report(self):
+        print(self.prepare_report())
+
+    def write_report(self, filename = "ang.txt"):
+        output = open(filename, "w")
+        output.write(self.prepare_report())
         output.close()
