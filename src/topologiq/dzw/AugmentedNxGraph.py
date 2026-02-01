@@ -1,7 +1,7 @@
 import pyzx as zx
 import networkx as nx
 
-from topologiq.dzw.BlockGraphSpace import Coordinates, BlockGraphSpace, Plane
+from topologiq.dzw.BlockGraphSpace import Coordinates, BlockGraphSpace, Reach, Step
 from topologiq.dzw.ZxGraphComponents import NodeType, EdgeType
 from topologiq.dzw.BlockGraphComponents import CubeKind
 from topologiq.utils.utils_pathfinder import check_exits
@@ -103,7 +103,7 @@ class AugmentedNxGraph(nx.Graph):
         return self.get_edge_data(source, target).get(AugmentedNxGraph.KEY_EDGE_TYPE)
 
     # TODO: move consistency checking to Cube classes (recommendation from J)
-    def get_candidate_adjacent(self, source: int, pipe_type: EdgeType) -> list[tuple[Coordinates, CubeKind]]:
+    def get_candidate_adjacent(self, source: int, pipe_type: EdgeType) -> list[tuple[Step, CubeKind]]:
         if not self.is_node_realised(source):
             raise Exception(f"{source} is not placed and thus has no kind. Cannot determine its adjacent candidates.")
 
@@ -153,15 +153,15 @@ class AugmentedNxGraph(nx.Graph):
             is_hadamard_path = False
 
             previous_kind: CubeKind = self.get_cube_kind(source)
-            previous_plane: Plane = self.get_cube_kind().get_plane()
+            previous_reach: Reach = previous_kind.get_reach()
             previous_position: Coordinates = self.get_position(source)
 
             for (current_position, current_kind) in path:
-                current_plane = current_kind.get_plane()
+                current_reach = current_kind.get_reach()
 
                 # Check that the step taken lies in both planes of successive cubes
                 step_taken = current_position - previous_position
-                if not previous_plane.contains(step_taken) or not current_plane.contains(step_taken):
+                if not previous_reach.contains(step_taken) or not current_reach.contains(step_taken):
                     return False
 
                 # Check that the current_position is not already occupied
@@ -174,14 +174,15 @@ class AugmentedNxGraph(nx.Graph):
 
                 previous_position = current_position
                 previous_kind = current_kind
-                previous_plane = current_plane
+                previous_reach = current_reach
 
-            target_position = self.get_position(target)
             target_kind = self.get_cube_kind(target)
+            target_reach = target_kind.get_reach()
+            target_position = self.get_position(target)
 
             # Check that the step taken lies in both planes of successive cubes
             step_taken = target_position - previous_position
-            if not previous_plane.contains(step_taken) or not target_kind.get_plane().contains(step_taken):
+            if not previous_reach.contains(step_taken) or not target_reach.contains(step_taken):
                 return False
 
             # Update the type of the path based on the type of the pipe

@@ -87,10 +87,11 @@ class ZxGraphWalker:
                         successful = self.place_nxt_block(source, target, init_step = step)
                         step += 3
 
-                    if successful:
-                        self.number_1st_pass_edges += 1
-                    else: # TODO: reporting(..) and animation(..)
+                    if not successful:
+                        # TODO: reporting(..) and animation(..)
                         raise Exception(f"Edge realisation failure [{source}-{target}]")
+
+                    self.number_1st_pass_edges += 1
 
                 elif not self.nx_graph.is_edge_realised(source, target):
                     # Second-pass edge
@@ -262,21 +263,27 @@ class ZxGraphWalker:
             print("No winner")
             return False
 
-        pretty = [
-            (block[0], self.kind_to_zx_type(block[1])) for block in winner_path.all_nodes_in_path
-        ]
-        pretty = [
-            (block if len(block[1]) == 1 or block[1] == "BOUNDARY" else f"{block[1]} EDGE")
-            for block in pretty
-        ]
+        target_kind = CubeKind.from_string(winner_path.tgt_kind)
+        target_position = Coordinates.from_tuple(winner_path.tgt_coords)
+
+        path = []
+        for coordinates, kind in winner_path.all_nodes_in_path[:-1]:
+            if kind.count('o') != 1:
+                path.append( (Coordinates.from_tuple(coordinates), CubeKind.from_string(kind)) )
+
+        # TODO: validate path before accepting it into the BlockGraph
+        # if not self.nx_graph.is_path_valid(source, target, path):
+        #     return False
+
+        self.nx_graph.realise_node(target, target_kind, target_position)
+        self.nx_graph.realise_edge(source, target, path)
 
         self.nx_graph.nodes[source][AugmentedNxGraph.KEY_OLD_COMPLETED] += 1
-        self.nx_graph.nodes[source][AugmentedNxGraph.KEY_REALISED_EDGES] += 1
-
-        self.nx_graph.nodes[target][AugmentedNxGraph.KEY_POSITION] = Coordinates.from_tuple(winner_path.tgt_coords)
-        self.nx_graph.nodes[target][AugmentedNxGraph.KEY_CUBE_KIND] = CubeKind.from_string(winner_path.tgt_kind)
         self.nx_graph.nodes[target][AugmentedNxGraph.KEY_OLD_COMPLETED] += 1
-        self.nx_graph.nodes[target][AugmentedNxGraph.KEY_REALISED_EDGES] += 1
+
+        # self.nx_graph.nodes[source][AugmentedNxGraph.KEY_REALISED_EDGES] += 1
+        # self.nx_graph.nodes[target][AugmentedNxGraph.KEY_REALISED_EDGES] += 1
+
         self.nx_graph.nodes[target][AugmentedNxGraph.KEY_BEAMS] = (
             []
             if self.nx_graph.nodes[target][AugmentedNxGraph.KEY_OLD_COMPLETED] >= self.nx_graph.degree[target]
@@ -296,7 +303,9 @@ class ZxGraphWalker:
         coordinates_in_path = get_taken_coords(winner_path.all_nodes_in_path)
         for taken in coordinates_in_path:
             self.nx_graph.occupied.add(Coordinates.from_tuple(taken))
-            self.nx_graph.old_taken.add(taken)
+
+        for coordinates, kind in winner_path.all_nodes_in_path:
+            self.nx_graph.old_taken.add(coordinates)
 
         return True
 
@@ -382,7 +391,7 @@ class ZxGraphWalker:
     ) -> NodeBeams:
         beams: NodeBeams = []
 
-        source_plane = source_kind.get_plane()
+        source_plane = source_kind.get_reach()
 
         for step in BlockGraphSpace.STEPS:
             if not source_plane.contains(step):
@@ -422,24 +431,28 @@ class ZxGraphWalker:
 
         return beams
 
-    def write_report(self):
-        print(f"RESULT SHEET. CIRCUIT NAME: {self.name}")
-        print("\n__________________________\n")
-        print("ORIGINAL ZX GRAPH")
+    def write_report(self, filename = "ang.txt"):
+        output = open(filename, "w")
+
+        output.write(f"RESULT SHEET. CIRCUIT NAME: {self.name}\n")
+        output.write("\n__________________________\n")
+        output.write("ORIGINAL ZX GRAPH\n")
         for node in self.nx_graph.nodes():
-            print(f"Node ID: {node}. Type: {self.nx_graph.get_node_type(node).name}")
-        print("")
+            output.write(f"Node ID: {node}. Type: {self.nx_graph.get_node_type(node).name}\n")
+        output.write("\n")
         for edge in self.nx_graph.edges():
             source = min(edge)
             target = max(edge)
             edge_type = self.nx_graph.get_edge_type(source, target)
             type_name = "SIMPLE" if edge_type == EdgeType.IDENTITY else "HADAMARD"
-            print(f"Edge ID: ({source}, {target}). Type: {type_name}")
-        print("\n__________________________\n")
-        print("3D \"EDGE PATHS\" (Blocks needed to connect two original nodes)")
+            output.write(f"Edge ID: ({source}, {target}). Type: {type_name}\n")
+        output.write("\n__________________________\n")
+        output.write("3D \"EDGE PATHS\" (Blocks needed to connect two original nodes)\n")
         for edge, data in self.nx_graph.edge_realisations.items():
-            print(f"Edge {edge}: {data['path_nodes']}")
-        print("\n__________________________\n")
-        print("LATTICE SURGERY (Graph)")
+            output.write(f"Edge {edge}: {data['path_nodes']}\n")
+        output.write("\n__________________________\n")
+        output.write("LATTICE SURGERY (Graph)\n")
         for node in self.node_placement_order:
-            print(f"Node ID: {node}. Info: ({self.nx_graph.get_position(node)}, '{self.nx_graph.get_cube_kind(node).name.lower()}')")
+            output.write(f"Node ID: {node}. Info: ({self.nx_graph.get_position(node)}, '{self.nx_graph.get_cube_kind(node).name.lower()}')\n")
+
+        output.close()

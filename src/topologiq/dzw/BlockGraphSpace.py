@@ -50,15 +50,18 @@ class Step(Enum):
     def __str__(self):
         return f"Step.{self.name}"
 
-class Plane(Enum):
-    # Represented by vectors
-    XY = Coordinates(+1, +1, 0)
-    XZ = Coordinates(+1, 0, +1)
-    YZ = Coordinates(0, +1, +1)
+class Reach(Enum):
+    # Represented by their normal vectors
+    XYZ = Coordinates(0, 0, 0)
+    XY = Coordinates(0,0,  +1)
+    XZ = Coordinates(0,  +1,0)
+    YZ = Coordinates(  +1,0,0)
 
-    def contains(self, step: Step) -> bool:
+    def contains(self, point: Coordinates) -> bool:
+        if isinstance(point, Step):
+            point = point.value
         # Dot product will tell us whether the step lies in this plane
-        return self.value.dot(step.value) != 0
+        return self.value.dot(point) == 0
 
     def __str__(self):
         return f"Plane.{self.name}"
@@ -67,24 +70,27 @@ class BlockGraphSpace:
     ORIGIN = Coordinates(0, 0, 0)
 
     STEPS = [ Step.XP, Step.XM, Step.YP, Step.YM, Step.ZP, Step.ZM ]
-    PLANES = [ Plane.XY, Plane.XZ, Plane.YZ ]
+    PLANES = [Reach.XY, Reach.XZ, Reach.YZ]
 
     @staticmethod
-    def get_orthogonal_plane(plane: Plane, line_of_intersection: Step) -> Plane:
+    def get_orthogonal_plane(plane: Reach, line_of_intersection: Coordinates) -> Reach:
+        if isinstance(line_of_intersection, Step):
+            line_of_intersection = line_of_intersection.value
+
         if not plane.contains(line_of_intersection):
             raise ValueError(f"Line of intersection {line_of_intersection} does not lie in plane {plane}.")
 
-        if abs(plane.value.x) != abs(line_of_intersection.value.x):
-            return Plane.YZ
-        elif abs(plane.value.y) != abs(line_of_intersection.value.y):
-            return Plane.XZ
-        else: # abs(plane.value.z) != abs(line_of_intersection.value.z)
-            return Plane.XY
+        if abs(plane.value.x) != abs(line_of_intersection.x):
+            return Reach.YZ
+        elif abs(plane.value.y) != abs(line_of_intersection.y):
+            return Reach.XZ
+        else: # abs(plane.value.z) != abs(line_of_intersection.z)
+            return Reach.XY
 
     @staticmethod
-    def get_constellation(position: Coordinates, restriction: Plane = None) -> list[Coordinates]:
+    def get_constellation(position: Coordinates, restriction: Reach = None) -> list[Coordinates]:
         constellation = []
         for step in BlockGraphSpace.STEPS:
-            if restriction is None or restriction.contains(step):
+            if restriction is None or restriction.contains(step.value):
                 constellation.append(position + step.value)
         return constellation

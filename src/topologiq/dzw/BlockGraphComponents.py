@@ -1,7 +1,7 @@
 from enum import Enum
 
 from topologiq.dzw.ZxGraphComponents import NodeType, EdgeType
-from topologiq.dzw.BlockGraphSpace import Plane, BlockGraphSpace, Coordinates, Step
+from topologiq.dzw.BlockGraphSpace import Reach, BlockGraphSpace, Coordinates, Step
 
 
 class CubeKind(Enum):
@@ -51,8 +51,8 @@ class CubeKind(Enum):
     @staticmethod
     def compatible_adjacent(kind1: 'CubeKind', kind2: 'CubeKind', step: Coordinates) -> bool:
         md_consistent = step.dot(step) == 1
-        plane1 = kind1.get_plane()
-        plane2 = kind2.get_plane()
+        reach1 = kind1.get_reach()
+        reach2 = kind2.get_reach()
         # TODO: compute kind-to-kind-consistency along the step between the two positions
         kk_consistent = True  # kind1.compatible(kind2, position1 - position2)
         return md_consistent and kk_consistent
@@ -62,37 +62,37 @@ class CubeKind(Enum):
         constellation = []
 
         source_type = self.get_type()
-        source_plane = self.get_plane()
+        source_reach = self.get_reach()
 
         for step in BlockGraphSpace.STEPS:
-            if source_plane.contains(step):
-                orthogonal_plane = BlockGraphSpace.get_orthogonal_plane(source_plane, step)
+            if source_reach.contains(step):
+                orthogonal_plane = BlockGraphSpace.get_orthogonal_plane(source_reach, step)
                 # A cube can always have an adjacent cube of the same color connected by
                 # - IDENTITY pipe in the same plane
                 # - HADAMARD pipe in the plane orthogonal along the step
-                candidate_plane = source_plane if pipe_type == EdgeType.IDENTITY else orthogonal_plane
+                candidate_plane = source_reach if pipe_type == EdgeType.IDENTITY else orthogonal_plane
                 constellation.append( (step , CubeKind.convert(source_type, candidate_plane)) )
                 # A cube can always have an adjacent cube of the other color connected by
                 # - IDENTITY pipe in the plane orthogonal along the step
                 # - HADAMARD pipe in the same plane
-                candidate_plane = orthogonal_plane if pipe_type == EdgeType.IDENTITY else source_plane
+                candidate_plane = orthogonal_plane if pipe_type == EdgeType.IDENTITY else source_reach
                 constellation.append( (step , CubeKind.convert(NodeType.flip(source_type), candidate_plane)) )
 
         return constellation
 
     @staticmethod
-    def convert(node_type: NodeType, node_plane: Plane):
+    def convert(node_type: NodeType, node_reach: Reach):
         if node_type == NodeType.X:
-            if node_plane == Plane.XY:
+            if node_reach == Reach.XY:
                 return CubeKind.ZZX
-            elif node_plane == Plane.XZ:
+            elif node_reach == Reach.XZ:
                 return CubeKind.ZXZ
             else:
                 return CubeKind.XZZ
         elif node_type == NodeType.Z:
-            if node_plane == Plane.XY:
+            if node_reach == Reach.XY:
                 return CubeKind.XXZ
-            elif node_plane == Plane.XZ:
+            elif node_reach == Reach.XZ:
                 return CubeKind.XZX
             else:
                 return CubeKind.ZXX
@@ -111,66 +111,32 @@ class CubeKind(Enum):
         else: # self == CubeKind.OOO
             return NodeType.O
 
-    def get_plane(self) -> Plane:
+    def get_reach(self) -> Reach:
         if self == CubeKind.XZZ or self == CubeKind.ZXX:
-            return Plane.YZ
+            return Reach.YZ
         elif self == CubeKind.ZXZ or self == CubeKind.XZX:
-            return Plane.XZ
+            return Reach.XZ
         elif self == CubeKind.ZZX or self == CubeKind.XXZ:
-            return Plane.XY
-        else: # self.name == CubeKind.OOO or self.name == CubeKind.YYY
-            raise ValueError(f"Not applicable to cube kind {self.value}")
+            return Reach.XY
+        elif self == CubeKind.OOO:
+            return Reach.XYZ
+        else: # self.name == CubeKind.YYY
+            raise ValueError(f"Not applicable to cube kind {self.name}")
 
     @staticmethod
     def infer_pipe_type(source: 'CubeKind', target: 'CubeKind') -> EdgeType:
         source_type = source.get_type()
         target_type = target.get_type()
-        source_plane = source.get_plane()
-        target_plane = target.get_plane()
+        source_reach = source.get_reach()
+        target_reach = target.get_reach()
 
-        if source_type not in [ NodeType.X, NodeType.Z ] or target_type not in [ NodeType.X, NodeType.Z ]:
-            raise NotImplemented("Can only infer type of pipe between X and Z nodes for now.")
+        if source_type in [ NodeType.Y ] or target_type in [ NodeType.Y ]:
+            raise NotImplemented("Cannot infer type of pipe w.r.t Y nodes for now.")
 
         same_type = source_type == target_type
-        same_plane = source_plane == target_plane
+        same_reach = source_reach == target_reach
 
-        return EdgeType.IDENTITY if same_type == same_plane else EdgeType.HADAMARD
-
-    @staticmethod
-    def validate_path(source_kind: 'CubeKind', source_position: Coordinates,
-                      target_kind: 'CubeKind', target_position: Coordinates,
-                      edge_type : EdgeType, path: list[tuple[Coordinates, 'CubeKind']]):
-
-        is_hadamard_path = False
-        previous_kind: CubeKind = source_kind
-        previous_plane: Plane = source_kind.get_plane()
-        previous_position: Coordinates = source_position
-        for (current_position, current_kind) in path:
-            # Check that the step taken lies in both planes of successive cubes
-            step_taken = current_position - previous_position
-            current_plane = current_kind.get_plane()
-            if not previous_plane.contains(step_taken) or not current_plane.contains(step_taken):
-                raise Exception(f"Step taken must lie in the plane of both successive cubes [{previous_kind}@{previous_position} vs. {current_kind}@{current_position}].")
-
-            # Update the type of the path based on the type of the pipe
-            if CubeKind.infer_pipe_type(previous_kind, current_kind) == EdgeType.HADAMARD:
-                is_hadamard_path = not is_hadamard_path
-
-            previous_position = current_position
-            previous_kind = current_kind
-            previous_plane = current_plane
-
-        # Check that the step taken lies in both planes of successive cubes
-        step_taken = target_position - previous_position
-        if not previous_plane.contains(step_taken) or not target_kind.get_plane().contains(step_taken):
-            raise Exception(f"Step taken must lie in the plane of both successive cubes [{previous_kind}@{previous_position} vs. {target_kind}@{target_position}].")
-
-        # Update the type of the path based on the type of the pipe
-        if CubeKind.infer_pipe_type(previous_kind, target_kind) == EdgeType.HADAMARD:
-            is_hadamard_path = not is_hadamard_path
-
-        if is_hadamard_path != (edge_type == EdgeType.HADAMARD):
-            raise Exception(f"Path type must match edge type [Hadamard-inconsistency].")
+        return EdgeType.IDENTITY if same_type == same_reach else EdgeType.HADAMARD
 
     def __str__(self):
         return self.name
