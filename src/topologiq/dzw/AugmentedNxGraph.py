@@ -23,11 +23,12 @@ class AugmentedNxGraph:
     KEY_BG_ZX_NODE   = 'bg_zx_node'
     KEY_BG_CUBE_KIND = 'bg_cube_kind'
     KEY_BG_CUBE_POSITION = 'bg_cube_position'
-    KEY_OLD_BEAMS = 'beams'
+    KEY_BG_PIPE_TYPE = 'bg_pipe_type'
 
     # These are here only for compatibility with the current implementation of graph_manager and pathfinder.
     # TODO: remove when rewrite is complete
     OLD_LENGTH_OF_BEAMS = 99
+    KEY_OLD_BEAMS = 'beams'
     KEY_OLD_CUBE_KIND = 'kind'
     KEY_OLD_COMPLETED = 'completed'
     KEY_OLD_COORDINATES = 'coords'
@@ -102,7 +103,7 @@ class AugmentedNxGraph:
         return self.__nx_graph
 
     def get_neighbours(self, node_id: int):
-        return self.__nx_graph.neighbors(node_id)
+        return self.__zx_graph.neighbors(node_id)
 
     def get_degrees(self):
         return self.__zx_graph.degree
@@ -122,10 +123,6 @@ class AugmentedNxGraph:
     def get_position(self, node_id: int) -> Coordinates:
         return self.__bg_graph.nodes[self.get_cube(node_id)][AugmentedNxGraph.KEY_BG_CUBE_POSITION]
 
-    def set_position(self, node_id: int, position: Coordinates):
-        self.__bg_graph.nodes[self.get_cube(node_id)][AugmentedNxGraph.KEY_BG_CUBE_POSITION] = position
-        self.__nx_graph.nodes[node_id][AugmentedNxGraph.KEY_OLD_COORDINATES] = position.as_tuple()
-
     def get_node_type(self, node_id: int) -> NodeType:
         return self.__zx_graph.nodes[node_id][AugmentedNxGraph.KEY_ZX_NODE_TYPE]
 
@@ -133,7 +130,7 @@ class AugmentedNxGraph:
         self.__zx_graph.nodes[node_id][AugmentedNxGraph.KEY_ZX_NODE_TYPE] = node_type
 
     def get_cube_kind(self, node_id: int) -> CubeKind:
-        return CubeKind.from_string(self.__nx_graph.nodes[node_id][AugmentedNxGraph.KEY_OLD_CUBE_KIND])
+        return self.__bg_graph.nodes[self.get_cube(node_id)][AugmentedNxGraph.KEY_BG_CUBE_KIND]
 
     def get_edge_type(self, source: int, target: int) -> EdgeType:
         return self.__zx_graph.get_edge_data(source, target).get(AugmentedNxGraph.KEY_ZX_EDGE_TYPE)
@@ -155,9 +152,7 @@ class AugmentedNxGraph:
         return 0
 
     def is_node_realised(self, node_id: int) -> bool:
-        has_position = self.__nx_graph.nodes[node_id][AugmentedNxGraph.KEY_OLD_COORDINATES] is not None
-        has_cubekind = self.__nx_graph.nodes[node_id][AugmentedNxGraph.KEY_OLD_CUBE_KIND] is not None
-        return has_position and has_cubekind
+        return self.__zx_graph.nodes[node_id][AugmentedNxGraph.KEY_ZX_BG_CUBE] is not None
 
     def realise_node(self, node_id: int, kind: CubeKind, position: Coordinates):
         """Realise the node as a cube of the given kind placed at the given coordinates."""
@@ -184,16 +179,15 @@ class AugmentedNxGraph:
         cube_id = self.get_next_cube_id()
         self.__bg_graph.add_node(cube_id)
 
-        self.__zx_graph.nodes[node_id][AugmentedNxGraph.KEY_ZX_BG_CUBE] = cube_id
         self.__bg_graph.nodes[cube_id][AugmentedNxGraph.KEY_BG_ZX_NODE] = node_id
+        self.__zx_graph.nodes[node_id][AugmentedNxGraph.KEY_ZX_BG_CUBE] = cube_id
 
         self.place_cube(cube_id, position, kind)
 
     def is_edge_realised(self, source: int, target: int) -> bool:
-        edge = (source, target) if source < target else (target, source)
-        return edge in self.edge_realisations
+        return self.__zx_graph.get_edge_data(source, target)[AugmentedNxGraph.KEY_ZX_BG_PATH] is not None
 
-    def is_path_valid(self, source: int, target: int, path: list[tuple[Coordinates, CubeKind]]) -> bool:
+    def is_path_valid(self, source: int, target_kind: CubeKind, target_position: Coordinates, edge_type: EdgeType, path: list[tuple[Coordinates, CubeKind]]) -> bool:
             is_hadamard_path = False
 
             previous_kind: CubeKind = self.get_cube_kind(source)
@@ -220,9 +214,9 @@ class AugmentedNxGraph:
                 previous_kind = current_kind
                 previous_reach = current_reach
 
-            target_kind = self.get_cube_kind(target)
+            # target_kind = self.get_cube_kind(target)
             target_reach = target_kind.get_reach()
-            target_position = self.get_position(target)
+            # target_position = self.get_position(target)
 
             # Check that the step taken lies in both planes of successive cubes
             step_taken = target_position - previous_position
@@ -233,7 +227,8 @@ class AugmentedNxGraph:
             if CubeKind.infer_pipe_type(previous_kind, target_kind) == EdgeType.HADAMARD:
                 is_hadamard_path = not is_hadamard_path
 
-            return is_hadamard_path != (self.get_edge_type(source, target) == EdgeType.HADAMARD)
+            # return is_hadamard_path == (self.get_edge_type(source, target) == EdgeType.HADAMARD)
+            return is_hadamard_path == (edge_type == EdgeType.HADAMARD)
 
     # Precondition: path is a sequence of (position,kind) for the extra cubes needed to connect the source to the target
     def realise_edge(self, source: int, target: int, path: list[tuple[Coordinates, CubeKind]]):
@@ -249,39 +244,45 @@ class AugmentedNxGraph:
         if self.is_edge_realised(source, target):
             raise Exception(f"{source}-{target} is already realized by a path.")
 
-        # Check path validity w.r.t. CubeKinds
-        # Check path does not place an extra cube at some occupied position
-        if not self.is_path_valid(source, target, path):
+        # Reject path if it is invalid.
+        if not self.is_path_valid(source, self.get_cube_kind(target), self.get_position(target), self.get_edge_type(source, target), path):
             return False
 
         # Representation of the path that will go into edge_realisations
         extras = []
 
         # Add all the extra cubes and pipes of the path to the BlockGraph
-        previous: int = source
+        previous_cube: int = self.get_cube(source)
         previous_kind: CubeKind = self.get_cube_kind(source)
         for (current_position, current_kind) in path:
-            current = len(self.__nx_graph.nodes)
+            current_cube = self.get_next_cube_id() #len(self.__nx_graph.nodes)
+            self.__bg_graph.add_node(current_cube)
+            self.__bg_graph.nodes[current_cube][AugmentedNxGraph.KEY_BG_ZX_NODE] = None
             # Place the current extra node and connect it to the previous node.
-            self.place_cube(current, current_position, current_kind)
+            self.place_cube(current_cube, current_position, current_kind)
             pipe_type = CubeKind.infer_pipe_type(previous_kind, current_kind)
-            self.connect_pipe(previous, current, pipe_type)
+            self.connect_pipe(previous_cube, current_cube, pipe_type)
 
             # Extend the sequence of extra node ids
-            extras.append(current)
+            extras.append(current_cube)
 
             # Prepare for the next iteration
-            previous = current
+            previous_cube = current_cube
             previous_kind = current_kind
 
         # Make the final connection
+        target_cube = self.get_cube(target)
         pipe_type = CubeKind.infer_pipe_type(previous_kind, self.get_cube_kind(target))
-        self.connect_pipe(previous, target, pipe_type)
+        self.connect_pipe(previous_cube, target_cube, pipe_type)
         # Associate the path as a realisation of the edge
-        edge = (source, target) if source < target else (target, source)
-        self.edge_realisations[edge] = extras
+        self.__zx_graph.get_edge_data(source, target)[AugmentedNxGraph.KEY_ZX_BG_PATH] = extras
+        # edge = (source, target) if source < target else (target, source)
+        # self.edge_realisations[edge] = extras
 
         # One more edge has been realised
+        self.__zx_graph.nodes[source][AugmentedNxGraph.KEY_ZX_EDGES_REALISED] += 1
+        self.__zx_graph.nodes[target][AugmentedNxGraph.KEY_ZX_EDGES_REALISED] += 1
+
         self.__nx_graph.nodes[source][AugmentedNxGraph.KEY_OLD_COMPLETED] += 1
         self.__nx_graph.nodes[target][AugmentedNxGraph.KEY_OLD_COMPLETED] += 1
 
@@ -303,15 +304,17 @@ class AugmentedNxGraph:
         self.occupied.add(position)
         self.old_taken.add(position.as_tuple())
 
-    def connect_pipe(self, source: int, target: int, edge_type : EdgeType):
-        if not self.is_node_realised(source):
-            raise Exception(f"{source} is not placed and has no kind; cannot connect with a pipe.")
+    def connect_pipe(self, source_cube: int, target_cube: int, pipe_type : EdgeType):
+        if not self.__bg_graph.has_node(source_cube):
+            raise Exception(f"Cube #{source_cube} not found in the BG-graph.")
 
-        if not self.is_node_realised(target):
-            raise Exception(f"{target} is not placed and has no kind; cannot connect with a pipe.")
+        if not self.__bg_graph.has_node(target_cube):
+            raise Exception(f"Cube #{target_cube} not found in the BG-graph.")
 
-        if self.__nx_graph.edges[source, target] is not None:
-            raise Exception(f"{source} and {target} are already connected by a pipe.")
+        if self.__bg_graph.has_edge(source_cube, target_cube):
+            raise Exception(f"Cubes #{source_cube} and #{target_cube} are already connected by a pipe.")
 
-        # self.__nx_graph.add_edge(source, target)
-        # self.__nx_graph.get_edge_data(target, source)[AugmentedNxGraph.KEY_OLD_EDGE_TYPE] = edge_type
+        # TODO: check adjacency in 3D space
+
+        self.__bg_graph.add_edge(source_cube, target_cube)
+        self.__bg_graph.get_edge_data(source_cube, target_cube)[AugmentedNxGraph.KEY_BG_PIPE_TYPE] = pipe_type

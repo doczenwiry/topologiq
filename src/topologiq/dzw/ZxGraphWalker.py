@@ -268,18 +268,12 @@ class ZxGraphWalker:
             if kind.count('o') != 1:
                 path.append( (Coordinates.from_tuple(coordinates), CubeKind.from_string(kind)) )
 
-        # TODO: validate path before accepting it into the BlockGraph
-        # if not self.nx_graph.is_path_valid(source, target, path):
-        #     return False
+        if not self.nx_graph.is_path_valid(source, target_kind, target_position, edge_type, path):
+            return False
 
         self.nx_graph.realise_node(target, target_kind, target_position)
-        self.nx_graph.realise_edge(source, target, path)
-
-        self.nx_graph.get_nodes()[source][AugmentedNxGraph.KEY_OLD_COMPLETED] += 1
-        self.nx_graph.get_nodes()[target][AugmentedNxGraph.KEY_OLD_COMPLETED] += 1
-
-        # self.nx_graph.nodes[source][AugmentedNxGraph.KEY_REALISED_EDGES] += 1
-        # self.nx_graph.nodes[target][AugmentedNxGraph.KEY_REALISED_EDGES] += 1
+        if not self.nx_graph.realise_edge(source, target, path):
+            raise Exception("Realisation of edge failed.")
 
         self.nx_graph.get_nodes()[target][AugmentedNxGraph.KEY_OLD_BEAMS] = (
             []
@@ -300,9 +294,7 @@ class ZxGraphWalker:
         coordinates_in_path = get_taken_coords(winner_path.all_nodes_in_path)
         for taken in coordinates_in_path:
             self.nx_graph.occupied.add(Coordinates.from_tuple(taken))
-
-        for coordinates, kind in winner_path.all_nodes_in_path:
-            self.nx_graph.old_taken.add(coordinates)
+            self.nx_graph.old_taken.add(taken)
 
         return True
 
