@@ -87,16 +87,19 @@ class AugmentedNxGraph:
         return cube_id
 
     def get_nodes(self):
+        return self.__zx_graph.nodes()
+
+    def get_nx_nodes(self):
         return self.__nx_graph.nodes()
 
     def number_of_nodes(self) -> int:
-        return self.__nx_graph.number_of_nodes()
+        return self.__zx_graph.number_of_nodes()
 
     def get_edges(self):
-        return self.__nx_graph.edges()
+        return self.__zx_graph.edges()
 
     def number_of_edges(self) -> int:
-        return self.__nx_graph.number_of_edges()
+        return self.__zx_graph.number_of_edges()
 
     # TODO: remove once encapsulation is complete
     def get_nx_graph(self):
@@ -125,9 +128,6 @@ class AugmentedNxGraph:
 
     def get_node_type(self, node_id: int) -> NodeType:
         return self.__zx_graph.nodes[node_id][AugmentedNxGraph.KEY_ZX_NODE_TYPE]
-
-    def set_node_type(self, node_id: int, node_type: NodeType):
-        self.__zx_graph.nodes[node_id][AugmentedNxGraph.KEY_ZX_NODE_TYPE] = node_type
 
     def get_cube_kind(self, node_id: int) -> CubeKind:
         return self.__bg_graph.nodes[self.get_cube(node_id)][AugmentedNxGraph.KEY_BG_CUBE_KIND]

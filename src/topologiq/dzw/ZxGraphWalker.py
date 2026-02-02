@@ -184,7 +184,7 @@ class ZxGraphWalker:
             if target_type == NodeType.O:
                 target_unobstructed_exits, target_beams = (6, [])
 
-            source_beams = self.nx_graph.get_nodes()[source][AugmentedNxGraph.KEY_OLD_BEAMS]
+            source_beams = self.nx_graph.get_nx_nodes()[source][AugmentedNxGraph.KEY_OLD_BEAMS]
 
             # print(f"{target_unobstructed_exits} >= {target_degree - 1} and {any(
             #     [clean_path[1][0] in beam for beam in source_beams]
@@ -196,7 +196,7 @@ class ZxGraphWalker:
             critical_broken = False
             beams_broken_by_path = 0
             for node in self.nx_graph.get_nodes():
-                node_beams = self.nx_graph.get_nodes()[node][AugmentedNxGraph.KEY_OLD_BEAMS]
+                node_beams = self.nx_graph.get_nx_nodes()[node][AugmentedNxGraph.KEY_OLD_BEAMS]
                 if node_beams is not None:
                     broken = 0
                     for beam in node_beams:
@@ -205,7 +205,7 @@ class ZxGraphWalker:
                             broken += 1
                     adjust_for_source_node = 1 if node == source else 0
                     node_degree = self.nx_graph.get_degrees()[node]
-                    node_completed = self.nx_graph.get_nodes()[node][AugmentedNxGraph.KEY_OLD_COMPLETED]
+                    node_completed = self.nx_graph.get_nx_nodes()[node][AugmentedNxGraph.KEY_OLD_COMPLETED]
                     remaining_edges = node_degree - node_completed
                     if (len(node_beams) - broken + adjust_for_source_node) < remaining_edges:
                         print(f"> Broken for {node} [L:{len(node_beams)},B:{broken},A:{adjust_for_source_node},R:{remaining_edges}]")
@@ -213,7 +213,7 @@ class ZxGraphWalker:
 
             critical_clash = False
             for node in self.nx_graph.get_nodes():
-                node_beams = self.nx_graph.get_nodes()[node][AugmentedNxGraph.KEY_OLD_BEAMS]
+                node_beams = self.nx_graph.get_nx_nodes()[node][AugmentedNxGraph.KEY_OLD_BEAMS]
                 if node not in [source, target] and node_beams is not None:
                     clashes = 0 # This is inside the following loop in the original code ...
                     for node_beam in node_beams:
@@ -222,7 +222,7 @@ class ZxGraphWalker:
                             if node_clashes > len(target_beams) - target_degree:
                                 clashes += 1
                     node_degree = self.nx_graph.get_degrees()[node]
-                    node_completed = self.nx_graph.get_nodes()[node][AugmentedNxGraph.KEY_OLD_COMPLETED]
+                    node_completed = self.nx_graph.get_nx_nodes()[node][AugmentedNxGraph.KEY_OLD_COMPLETED]
                     remaining_edges = node_degree - node_completed
                     if len(node_beams) - clashes < remaining_edges:
                         print(f"> Clash with {node}")
@@ -275,15 +275,12 @@ class ZxGraphWalker:
         if not self.nx_graph.realise_edge(source, target, path):
             raise Exception("Realisation of edge failed.")
 
-        self.nx_graph.get_nodes()[target][AugmentedNxGraph.KEY_OLD_BEAMS] = (
-            []
-            if self.nx_graph.get_nodes()[target][AugmentedNxGraph.KEY_OLD_COMPLETED] >= self.nx_graph.get_degrees()[target]
-            else winner_path.tgt_beams
-        )
+        # Compute the beams for the newly placed target cube.
+        self.nx_graph.get_nx_nodes()[target][AugmentedNxGraph.KEY_OLD_BEAMS] = self.compute_beams(target_kind, target_position)
 
+        # Store the edge realisation path
         edge = (source, target) if source < target else (target, source)
         edge_type = self.nx_graph.get_edge_type(source, target)
-
         self.nx_graph.edge_realisations[edge] = {
             "src_tgt_ids": edge,
             "path_coordinates": winner_path.coords_in_path,
@@ -291,6 +288,7 @@ class ZxGraphWalker:
             "edge_type": edge_type,
         }
 
+        # Incorporate the now occupied positions
         coordinates_in_path = get_taken_coords(winner_path.all_nodes_in_path)
         for taken in coordinates_in_path:
             self.nx_graph.occupied.add(Coordinates.from_tuple(taken))
@@ -373,34 +371,31 @@ class ZxGraphWalker:
 
         return clean_paths, pathfinder_vis_data
 
-    def compute_beams(self,
-        source_position, source_kind,
-        path_coordinates: list[Coordinates],
-        beam_length: int = 99,
-    ) -> NodeBeams:
+    def compute_beams(self, cube_kind: CubeKind, cube_position: Coordinates,
+                      path_coordinates: list[Coordinates] = [], beam_length: int = 99) -> NodeBeams:
         beams: NodeBeams = []
 
-        source_plane = source_kind.get_reach()
+        cube_reach = cube_kind.get_reach()
 
         for step in BlockGraphSpace.STEPS:
-            if not source_plane.contains(step):
+            if not cube_reach.contains(step):
                 continue
 
             beam = [] # from source_position up to beams_len steps away
 
-            current_position = source_position + step.value
+            current_position = cube_position + step.value
             for i in range(0, beam_length):
                 if current_position in self.nx_graph.occupied or current_position in path_coordinates:
                     break
 
                 beam_crossed = False
                 for node in self.nx_graph.get_nodes():
-                    other_beams = self.nx_graph.get_nodes()[node][AugmentedNxGraph.KEY_OLD_BEAMS]
+                    other_beams = self.nx_graph.get_nx_nodes()[node][AugmentedNxGraph.KEY_OLD_BEAMS]
 
                     if other_beams is None:
                         continue
 
-                    for other in self.nx_graph.get_nodes()[node][AugmentedNxGraph.KEY_OLD_BEAMS]:
+                    for other in self.nx_graph.get_nx_nodes()[node][AugmentedNxGraph.KEY_OLD_BEAMS]:
                         if not any([position in path_coordinates for position in other[:9]]):
                             if current_position in other:
                                 beam_crossed = True
