@@ -128,7 +128,6 @@ class ZxGraphWalker:
 
                     raise NotImplemented("Second-pass edge processing.")
 
-                # prune_beams(self.nx_graph.get_nx_graph(), list(self.nx_graph.old_taken))
                 self.prune_beams()
 
         # Prepare final BlockGraph and return it ?
@@ -150,7 +149,7 @@ class ZxGraphWalker:
         is_hadamard = edge_type == EdgeType.HADAMARD
 
         # For compatibility with the current implementation of the pathfinder
-        taken_coordinates = list(filter(lambda position : source_position != position, self.nx_graph.old_taken))
+        taken_coordinates = [ position.as_tuple() for position in self.nx_graph.occupied if position != source_position ]
 
         # clean_paths, pathfinder_vis_data = self.run_pathfinder(source, target, init_step)
 
@@ -278,7 +277,6 @@ class ZxGraphWalker:
         coordinates_in_path = get_taken_coords(winner_path.all_nodes_in_path)
         for taken in coordinates_in_path:
             self.nx_graph.occupied.add(Coordinates.from_tuple(taken))
-            self.nx_graph.old_taken.add(taken)
 
         return True
 
@@ -302,9 +300,7 @@ class ZxGraphWalker:
 
         source_position = self.nx_graph.get_position(source)
 
-        taken_cc = list(self.nx_graph.old_taken)
-        if source_position.as_tuple() in taken_cc:
-            taken_cc.remove(source_position.as_tuple())
+        taken_cc = [ position.as_tuple() for position in self.nx_graph.occupied if position != source_position ]
 
         target_type = self.nx_graph.get_node_type(target)
         target_position = None
@@ -323,7 +319,7 @@ class ZxGraphWalker:
                 tent_coords = [target_position.as_tuple()]
             else:
                 tent_coords = gen_tent_tgt_coords(
-                    source_position.as_tuple(), step, list(self.nx_graph.old_taken)
+                    source_position.as_tuple(), step, [ position.as_tuple() for position in self.nx_graph.occupied ]
                 )
 
             if tent_coords:
@@ -358,7 +354,7 @@ class ZxGraphWalker:
         return clean_paths, pathfinder_vis_data
 
     def compute_beams(self, cube_kind: CubeKind, cube_position: Coordinates,
-                      extra_coordinates=None, beam_length: int = 99) -> NodeBeams:
+                      extra_coordinates : list[tuple[int,int,int]] = None, beam_length: int = 99) -> NodeBeams:
         if extra_coordinates is None:
             extra_coordinates = []
 
@@ -374,7 +370,7 @@ class ZxGraphWalker:
 
             current_position = cube_position + step.value
             for i in range(0, beam_length):
-                if current_position in self.nx_graph.occupied or current_position in extra_coordinates:
+                if current_position in self.nx_graph.occupied or current_position.as_tuple() in extra_coordinates:
                     break
 
                 beam_crossed = False
@@ -384,7 +380,7 @@ class ZxGraphWalker:
 
                     for other in self.node_cube_beams[node]:
                         if not any([position in extra_coordinates for position in other[:9]]):
-                            if current_position in other:
+                            if current_position.as_tuple() in other:
                                 beam_crossed = True
                                 break
                     if beam_crossed:
@@ -409,7 +405,7 @@ class ZxGraphWalker:
             elif node in self.node_cube_beams:
                 new_beams = []
                 for beam in self.node_cube_beams[node]:
-                    if all([position not in self.nx_graph.old_taken for position in beam]):
+                    if all([Coordinates.from_tuple(position) not in self.nx_graph.occupied for position in beam]):
                         new_beams.append(beam)
                 self.node_cube_beams[node] = new_beams
 

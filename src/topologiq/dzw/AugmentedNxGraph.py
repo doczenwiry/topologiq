@@ -34,8 +34,6 @@ class AugmentedNxGraph:
         # Keeps track of the coordinates in 3D that are occupied by some cube
         # TODO: Replace with efficient data-structure for crowded space (Binary Space Partitioning ?)
         self.occupied: set[Coordinates] = set()
-        # TODO: remove old_taken rewrite is complete
-        self.old_taken: set[tuple[int,int,int]] = set()
         # Keeps track of the paths (i.e. one or more pipes) in the BlockGraph that realise the edges of the ZX-graph
         self.edge_realisations: dict = {}
         # Keeps track of the order in which nodes from the ZX-graph were placed for visualisation purposes
@@ -268,7 +266,6 @@ class AugmentedNxGraph:
         self.__bg_graph.nodes[cube_id][AugmentedNxGraph.KEY_BG_CUBE_POSITION] = position
 
         self.occupied.add(position)
-        self.old_taken.add(position.as_tuple())
 
     def connect_pipe(self, source_cube: int, target_cube: int, pipe_type : EdgeType):
         if not self.__bg_graph.has_node(source_cube):
