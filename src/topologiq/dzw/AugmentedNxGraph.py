@@ -4,7 +4,6 @@ import networkx as nx
 from topologiq.dzw.BlockGraphSpace import Coordinates, Reach, Step
 from topologiq.dzw.ZxGraphComponents import NodeType, EdgeType
 from topologiq.dzw.BlockGraphComponents import CubeKind
-from topologiq.utils.utils_pathfinder import check_exits
 
 # TODO: figure out what the other VertexType and EdgeType represent
 # TODO: how do we deal with the last four VertexType (i.e. H_BOX, W_INPUT, W_OUTPUT, Z_BOX) ?
@@ -13,7 +12,6 @@ from topologiq.utils.utils_pathfinder import check_exits
 # TODO: benchmarking and timing various parts
 # TODO: construction of animation
 class AugmentedNxGraph:
-
     KEY_ZX_NODE_TYPE = 'zx_node_type'
     KEY_ZX_EDGE_TYPE = 'zx_edge_type'
     KEY_ZX_EDGES_REALISED = 'zx_edges_realised'
@@ -24,20 +22,11 @@ class AugmentedNxGraph:
     KEY_BG_CUBE_KIND = 'bg_cube_kind'
     KEY_BG_CUBE_POSITION = 'bg_cube_position'
     KEY_BG_PIPE_TYPE = 'bg_pipe_type'
-
-    # These are here only for compatibility with the current implementation of graph_manager and pathfinder.
-    # TODO: remove when rewrite is complete
-    OLD_LENGTH_OF_BEAMS = 99
-    KEY_OLD_BEAMS = 'beams'
-    KEY_OLD_CUBE_KIND = 'kind'
-    KEY_OLD_COMPLETED = 'completed'
-    KEY_OLD_COORDINATES = 'coords'
+    KEY_BG_CUBE_BEAMS = 'bg_cube_beams'
 
     def __init__(self, zx_graph: zx.graph.base.BaseGraph):
         super().__init__()
 
-        # For compatibility with the current implementation of graph_manager and pathfinder.
-        self.__nx_graph = nx.Graph()
         # Separate ZX-graph and BG-graph
         self.__zx_graph = nx.Graph()
         self.__bg_graph = nx.Graph()
@@ -58,17 +47,9 @@ class AugmentedNxGraph:
             self.__zx_graph.nodes[node][AugmentedNxGraph.KEY_ZX_EDGES_REALISED] = 0
             self.__zx_graph.nodes[node][AugmentedNxGraph.KEY_ZX_BG_CUBE] = None
 
-            self.__nx_graph.add_node(node)
-            self.__nx_graph.nodes[node][AugmentedNxGraph.KEY_OLD_BEAMS] = None
-            self.__nx_graph.nodes[node][AugmentedNxGraph.KEY_OLD_CUBE_KIND] = None
-            self.__nx_graph.nodes[node][AugmentedNxGraph.KEY_OLD_COMPLETED] = 0
-            self.__nx_graph.nodes[node][AugmentedNxGraph.KEY_OLD_COORDINATES] = None
-
         for edge in zx_graph.edges():
             source = min(edge)
             target = max(edge)
-            self.__nx_graph.add_edge(source, target)
-
             self.__zx_graph.add_edge(source, target)
             self.__zx_graph.get_edge_data(source, target)[AugmentedNxGraph.KEY_ZX_EDGE_TYPE] = EdgeType.convert(zx_graph.edge_type(edge))
             self.__zx_graph.get_edge_data(source, target)[AugmentedNxGraph.KEY_ZX_BG_PATH] = None
@@ -89,9 +70,6 @@ class AugmentedNxGraph:
     def get_nodes(self):
         return self.__zx_graph.nodes()
 
-    def get_nx_nodes(self):
-        return self.__nx_graph.nodes()
-
     def number_of_nodes(self) -> int:
         return self.__zx_graph.number_of_nodes()
 
@@ -101,9 +79,8 @@ class AugmentedNxGraph:
     def number_of_edges(self) -> int:
         return self.__zx_graph.number_of_edges()
 
-    # TODO: remove once encapsulation is complete
-    def get_nx_graph(self):
-        return self.__nx_graph
+    def get_edges_realised(self, node_id: int):
+        return self.__zx_graph.nodes[node_id].get(AugmentedNxGraph.KEY_ZX_EDGES_REALISED)
 
     def get_neighbours(self, node_id: int):
         return self.__zx_graph.neighbors(node_id)
@@ -283,21 +260,12 @@ class AugmentedNxGraph:
         self.__zx_graph.nodes[source][AugmentedNxGraph.KEY_ZX_EDGES_REALISED] += 1
         self.__zx_graph.nodes[target][AugmentedNxGraph.KEY_ZX_EDGES_REALISED] += 1
 
-        self.__nx_graph.nodes[source][AugmentedNxGraph.KEY_OLD_COMPLETED] += 1
-        self.__nx_graph.nodes[target][AugmentedNxGraph.KEY_OLD_COMPLETED] += 1
-
     def place_cube(self, cube_id: int, position: Coordinates, kind: CubeKind):
         if position in self.occupied:
             raise Exception(f"Proposed {position} is already occupied by another cube.")
 
         self.__bg_graph.nodes[cube_id][AugmentedNxGraph.KEY_BG_CUBE_KIND] = kind
         self.__bg_graph.nodes[cube_id][AugmentedNxGraph.KEY_BG_CUBE_POSITION] = position
-
-        # TODO: only for compatibility with current implementation. Remove after rewrite.
-        node_id = self.get_node(cube_id)
-        if node_id is not None:
-            self.__nx_graph.nodes[node_id][AugmentedNxGraph.KEY_OLD_COORDINATES] = position.as_tuple()
-            self.__nx_graph.nodes[node_id][AugmentedNxGraph.KEY_OLD_CUBE_KIND] = kind.name.lower()
 
         self.occupied.add(position)
         self.old_taken.add(position.as_tuple())
