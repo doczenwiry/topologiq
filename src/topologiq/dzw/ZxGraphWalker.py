@@ -50,23 +50,24 @@ class ZxGraphWalker:
         if self.nx_graph.number_of_nodes() == 0:
             raise nx.exception.NodeNotFound("Graph is empty.")
 
-        # n.b. entries of self.degree are tuples of the form (node_id, degree)
         # TODO: shouldn't we ignore boundaries when computing degree ?
         if central_spider:
-            (_, max_degree) = max(self.nx_graph.get_degrees(), key=lambda entry: entry[1])
-            candidates = [node_id for node_id in self.nx_graph.get_nodes() if self.nx_graph.is_spider(node_id) and self.nx_graph.get_degrees()[node_id] == max_degree]
+            # n.b. entries of self.degree are tuples of the form (node_id, degree)
+            (_, max_degree) = max([self.nx_graph.get_degree(node) for node in self.nx_graph.get_nodes()], key=lambda entry: entry[1])
+            candidates = [node for node in self.nx_graph.get_nodes() if self.nx_graph.is_spider(node) and self.nx_graph.get_degree(node) == max_degree]
         else:
-            candidates = [node_id for node_id in self.nx_graph.get_nodes() if self.nx_graph.is_spider(node_id)]
+            candidates = [node for node in self.nx_graph.get_nodes() if self.nx_graph.is_spider(node)]
 
         return min(candidates) if deterministic else random.choice(candidates)
 
-    def construct(self, root: int = None):
+    def construct(self, root_choice: tuple[int, CubeKind] = None):
         # Prepare the root node of the construction.
-        if root is None:
+        if root_choice is None:
             root = self.pick_root()
-        root_kind = CubeKind.suitable_kinds(self.nx_graph.get_node_type(root))[0]
-        #root_kind = random.choice(CubeKind.suitable_kinds(self.nx_graph.get_node_type(root)))
-        self.nx_graph.realise_node(root, root_kind, BlockGraphSpace.ORIGIN)
+            kind = random.choice(CubeKind.suitable_kinds(self.nx_graph.get_node_type(root)))
+        else:
+            (root, kind) = root_choice
+        self.nx_graph.realise_node(root, kind, BlockGraphSpace.ORIGIN)
 
         queue : deque[int] = deque([root])
 
@@ -96,11 +97,11 @@ class ZxGraphWalker:
                 elif not self.nx_graph.is_edge_realised(source, target):
                     # Second-pass edge
                     # Goal: find a path towards the position of a cube representing the target node
-                    source_position = self.nx_graph.get_position(source)
-                    source_kind = self.nx_graph.get_cube_kind(source)
-
-                    target_position = self.nx_graph.get_position(target)
-                    target_kind = self.nx_graph.get_cube_kind(target)
+                    # source_position = self.nx_graph.get_position(source)
+                    # source_kind = self.nx_graph.get_cube_kind(source)
+                    #
+                    # target_position = self.nx_graph.get_position(target)
+                    # target_kind = self.nx_graph.get_cube_kind(target)
 
                     # TODO: deal with the critical beams (cfr. graph_manager.py Lines 301-313)
 
@@ -141,15 +142,13 @@ class ZxGraphWalker:
         if self.nx_graph.is_node_realised(target):
             raise Exception(f"{target} is already placed and has a kind.")
 
-        source_position = self.nx_graph.get_position(source)
-        source_kind = self.nx_graph.get_cube_kind(source)
+        source_cube = self.nx_graph.get_cube(source)
+        source_kind = self.nx_graph.get_cube_kind(source_cube)
+        source_position = self.nx_graph.get_cube_position(source_cube)
 
         target_type = self.nx_graph.get_node_type(target)
         edge_type = self.nx_graph.get_edge_type(source, target)
         is_hadamard = edge_type == EdgeType.HADAMARD
-
-        # For compatibility with the current implementation of the pathfinder
-        taken_coordinates = [ position.as_tuple() for position in self.nx_graph.occupied if position != source_position ]
 
         # clean_paths, pathfinder_vis_data = self.run_pathfinder(source, target, init_step)
 
@@ -157,15 +156,15 @@ class ZxGraphWalker:
             (source_position.as_tuple(), source_kind.name.lower()),
             target_type.name,
             init_step,
-            taken_coordinates,
-            hdm=is_hadamard,
-            min_succ_rate=60,
-            src_tgt_ids=(source, target),
-            log_stats_id=log_stats_id,
+            taken = [ position.as_tuple() for position in self.nx_graph.occupied if position != source_position ],
+            hdm = is_hadamard,
+            min_succ_rate = 60,
+            src_tgt_ids = (source, target),
+            log_stats_id = log_stats_id,
         )
 
         viable_paths = []
-        target_degree = self.nx_graph.get_degrees()[target]
+        target_degree = self.nx_graph.get_degree(target)
 
         print(f"Found {len(clean_paths)} clean_paths.")
 
@@ -173,7 +172,11 @@ class ZxGraphWalker:
             target_position, target_kind = clean_path[-1]
             print(f"> Clean path [{target_kind}@{target_position}]: {clean_path}")
             coordinates_in_path = get_taken_coords(clean_path)
-            target_beams = self.compute_beams(CubeKind.from_string(target_kind), Coordinates.from_tuple(target_position), coordinates_in_path)
+            target_beams = self.compute_beams(
+                CubeKind.from_string(target_kind),
+                Coordinates.from_tuple(target_position),
+                coordinates_in_path
+            )
             target_unobstructed_exits = len(target_beams)
 
             if target_type == NodeType.O:
@@ -194,7 +197,7 @@ class ZxGraphWalker:
                 broken = len(list(filter(lambda beam : any([ c in coordinates_in_path for c in beam[:7]]), node_beams)))
                 beams_broken_by_path += broken
                 adjust_for_source_node = 1 if node == source else 0
-                node_degree = self.nx_graph.get_degrees()[node]
+                node_degree = self.nx_graph.get_degree(node)
                 edges_realised = self.nx_graph.get_edges_realised(node)
                 remaining_edges = node_degree - edges_realised
                 if (len(node_beams) - broken + adjust_for_source_node) < remaining_edges:
@@ -210,7 +213,7 @@ class ZxGraphWalker:
                 clashes = 0 # This is inside the following loop in the original code ...
                 for node_beam in node_beams:
                     clashes += len(list(filter(lambda target_beam : sum([(c in node_beam[:9]) for c in target_beam[:9]]) > len(target_beams) - target_degree, target_beams)))
-                node_degree = self.nx_graph.get_degrees()[node]
+                node_degree = self.nx_graph.get_degree(node)
                 edges_realised = self.nx_graph.get_edges_realised(node)
                 remaining_edges = node_degree - edges_realised
                 if len(node_beams) - clashes < remaining_edges:
@@ -249,9 +252,10 @@ class ZxGraphWalker:
         target_position = Coordinates.from_tuple(winner_path.tgt_coords)
 
         path = []
-        for coordinates, kind in winner_path.all_nodes_in_path[:-1]:
-            if kind.count('o') != 1:
-                path.append( (Coordinates.from_tuple(coordinates), CubeKind.from_string(kind)) )
+        for coordinates, kind in winner_path.all_nodes_in_path[1:-1]:
+            position = Coordinates.from_tuple(coordinates)
+            if BlockGraphSpace.ORIGIN.get_manhattan_distance(position) % 3 == 0:
+                path.append( (position, CubeKind.from_string(kind)) )
 
         if not self.nx_graph.is_path_valid(source, target_kind, target_position, edge_type, path):
             return False
@@ -298,14 +302,16 @@ class ZxGraphWalker:
         clean_paths = []
         pathfinder_vis_data = []
 
-        source_position = self.nx_graph.get_position(source)
+        source_cube = self.nx_graph.get_cube(source)
+        source_position = self.nx_graph.get_cube_position(source_cube)
 
         taken_cc = [ position.as_tuple() for position in self.nx_graph.occupied if position != source_position ]
 
+        target_cube = self.nx_graph.get_cube(target)
         target_type = self.nx_graph.get_node_type(target)
         target_position = None
         if self.nx_graph.is_node_realised(target):
-            target_position = self.nx_graph.get_position(target)
+            target_position = self.nx_graph.get_cube_position(target_cube)
             max_step = 2 * init_step
             if target_position.as_tuple() in taken_cc:
                 taken_cc.remove(target_position.as_tuple())
@@ -324,7 +330,7 @@ class ZxGraphWalker:
 
             if tent_coords:
                 valid_paths, pathfinder_vis_data = pathfinder(
-                    (source_position.as_tuple(), self.nx_graph.get_cube_kind(source).name),
+                    (source_position.as_tuple(), self.nx_graph.get_cube_kind(source_cube).name),
                     tent_coords,
                     target_type.name,
                     taken=taken_cc,
@@ -362,27 +368,23 @@ class ZxGraphWalker:
 
         cube_reach = cube_kind.get_reach()
 
-        for step in BlockGraphSpace.STEPS:
-            if not cube_reach.contains(step):
-                continue
+        for step in cube_reach.get_step_constellation():
 
             beam = [] # from cube_position up to beams_len steps away
 
-            current_position = cube_position + step.value
+            current_position = cube_position + step
             for i in range(0, beam_length):
                 if current_position in self.nx_graph.occupied or current_position.as_tuple() in extra_coordinates:
                     break
 
                 beam_crossed = False
-                for node in self.nx_graph.get_nodes():
-                    if node not in self.node_cube_beams:
-                        continue
-
+                for node in self.node_cube_beams.keys():
                     for other in self.node_cube_beams[node]:
                         if not any([position in extra_coordinates for position in other[:9]]):
                             if current_position.as_tuple() in other:
                                 beam_crossed = True
                                 break
+
                     if beam_crossed:
                         break
 
@@ -390,7 +392,7 @@ class ZxGraphWalker:
                     break
 
                 beam.append(current_position.as_tuple())
-                current_position += step.value
+                current_position += step
 
             # Add the beam to the list if it was completely constructed
             if len(beam) == beam_length:
@@ -400,7 +402,7 @@ class ZxGraphWalker:
 
     def prune_beams(self):
         for node in self.nx_graph.get_nodes():
-            if self.nx_graph.get_edges_realised(node) >= self.nx_graph.get_degrees()[node]:
+            if self.nx_graph.get_edges_realised(node) >= self.nx_graph.get_degree(node):
                 self.node_cube_beams[node] = []
             elif node in self.node_cube_beams:
                 new_beams = []
@@ -409,7 +411,7 @@ class ZxGraphWalker:
                         new_beams.append(beam)
                 self.node_cube_beams[node] = new_beams
 
-    def prepare_report(self):
+    def prepare_report(self, append_cube_report : bool = False):
         report = ""
 
         report += f"RESULT SHEET. CIRCUIT NAME: {self.name}\n"
@@ -431,12 +433,20 @@ class ZxGraphWalker:
         report += "\n__________________________\n"
         report += "LATTICE SURGERY (Graph)\n"
         for node in self.node_placement_order:
-            report += f"Node ID: {node}. Info: ({self.nx_graph.get_position(node)}, '{self.nx_graph.get_cube_kind(node).name.lower()}')\n"
+            cube = self.nx_graph.get_cube(node)
+            report += f"Node ID: {node}. Info: ({self.nx_graph.get_cube_position(cube)}, '{self.nx_graph.get_cube_kind(cube).name.lower()}')\n"
+        if append_cube_report:
+            report += "\n__________________________\n"
+            report += "CUBES (BG-Graph)\n"
+            for cube in self.nx_graph.get_cubes():
+                node = self.nx_graph.get_node(cube)
+                label = str(node) if node is not None else '-'
+                report += f"Cube #{cube} [ZX:{label}] : {self.nx_graph.get_cube_kind(cube)}@{self.nx_graph.get_cube_position(cube)}\n"
 
         return report
 
-    def print_report(self):
-        print(self.prepare_report())
+    def print_report(self, append_cube_report = False):
+        print(self.prepare_report(append_cube_report = append_cube_report))
 
     def write_report(self, filename = "ang.txt"):
         output = open(filename, "w")

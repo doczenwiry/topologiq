@@ -12,9 +12,13 @@ class Coordinates:
         return Coordinates(t[0], t[1], t[2])
 
     def __add__(self, other):
+        if isinstance(other, Step):
+            other = other.value
         return Coordinates(self.x + other.x, self.y + other.y, self.z + other.z)
 
     def __sub__(self, other):
+        if isinstance(other, Step):
+            other = other.value
         return Coordinates(self.x - other.x, self.y - other.y, self.z - other.z)
 
     def invert(self):
@@ -40,6 +44,9 @@ class Coordinates:
 
     def __eq__(self, other):
         return self.x == other.x and self.y == other.y and self.z == other.z
+
+    def __cmp__(self, other):
+        return self.as_tuple().__cmp__(other.as_tuple())
 
     def __str__(self):
         return f"({self.x}, {self.y}, {self.z})"
@@ -69,6 +76,9 @@ class Reach(Enum):
         # Dot product will tell us whether the step lies in this plane
         return self.value.dot(point) == 0
 
+    def get_step_constellation(self) -> list[Step]:
+        return [ step for step in BlockGraphSpace.STEPS if self.contains(step.value) ]
+
     def __str__(self):
         return f"Plane.{self.name}"
 
@@ -86,11 +96,13 @@ class BlockGraphSpace:
         if not plane.contains(line_of_intersection):
             raise ValueError(f"Line of intersection {line_of_intersection} does not lie in plane {plane}.")
 
-        if abs(plane.value.x) != abs(line_of_intersection.x):
+        plane = plane.value
+
+        if abs(plane.x) != abs(line_of_intersection.x):
             return Reach.YZ
-        elif abs(plane.value.y) != abs(line_of_intersection.y):
+        elif abs(plane.y) != abs(line_of_intersection.y):
             return Reach.XZ
-        else: # abs(plane.value.z) != abs(line_of_intersection.z)
+        else: # abs(plane.z) != abs(line_of_intersection.z)
             return Reach.XY
 
     @staticmethod
