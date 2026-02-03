@@ -36,8 +36,8 @@ class AugmentedNxGraph:
         self.occupied: set[Coordinates] = set()
         # Keeps track of the paths (i.e. one or more pipes) in the BlockGraph that realise the edges of the ZX-graph
         self.edge_realisations: dict = {}
-        # Keeps track of the order in which nodes from the ZX-graph were placed for visualisation purposes
-        self.placement_order : list[int] = []
+        # Keeps track of the order in which edges from the ZX-graph were placed for visualisation purposes
+        self.edge_realisation_order: list[tuple[int,int]] = []
 
         for node in zx_graph.vertices():
             self.__zx_graph.add_node(node)

@@ -134,6 +134,68 @@ class ZxGraphWalker:
         # Prepare final BlockGraph and return it ?
         return True
 
+    def is_path_viable(self, source, target, clean_path) -> tuple[bool, int, int]:
+        target_type = self.nx_graph.get_node_type(target)
+        target_degree = self.nx_graph.get_degree(target)
+
+        target_position, target_kind = clean_path[-1]
+        print(f"> Clean path [{target_kind}@{target_position}]: {clean_path}")
+        coordinates_in_path = get_taken_coords(clean_path)
+        target_beams = self.compute_beams(
+            CubeKind.from_string(target_kind),
+            Coordinates.from_tuple(target_position),
+            coordinates_in_path
+        )
+        target_unobstructed_exits = len(target_beams)
+
+        if target_type == NodeType.O:
+            target_unobstructed_exits, target_beams = (6, [])
+
+        source_beams = self.node_cube_beams[source]
+
+        if not (target_unobstructed_exits >= target_degree - 1 and any(
+                [clean_path[1][0] in beam for beam in source_beams])):
+            return False, 0, 0
+
+        critical_broken = False
+        beams_broken_by_path = 0
+        for node in self.nx_graph.get_nodes():
+            if node not in self.node_cube_beams:
+                continue
+
+            node_beams = self.node_cube_beams[node]
+            broken = len(list(filter(lambda beam: any([c in coordinates_in_path for c in beam[:7]]), node_beams)))
+            beams_broken_by_path += broken
+            adjust_for_source_node = 1 if node == source else 0
+            node_degree = self.nx_graph.get_degree(node)
+            edges_realised = self.nx_graph.get_edges_realised(node)
+            remaining_edges = node_degree - edges_realised
+            if (len(node_beams) - broken + adjust_for_source_node) < remaining_edges:
+                print(
+                    f"> Broken for {node} [L:{len(node_beams)},B:{broken},A:{adjust_for_source_node},R:{remaining_edges}]")
+                critical_broken = True
+
+        critical_clash = False
+        for node in self.node_cube_beams.keys():
+            if node == source or node == target:
+                continue
+
+            node_beams = self.node_cube_beams[node]
+            clashes = 0  # This is inside the following loop in the original code ...
+            for node_beam in node_beams:
+                clashes += len(list(filter(
+                    lambda target_beam: sum([(c in node_beam[:9]) for c in target_beam[:9]]) > len(
+                        target_beams) - target_degree, target_beams)))
+            node_degree = self.nx_graph.get_degree(node)
+            edges_realised = self.nx_graph.get_edges_realised(node)
+            remaining_edges = node_degree - edges_realised
+            if len(node_beams) - clashes < remaining_edges:
+                print(f"> Clash with {node}")
+                critical_clash = True
+
+        viable = not critical_broken and not critical_clash
+        return viable, beams_broken_by_path, critical_clash
+
     # TODO: the BgPathFinder should provide a function to find a path towards some position where a suitable cube can be placed
     def place_nxt_block(self, source: int, target: int, init_step: int = 3, log_stats_id = None):
         if not self.nx_graph.is_node_realised(source):
@@ -164,11 +226,14 @@ class ZxGraphWalker:
         )
 
         viable_paths = []
-        target_degree = self.nx_graph.get_degree(target)
 
         print(f"Found {len(clean_paths)} clean_paths.")
 
         for clean_path in clean_paths:
+            (viable, beams_broken_by_path, clashes) = self.is_path_viable(source, target, clean_path)
+            if not viable:
+                continue
+
             target_position, target_kind = clean_path[-1]
             print(f"> Clean path [{target_kind}@{target_position}]: {clean_path}")
             coordinates_in_path = get_taken_coords(clean_path)
@@ -179,66 +244,24 @@ class ZxGraphWalker:
             )
             target_unobstructed_exits = len(target_beams)
 
+            all_nodes_in_path = [p for p in clean_path]
+
             if target_type == NodeType.O:
-                target_unobstructed_exits, target_beams = (6, [])
+                target_kind = CubeKind.OOO.name.lower()
+                all_nodes_in_path[-1] = (all_nodes_in_path[-1][0], target_kind)
 
-            source_beams = self.node_cube_beams[source]
+            path_data = {
+                "tgt_coords": target_position,
+                "tgt_kind": target_kind,
+                "tgt_beams": target_beams,
+                "coords_in_path": coordinates_in_path,
+                "all_nodes_in_path": all_nodes_in_path,
+                "beams_broken_by_path": beams_broken_by_path,
+                "len_of_path": len(clean_path),
+                "tgt_unobstr_exit_n": target_unobstructed_exits,
+            }
 
-            if not (target_unobstructed_exits >= target_degree - 1 and any([clean_path[1][0] in beam for beam in source_beams])):
-                continue
-
-            critical_broken = False
-            beams_broken_by_path = 0
-            for node in self.nx_graph.get_nodes():
-                if node not in self.node_cube_beams:
-                    continue
-
-                node_beams = self.node_cube_beams[node]
-                broken = len(list(filter(lambda beam : any([ c in coordinates_in_path for c in beam[:7]]), node_beams)))
-                beams_broken_by_path += broken
-                adjust_for_source_node = 1 if node == source else 0
-                node_degree = self.nx_graph.get_degree(node)
-                edges_realised = self.nx_graph.get_edges_realised(node)
-                remaining_edges = node_degree - edges_realised
-                if (len(node_beams) - broken + adjust_for_source_node) < remaining_edges:
-                    print(f"> Broken for {node} [L:{len(node_beams)},B:{broken},A:{adjust_for_source_node},R:{remaining_edges}]")
-                    critical_broken = True
-
-            critical_clash = False
-            for node in self.nx_graph.get_nodes():
-                if node == source or node == target or node not in self.node_cube_beams:
-                    continue
-
-                node_beams = self.node_cube_beams[node]
-                clashes = 0 # This is inside the following loop in the original code ...
-                for node_beam in node_beams:
-                    clashes += len(list(filter(lambda target_beam : sum([(c in node_beam[:9]) for c in target_beam[:9]]) > len(target_beams) - target_degree, target_beams)))
-                node_degree = self.nx_graph.get_degree(node)
-                edges_realised = self.nx_graph.get_edges_realised(node)
-                remaining_edges = node_degree - edges_realised
-                if len(node_beams) - clashes < remaining_edges:
-                    print(f"> Clash with {node}")
-                    critical_clash = True
-
-            if not critical_broken and not critical_clash:
-                all_nodes_in_path = [p for p in clean_path]
-
-                if target_type == NodeType.O:
-                    target_kind = CubeKind.OOO.name.lower()
-                    all_nodes_in_path[-1] = (all_nodes_in_path[-1][0], target_kind)
-
-                path_data = {
-                    "tgt_coords": target_position,
-                    "tgt_kind": target_kind,
-                    "tgt_beams": target_beams,
-                    "coords_in_path": coordinates_in_path,
-                    "all_nodes_in_path": all_nodes_in_path,
-                    "beams_broken_by_path": beams_broken_by_path,
-                    "len_of_path": len(clean_path),
-                    "tgt_unobstr_exit_n": target_unobstructed_exits,
-                }
-
-                viable_paths.append(PathBetweenNodes(**path_data))
+            viable_paths.append(PathBetweenNodes(**path_data))
 
         winner_path = None
         if viable_paths:
@@ -251,6 +274,7 @@ class ZxGraphWalker:
         target_kind = CubeKind.from_string(winner_path.tgt_kind)
         target_position = Coordinates.from_tuple(winner_path.tgt_coords)
 
+        # Conversion needed for the path produced by the pathfinder.
         path = []
         for coordinates, kind in winner_path.all_nodes_in_path[1:-1]:
             position = Coordinates.from_tuple(coordinates)
@@ -260,15 +284,17 @@ class ZxGraphWalker:
         if not self.nx_graph.is_path_valid(source, target_kind, target_position, edge_type, path):
             return False
 
+        # Place the target cube
         self.nx_graph.realise_node(target, target_kind, target_position)
-
+        # Realise the edge using the path
         self.nx_graph.realise_edge(source, target, path)
 
-        # Compute the beams for the newly placed target cube.
+        # Compute the beams for the target cube.
         self.node_cube_beams[target] = self.compute_beams(target_kind, target_position)
 
         # Store the edge realisation path
         edge = (source, target) if source < target else (target, source)
+        self.nx_graph.edge_realisation_order.append(edge)
         edge_type = self.nx_graph.get_edge_type(source, target)
         self.nx_graph.edge_realisations[edge] = {
             "src_tgt_ids": edge,
