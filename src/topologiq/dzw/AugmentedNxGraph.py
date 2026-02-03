@@ -246,7 +246,7 @@ class AugmentedNxGraph:
 
         # Reject path if it is invalid.
         if not self.is_path_valid(source, self.get_cube_kind(target), self.get_position(target), self.get_edge_type(source, target), path):
-            return False
+            raise Exception(f"Proposed path to realise edge {source}-{target} is invalid.")
 
         # Representation of the path that will go into edge_realisations
         extras = []
@@ -285,8 +285,6 @@ class AugmentedNxGraph:
 
         self.__nx_graph.nodes[source][AugmentedNxGraph.KEY_OLD_COMPLETED] += 1
         self.__nx_graph.nodes[target][AugmentedNxGraph.KEY_OLD_COMPLETED] += 1
-
-        return True
 
     def place_cube(self, cube_id: int, position: Coordinates, kind: CubeKind):
         if position in self.occupied:
