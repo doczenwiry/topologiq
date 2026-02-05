@@ -30,7 +30,8 @@ class ZxGraphWalker:
         self.nx_graph = AugmentedNxGraph(pyzx_graph)
         self.number_1st_pass_edges = 0
         self.number_2nd_pass_edges = 0
-        self.node_placement_order = []
+        self.node_realisation_order = []
+        self.edge_realisation_order = []
         self.node_cube_beams = dict()
 
     def pick_root(self, central_spider: bool = True, deterministic: bool = False) -> int:
@@ -76,7 +77,7 @@ class ZxGraphWalker:
         # Proceed with the main loop of the BFS
         while queue:
             source: int = queue.popleft()
-            self.node_placement_order.append(source)
+            self.node_realisation_order.append(source)
 
             for target in self.nx_graph.get_neighbours(source):
                 if self.nx_graph.is_node_realised(target) or self.nx_graph.is_edge_realised(source, target):
@@ -122,7 +123,7 @@ class ZxGraphWalker:
                 self.node_cube_beams[target] = self.compute_beams(target_kind, target_position)
 
                 # Store the path that realises the current edge
-                self.nx_graph.edge_realisation_order.append( (source,target) )
+                self.edge_realisation_order.append( (source,target) )
 
                 # Incorporate the positions that are occupied by the extra cubes in the path
                 for position, _ in path:
@@ -462,93 +463,3 @@ class ZxGraphWalker:
                     if all([Coordinates.from_tuple(position) not in self.nx_graph.occupied for position in beam]):
                         new_beams.append(beam)
                 self.node_cube_beams[node] = new_beams
-
-    def infer_connecting_pipe_colors(self, previous, step):
-        current_type = previous.get_type()
-        current_reach = previous.get_reach().value.as_tuple()
-        colors = ['-', '-', '-']
-
-        step = step.as_tuple()
-
-        for index in range(3):
-            if step[index] != 0:
-                colors[index] = 'o'
-            else:
-                t = current_type if current_reach[index] != 0 else current_type.flip()
-                colors[index] = t.name.lower()
-
-        return "".join(colors)
-
-    def old_path_format(self, source, target):
-        source_cube = self.nx_graph.get_cube(source)
-        source_kind = self.nx_graph.get_cube_kind(source_cube)
-        source_position = self.nx_graph.get_cube_position(source_cube)
-        old_format = [ (source_position.as_tuple(), source_kind.name.lower()) ]
-
-        previous_kind = source_kind
-        previous_position = source_position
-        for current_position, current_kind in self.nx_graph.get_edge_realisation(source, target):
-            # Infer needed pipe
-            step = (current_position - previous_position).normalized()
-            old_format.append( (previous_position + step, self.infer_connecting_pipe_colors(previous_kind, step)) )
-
-            # Append current cube
-            old_format.append( (current_position.as_tuple(), current_kind.name) )
-
-            previous_kind = current_kind
-            previous_position = current_position
-
-        target_cube = self.nx_graph.get_cube(target)
-        current_kind = self.nx_graph.get_cube_kind(target_cube)
-        current_position = self.nx_graph.get_cube_position(target_cube)
-
-        # Infer needed pipe
-        step = (current_position - previous_position).normalized()
-        old_format.append(( (previous_position + step).as_tuple(), self.infer_connecting_pipe_colors(previous_kind, step)))
-        # Append current cube
-        old_format.append( (current_position.as_tuple(), current_kind.name.lower()) )
-
-        return str(old_format)
-
-    def prepare_report(self, append_cube_report : bool = False):
-        report = ""
-
-        report += f"RESULT SHEET. CIRCUIT NAME: {self.name}\n"
-        report += "\n__________________________\n"
-        report += "ORIGINAL ZX GRAPH\n"
-        for node in self.nx_graph.get_nodes():
-            report += f"Node ID: {node}. Type: {self.nx_graph.get_node_type(node).name}\n"
-        report += "\n"
-        for edge in self.nx_graph.get_edges():
-            source = min(edge)
-            target = max(edge)
-            edge_type = self.nx_graph.get_edge_type(source, target)
-            type_name = "SIMPLE" if edge_type == EdgeType.IDENTITY else "HADAMARD"
-            report += f"Edge ID: ({source}, {target}). Type: {type_name}\n"
-        report += "\n__________________________\n"
-        report += "3D \"EDGE PATHS\" (Blocks needed to connect two original nodes)\n"
-        for source, target in self.nx_graph.edge_realisation_order:
-            edge = (source, target) if source < target else (target, source)
-            report += f"Edge {edge}: {self.old_path_format(source, target)}\n"
-        report += "\n__________________________\n"
-        report += "LATTICE SURGERY (Graph)\n"
-        for node in self.node_placement_order:
-            cube = self.nx_graph.get_cube(node)
-            report += f"Node ID: {node}. Info: ({self.nx_graph.get_cube_position(cube)}, '{self.nx_graph.get_cube_kind(cube).name.lower()}')\n"
-        if append_cube_report:
-            report += "\n__________________________\n"
-            report += "CUBES (BG-Graph)\n"
-            for cube in self.nx_graph.get_cubes():
-                node = self.nx_graph.get_node(cube)
-                label = str(node) if node is not None else '-'
-                report += f"Cube #{cube} [ZX:{label}] : {self.nx_graph.get_cube_kind(cube)}@{self.nx_graph.get_cube_position(cube)}\n"
-
-        return report
-
-    def print_report(self, append_cube_report = False):
-        print(self.prepare_report(append_cube_report = append_cube_report))
-
-    def write_report(self, filename = "ang.txt"):
-        output = open(filename, "w")
-        output.write(self.prepare_report())
-        output.close()

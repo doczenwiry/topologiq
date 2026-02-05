@@ -2,12 +2,13 @@ import pyzx as zx
 
 from topologiq.dzw.ZxGraphWalker import ZxGraphWalker
 from topologiq.dzw.BlockGraphComponents import CubeKind, NodeType
+from topologiq.dzw.visualisation.ReportFormatter import ReportFormatter
 
 if __name__ == '__main__':
     circuit_name = "cnot"
     c = zx.Circuit(2)
     c.add_gate("CNOT", 1, 0)
-    # c.add_gate("CNOT", 1, 0)
+    # c.add_gate("CNOT", 0, 1)
     # c.add_gate("CNOT", 0, 1)
     zx_input = c.to_graph()
 
@@ -45,5 +46,6 @@ if __name__ == '__main__':
 
     walker.construct( root_choice = (root,kind) )
 
-    walker.print_report(append_cube_report = True)
-    walker.write_report("../../output/txt/cnot-ang-bis.txt")
+    formatter = ReportFormatter(walker)
+    formatter.print_report(append_cube_report = True)
+    formatter.write_report("../../output/txt/cnot-ang-bis.txt")
