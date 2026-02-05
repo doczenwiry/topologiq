@@ -2,7 +2,6 @@ import pyzx as zx
 
 from topologiq.dzw.ZxGraphWalker import ZxGraphWalker
 from topologiq.dzw.BlockGraphComponents import CubeKind, NodeType
-from topologiq.dzw.BlockGraphSpace import BlockGraphSpace
 
 if __name__ == '__main__':
     circuit_name = "cnot"
@@ -43,8 +42,6 @@ if __name__ == '__main__':
         "weights": (-1, -1),
         "length_of_beams": 99,
     }
-
-    walker.node_cube_beams[root] = walker.compute_beams(kind, BlockGraphSpace.ORIGIN)
 
     walker.construct( root_choice = (root,kind) )
 

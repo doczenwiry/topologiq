@@ -69,6 +69,7 @@ class ZxGraphWalker:
         else:
             (root, kind) = root_choice
         self.nx_graph.realise_node(root, kind, BlockGraphSpace.ORIGIN)
+        self.node_cube_beams[root] = self.compute_beams(kind, BlockGraphSpace.ORIGIN)
 
         queue : deque[int] = deque([root])
 
@@ -78,122 +79,68 @@ class ZxGraphWalker:
             self.node_placement_order.append(source)
 
             for target in self.nx_graph.get_neighbours(source):
+                if self.nx_graph.is_node_realised(target) or self.nx_graph.is_edge_realised(source, target):
+                    continue
+
+                path = None
+
                 if not self.nx_graph.is_node_realised(target):
                     # First-pass edge
                     # Goal: find a path to some position where a suitable cube can be placed within some maximal MD
                     queue.append(target)
 
-                    step = 3
-                    outcome = None
-                    while step <= 9 and outcome is None:
-                        outcome = self.place_nxt_block(source, target, init_step = step)
-                        step += 3
+                    (target_kind, target_position, path) = self.find_target_realisation(source, target)
 
-                    if outcome is None:
-                        # TODO: reporting(..) and animation(..)
-                        raise Exception(f"Edge realisation failure [{source}-{target}]")
+                    if target_kind is None or target_position is None:
+                        raise Exception(f"Target realisation failure [{target}]")
 
-                    (target_kind, target_position, path) = outcome
-
-                    # Place the target cube
+                    # Realise the target node as a cube with kind and position provided by the pathfinder
                     self.nx_graph.realise_node(target, target_kind, target_position)
-                    # Realise the edge using the path
-                    self.nx_graph.realise_edge(source, target, path)
-
-                    # Compute the beams for the target cube.
-                    self.node_cube_beams[target] = self.compute_beams(target_kind, target_position)
-
-                    # Store the edge realisation path
-                    self.nx_graph.edge_realisation_order.append( (source,target) )
-
-                    # Incorporate the now occupied positions
-                    # coordinates_in_path = get_taken_coords(winner_path.all_nodes_in_path)
-                    for position, _ in path:
-                        self.nx_graph.occupied.add(position)
 
                     self.number_1st_pass_edges += 1
 
                 elif not self.nx_graph.is_edge_realised(source, target):
                     # Second-pass edge
                     # Goal: find a path towards the position of a cube representing the target node
-                    source_cube = self.nx_graph.get_cube(source)
-                    target_cube = self.nx_graph.get_cube(target)
-                    source_position = self.nx_graph.get_cube_position(source_cube)
-                    target_position = self.nx_graph.get_cube_position(target_cube)
 
-                    source_kind = self.nx_graph.get_cube_kind(source_cube)
-                    target_type = self.nx_graph.get_node_type(target)
-                    target_kind = self.nx_graph.get_cube_kind(target_cube)
+                    path = self.connect_cubes(source, target)
 
-                    edge_type = self.nx_graph.get_edge_type(source, target)
-                    #
-                    # # TODO: deal with the critical beams (cfr. graph_manager.py Lines 301-313)
-                    # critical_beams: dict[int, tuple[int, NodeBeams]] = {}
-                    # for node, beams in self.node_cube_beams.items():
-                    #     unrealised_edges = self.nx_graph.get_edges_unrealised(node)
-                    #     if unrealised_edges > 0:
-                    #         critical_beams[node] = (unrealised_edges, beams)
-                    #
-                    # # Check if edge is Hadamard
-                    # clean_paths, pathfinder_vis_data = run_pathfinder(
-                    #     src_block_info = (source_position.as_tuple(), source_kind.name.lower()),
-                    #     tgt_zx_type = target_type.name,
-                    #     init_step = 3,
-                    #     taken = [ position.as_tuple() for position in self.nx_graph.occupied ],
-                    #     tgt_block_info = (target_position.as_tuple(), target_kind.name.lower()),
-                    #     hdm = (edge_type == EdgeType.HADAMARD),
-                    #     min_succ_rate = 60,
-                    #     critical_beams = critical_beams,
-                    #     # log_stats_id = log_stats_id,
-                    #     src_tgt_ids = (source, target)
-                    # )
-                    #
-                    # if clean_paths:
-                    #     coords_in_path = [
-                    #         p[0] for p in clean_paths[0]
-                    #     ]  # Take the first path
-                    #     edge = (source, target) if source < target else (target, source)
-                    #     # update edge_realizations with clean_paths[0]
-                    #     self.nx_graph.edge_realisations[edge] = {
-                    #         "src_tgt_ids": edge,
-                    #         "path_coordinates": coords_in_path,
-                    #         "path_nodes": clean_paths[0],
-                    #         "edge_type": edge_type,
-                    #     }
-                    #     # TODO: a path can just be a list of (coordinates, kind)
-                    #
-                    #     # TODO: reporting
-                    #     # Update source info
-                    #     nx_g.nodes[src_id]["completed"] += 1
-                    #     nx_g.nodes[tgt_id]["completed"] += 1
-                    #
-                    #     # Update target node information
-                    #     nx_g.nodes[tgt_id]["beams"] = (
-                    #         []
-                    #         if nx_g.nodes[tgt_id]["completed"]
-                    #            >= get_node_degree(nx_g, tgt_id)
-                    #         else nx_g.nodes[tgt_id]["beams"]
-                    #     )
-                    #
-                    #     # Add path to position to list of taken coordinates
-                    #     all_coords_in_path = get_taken_coords(clean_paths[0])
-                    #     taken.extend(all_coords_in_path)
-                    # if clean_paths:
-                    #   number_2nd_pass_edges += 1
-                    #   n.b. only consider clean_paths[0]
-                    #   associate clean_paths[0] to edge in edge_realizations
-                    #   update AugmentedNxGraph with new cubes and pipes from clean_paths[0]
-                    #   update Beams ? Should be done as part
-                    # else:
-                    #   create_animation(..) and report failure
-                    #   raise ValueError(f"ERROR. Path between fixed cubes {src_id} -> {tgt_id}")
+                    self.number_2nd_pass_edges += 1
 
-                    raise NotImplemented("Second-pass edge processing.")
+                if path is None:
+                    # TODO: reporting(..) and animation(..)
+                    raise Exception(f"Edge realisation failure [{source}-{target}]")
+
+                target_cube = self.nx_graph.get_cube(target)
+                target_kind = self.nx_graph.get_cube_kind(target_cube)
+                target_position = self.nx_graph.get_cube_position(target_cube)
+
+                # Realise the edge using the path
+                self.nx_graph.realise_edge(source, target, path)
+
+                # Compute the beams for the target cube.
+                self.node_cube_beams[target] = self.compute_beams(target_kind, target_position)
+
+                # Store the path that realises the current edge
+                self.nx_graph.edge_realisation_order.append( (source,target) )
+
+                # Incorporate the positions that are occupied by the extra cubes in the path
+                for position, _ in path:
+                    self.nx_graph.occupied.add(position)
 
                 self.prune_beams()
 
         # Prepare final BlockGraph and return it ?
         return True
+
+    def find_target_realisation(self, source, target):
+        step = 3
+        outcome = None
+        while step <= 9 and outcome is None:
+            outcome = self.place_nxt_block(source, target, init_step=step)
+            step += 3
+
+        return outcome
 
     def is_path_viable(self, source, target, clean_path) -> tuple[bool, int, int]:
         target_type = self.nx_graph.get_node_type(target)
@@ -202,11 +149,7 @@ class ZxGraphWalker:
         target_position, target_kind = clean_path[-1]
         print(f"> Clean path [{target_kind}@{target_position}]: {clean_path}")
         coordinates_in_path = get_taken_coords(clean_path)
-        target_beams = self.compute_beams(
-            CubeKind.from_string(target_kind),
-            Coordinates.from_tuple(target_position),
-            coordinates_in_path
-        )
+        target_beams = self.compute_beams(CubeKind.from_string(target_kind), Coordinates.from_tuple(target_position), coordinates_in_path)
         target_unobstructed_exits = len(target_beams)
 
         if target_type == NodeType.O:
@@ -336,16 +279,60 @@ class ZxGraphWalker:
         target_position = Coordinates.from_tuple(winner_path.tgt_coords)
 
         # Conversion needed for the path produced by the pathfinder.
+        path = self.convert_path(winner_path)
+
+        if not self.nx_graph.is_path_valid(source, target_kind, target_position, edge_type, path):
+            return None
+
+        return target_kind, target_position, path
+
+    def connect_cubes(self, source, target):
+        source_cube = self.nx_graph.get_cube(source)
+        target_cube = self.nx_graph.get_cube(target)
+        source_position = self.nx_graph.get_cube_position(source_cube)
+        target_position = self.nx_graph.get_cube_position(target_cube)
+
+        source_kind = self.nx_graph.get_cube_kind(source_cube)
+        target_type = self.nx_graph.get_node_type(target)
+        target_kind = self.nx_graph.get_cube_kind(target_cube)
+
+        edge_type = self.nx_graph.get_edge_type(source, target)
+
+        # # TODO: deal with the critical beams (cfr. graph_manager.py Lines 301-313)
+        critical_beams: dict[int, tuple[int, NodeBeams]] = {}
+        for node, beams in self.node_cube_beams.items():
+            unrealised_edges = self.nx_graph.get_edges_unrealised(node)
+            if unrealised_edges > 0:
+                critical_beams[node] = (unrealised_edges, beams)
+
+        # # Check if edge is Hadamard
+        clean_paths, pathfinder_vis_data = run_pathfinder(
+            src_block_info=(source_position.as_tuple(), source_kind.name.lower()),
+            tgt_zx_type=target_type.name,
+            init_step=3,
+            taken=[position.as_tuple() for position in self.nx_graph.occupied],
+            tgt_block_info=(target_position.as_tuple(), target_kind.name.lower()),
+            hdm=(edge_type == EdgeType.HADAMARD),
+            min_succ_rate=60,
+            critical_beams=critical_beams,
+            # log_stats_id = log_stats_id,
+            src_tgt_ids=(source, target)
+        )
+
+        if not clean_paths:
+            return None
+
+        return self.convert_path(clean_paths[0])
+
+    def convert_path(self, winner_path):
+        # Conversion needed for the path produced by the pathfinder.
         path = []
         for coordinates, kind in winner_path.all_nodes_in_path[1:-1]:
             position = Coordinates.from_tuple(coordinates)
             if BlockGraphSpace.ORIGIN.get_manhattan_distance(position) % 3 == 0:
                 path.append((position, CubeKind.from_string(kind)))
 
-        if not self.nx_graph.is_path_valid(source, target_kind, target_position, edge_type, path):
-            return None
-
-        return target_kind, target_position, path
+        return path
 
     @staticmethod
     def kind_to_zx_type(kind: str) -> str:
@@ -422,14 +409,16 @@ class ZxGraphWalker:
 
         return clean_paths, pathfinder_vis_data
 
-    def compute_beams(self, cube_kind: CubeKind, cube_position: Coordinates,
-                      extra_coordinates : list[tuple[int,int,int]] = None, beam_length: int = 99) -> NodeBeams:
+    def compute_beams(self, cube_kind: CubeKind, cube_position: Coordinates, extra_coordinates : list[tuple[int,int,int]] = None, beam_length: int = 99) -> NodeBeams:
         if extra_coordinates is None:
             extra_coordinates = []
 
         beams: NodeBeams = []
 
+        # cube = self.nx_graph.get_cube(node)
+        # cube_kind = self.nx_graph.get_cube_kind(cube)
         cube_reach = cube_kind.get_reach()
+        # cube_position = self.nx_graph.get_cube_position(cube)
 
         for step in cube_reach.get_step_constellation():
 
@@ -538,8 +527,6 @@ class ZxGraphWalker:
             report += f"Edge ID: ({source}, {target}). Type: {type_name}\n"
         report += "\n__________________________\n"
         report += "3D \"EDGE PATHS\" (Blocks needed to connect two original nodes)\n"
-        # for edge, data in self.nx_graph.edge_realisations.items():
-        #     report += f"Edge {edge}: {data['path_nodes']}\n"
         for source, target in self.nx_graph.edge_realisation_order:
             edge = (source, target) if source < target else (target, source)
             report += f"Edge {edge}: {self.old_path_format(source, target)}\n"
