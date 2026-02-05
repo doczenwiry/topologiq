@@ -39,7 +39,7 @@ class TikzWriter:
                     cube_plane = TikzWriter.AXES[index]
 
             cube_position = self.walker.nx_graph.get_cube_position(cube)
-            # TODO: scaling needed due to current implementation of the path-finder
+            # TODO: scaling down needed due to current implementation of the path-finder
             cube_position = cube_position.div(3)
 
             cube_label = self.walker.nx_graph.get_node(cube)
@@ -54,7 +54,7 @@ class TikzWriter:
             source_position = self.walker.nx_graph.get_cube_position(source_cube)
             target_position = self.walker.nx_graph.get_cube_position(target_cube)
 
-            line = f"\t\t\\Edge[axis={TikzWriter.find_axis(target_position - source_position)}]"
+            line = f"\t\t\\Edge[axis={TikzWriter.find_axis(target_position - source_position)}, type={self.walker.nx_graph.get_pipe_type(source_cube, target_cube).name.lower()}]"
             line += "{N" + str(source_cube) + "}{N" + str(target_cube) + "}\n"
 
             output.write(line)

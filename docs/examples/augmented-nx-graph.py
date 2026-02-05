@@ -5,6 +5,9 @@ from topologiq.dzw.BlockGraphComponents import CubeKind, NodeType
 from topologiq.dzw.visualisation.ReportFormatter import ReportFormatter
 from topologiq.dzw.visualisation.TikzWriter import TikzWriter
 
+import logging
+logging.basicConfig(level=logging.INFO)
+
 if __name__ == '__main__':
     circuit_name = "cnots"
     c = zx.Circuit(2)

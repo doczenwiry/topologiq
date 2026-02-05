@@ -5,6 +5,9 @@ from topologiq.dzw.BlockGraphSpace import Coordinates, Reach, Step
 from topologiq.dzw.ZxGraphComponents import NodeType, EdgeType
 from topologiq.dzw.BlockGraphComponents import CubeKind
 
+from logging import getLogger
+console = getLogger(__name__)
+
 # TODO: figure out what the other VertexType and EdgeType represent
 # TODO: how do we deal with the last four VertexType (i.e. H_BOX, W_INPUT, W_OUTPUT, Z_BOX) ?
 # TODO: do we need the last EdgeType (i.e. W_IO) ?
@@ -118,6 +121,9 @@ class AugmentedNxGraph:
     def get_cube_kind(self, cube_id: int) -> CubeKind:
         return self.__bg_graph.nodes[cube_id][AugmentedNxGraph.KEY_BG_CUBE_KIND]
 
+    def get_pipe_type(self, source_cube: int, target_cube: int):
+        return self.__bg_graph.get_edge_data(source_cube, target_cube).get(AugmentedNxGraph.KEY_BG_PIPE_TYPE)
+
     def get_edge_type(self, source: int, target: int) -> EdgeType:
         return self.__zx_graph.get_edge_data(source, target).get(AugmentedNxGraph.KEY_ZX_EDGE_TYPE)
 
@@ -153,7 +159,7 @@ class AugmentedNxGraph:
             raise Exception(f"Node #{node_id} not found in the ZX-graph.")
 
         cube_id = self.get_next_cube_id()
-        print(f"Realising node #{node_id} as cube #{cube_id}")
+        console.info(f"Realising node #{node_id} [{self.get_node_type(node_id)}] as cube #{cube_id} [{kind}@{position}]")
 
         self.__bg_graph.add_node(cube_id)
 
@@ -231,10 +237,13 @@ class AugmentedNxGraph:
         if not self.is_path_valid(source, self.get_cube_kind(target_cube), self.get_cube_position(target_cube), self.get_edge_type(source, target), path):
             raise Exception(f"Proposed path to realise edge {source}-{target} is invalid.")
 
-        print(f"Realising edge {source}-{target} by path : ", end = "")
-        for position, kind in path:
-            print(f"{kind}@{position}", end = " ")
-        print()
+        if not path:
+            sequence = "[]"
+        else:
+            sequence = ""
+            for position, kind in path:
+                sequence += f"{kind}@{position}"
+        console.info(f"Realising edge {source}-{target} [type={self.get_edge_type(source,target)}] with extra cubes : {sequence}")
 
         # Representation of the path that will go into edge_realisations
         extras = []
@@ -245,7 +254,7 @@ class AugmentedNxGraph:
         for (current_position, current_kind) in path:
             current_cube = self.get_next_cube_id() #len(self.__nx_graph.nodes)
             self.__bg_graph.add_node(current_cube)
-            print(f"> Adding cube #{current_cube}.")
+            console.debug(f"> Adding cube #{current_cube} [{current_kind}@{current_position}].")
             self.__bg_graph.nodes[current_cube][AugmentedNxGraph.KEY_BG_ZX_NODE] = None
             # Place the current extra node and connect it to the previous node.
             self.place_cube(current_cube, current_position, current_kind)

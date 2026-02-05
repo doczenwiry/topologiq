@@ -3,7 +3,9 @@ from collections import deque
 
 import pyzx as zx
 import networkx as nx
-from IPython.utils.openpy import source_to_unicode
+
+from logging import getLogger
+console = getLogger(__name__)
 
 from topologiq.dzw.AugmentedNxGraph import AugmentedNxGraph
 from topologiq.dzw.BlockGraphSpace import BlockGraphSpace, Coordinates, Step, Reach
@@ -83,12 +85,9 @@ class ZxGraphWalker:
             self.node_realisation_order.append(source)
 
             for target in self.nx_graph.get_neighbours(source):
-                print(f"Processing {source}-{target} : ", end = "")
+                console.info(f"Processing {source}-{target} : [target_visited={target in visited}, edge_realised={self.nx_graph.is_edge_realised(source, target)}]")
                 if target in visited or self.nx_graph.is_edge_realised(source, target):
-                    print(f"IGNORING [target_visited={target in visited}, edge_realised={self.nx_graph.is_edge_realised(source, target)}]")
                     continue
-                else:
-                    print(f"CONSIDERING")
 
                 path = None
 
@@ -155,7 +154,7 @@ class ZxGraphWalker:
         target_degree = self.nx_graph.get_degree(target)
 
         target_position, target_kind = clean_path[-1]
-        print(f"> Clean path [{target_kind}@{target_position}]: {clean_path}")
+        console.debug(f"> Clean path [{target_kind}@{target_position}]: {clean_path}")
         coordinates_in_path = get_taken_coords(clean_path)
         target_beams = self.compute_beams(CubeKind.from_string(target_kind), Coordinates.from_tuple(target_position), coordinates_in_path)
         target_unobstructed_exits = len(target_beams)
@@ -183,8 +182,7 @@ class ZxGraphWalker:
             edges_realised = self.nx_graph.get_edges_realised(node)
             remaining_edges = node_degree - edges_realised
             if (len(node_beams) - broken + adjust_for_source_node) < remaining_edges:
-                print(
-                    f"> Broken for {node} [L:{len(node_beams)},B:{broken},A:{adjust_for_source_node},R:{remaining_edges}]")
+                console.debug(f"> Broken for {node} [L:{len(node_beams)},B:{broken},A:{adjust_for_source_node},R:{remaining_edges}]")
                 critical_broken = True
 
         critical_clash = False
@@ -202,7 +200,7 @@ class ZxGraphWalker:
             edges_realised = self.nx_graph.get_edges_realised(node)
             remaining_edges = node_degree - edges_realised
             if len(node_beams) - clashes < remaining_edges:
-                print(f"> Clash with {node}")
+                console.debug(f"> Clash with {node}")
                 critical_clash = True
 
         viable = not critical_broken and not critical_clash
@@ -280,7 +278,7 @@ class ZxGraphWalker:
             winner_path = max(viable_paths, key = lambda path: path.weighed_value(**kwargs))
 
         if winner_path is None:
-            print("No winner")
+            console.debug("No winner")
             return None
 
         target_kind = CubeKind.from_string(winner_path.tgt_kind)
@@ -341,16 +339,6 @@ class ZxGraphWalker:
                 path.append((position, CubeKind.from_string(kind)))
 
         return path
-
-    @staticmethod
-    def kind_to_zx_type(kind: str) -> str:
-        if kind == "ooo":
-            zx_t = "BOUNDARY"
-        elif "o" in kind:
-            zx_t = "HADAMARD" if "h" in kind else "SIMPLE"
-        else:
-            zx_t = min(set(kind), key=lambda c: kind.count(c)).capitalize()
-        return zx_t
 
     def run_pathfinder(self,
             source, target,
