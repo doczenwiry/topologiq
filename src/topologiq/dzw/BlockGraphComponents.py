@@ -111,6 +111,7 @@ class CubeKind(Enum):
         else: # self == CubeKind.OOO
             return NodeType.O
 
+    # TODO: a CubeKind.YYY has Reach.XYZ and single port ?
     def get_reach(self) -> Reach:
         if self == CubeKind.XZZ or self == CubeKind.ZXX:
             return Reach.YZ

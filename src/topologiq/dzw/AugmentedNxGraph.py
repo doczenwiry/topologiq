@@ -34,8 +34,6 @@ class AugmentedNxGraph:
         # Keeps track of the coordinates in 3D that are occupied by some cube
         # TODO: Replace with efficient data-structure for crowded space (Binary Space Partitioning ?)
         self.occupied: set[Coordinates] = set()
-        # Keeps track of the paths (i.e. one or more pipes) in the BlockGraph that realise the edges of the ZX-graph
-        self.edge_realisations: dict = {}
         # Keeps track of the order in which edges from the ZX-graph were placed for visualisation purposes
         self.edge_realisation_order: list[tuple[int,int]] = []
 
@@ -86,6 +84,9 @@ class AugmentedNxGraph:
     def get_edges_realised(self, node_id: int):
         return self.__zx_graph.nodes[node_id].get(AugmentedNxGraph.KEY_ZX_EDGES_REALISED)
 
+    def get_edges_unrealised(self, node_id: int):
+        return self.get_degree(node_id) - self.get_edges_realised(node_id)
+
     def get_neighbours(self, node_id: int):
         return self.__zx_graph.neighbors(node_id)
 
@@ -115,6 +116,9 @@ class AugmentedNxGraph:
 
     def get_edge_type(self, source: int, target: int) -> EdgeType:
         return self.__zx_graph.get_edge_data(source, target).get(AugmentedNxGraph.KEY_ZX_EDGE_TYPE)
+
+    def get_edge_realisation(self, source: int, target: int):
+        return self.__zx_graph.get_edge_data(source, target).get(AugmentedNxGraph.KEY_ZX_BG_PATH)
 
     # TODO: move consistency checking to Cube classes (recommendation from J)
     def get_candidate_adjacent(self, source: int, pipe_type: EdgeType) -> list[tuple[Step, CubeKind]]:

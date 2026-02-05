@@ -1,8 +1,9 @@
+import math
 from enum import Enum
 
 # Essentially vectors with their basic operations
 class Coordinates:
-    def __init__(self, x, y, z):
+    def __init__(self, x: int, y: int, z: int):
         self.x = x
         self.y = y
         self.z = z
@@ -26,6 +27,10 @@ class Coordinates:
 
     def mul(self, scalar: int):
         return Coordinates(self.x * scalar, self.y * scalar, self.z * scalar)
+
+    def normalized(self):
+        norm = math.sqrt(self.dot(self))
+        return Coordinates(int(self.x / norm), int(self.y / norm), int(self.z / norm))
 
     def dot(self, other) -> int:
         return self.x * other.x + self.y * other.y + self.z * other.z
