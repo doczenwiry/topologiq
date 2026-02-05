@@ -79,6 +79,12 @@ class AugmentedNxGraph:
     def number_of_cubes(self) -> int:
         return self.__bg_graph.number_of_nodes()
 
+    def get_pipes(self):
+        return self.__bg_graph.edges()
+
+    def number_of_pipes(self) -> int:
+        return self.__bg_graph.number_of_edges()
+
     def get_edges_realised(self, node_id: int):
         return self.__zx_graph.nodes[node_id].get(AugmentedNxGraph.KEY_ZX_EDGES_REALISED)
 

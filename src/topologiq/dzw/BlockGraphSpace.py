@@ -28,9 +28,11 @@ class Coordinates:
     def mul(self, scalar: int):
         return Coordinates(self.x * scalar, self.y * scalar, self.z * scalar)
 
+    def div(self, scalar: int):
+        return Coordinates(int(self.x / scalar), int(self.y / scalar), int(self.z / scalar))
+
     def normalized(self):
-        norm = math.sqrt(self.dot(self))
-        return Coordinates(int(self.x / norm), int(self.y / norm), int(self.z / norm))
+        return self.div(int(math.sqrt(self.dot(self))))
 
     def dot(self, other) -> int:
         return self.x * other.x + self.y * other.y + self.z * other.z

@@ -32,7 +32,9 @@ class ReportFormatter:
 
         previous_kind = source_kind
         previous_position = source_position
-        for current_position, current_kind in self.walker.nx_graph.get_edge_realisation(source, target):
+        for current_cube in self.walker.nx_graph.get_edge_realisation(source, target):
+            current_kind = self.walker.nx_graph.get_cube_kind(current_cube)
+            current_position = self.walker.nx_graph.get_cube_position(current_cube)
             # Infer needed pipe
             step = (current_position - previous_position).normalized()
             old_format.append((previous_position + step, ReportFormatter.infer_connecting_pipe_colors(previous_kind, step)))
@@ -96,7 +98,10 @@ class ReportFormatter:
         print(self.prepare_report(append_cube_report = append_cube_report))
 
 
-    def write_report(self, filename="ang.txt"):
+    def write_report(self, filename = None):
+        if filename is None:
+            filename = f"../../output/txt/old-format-{self.walker.name}.txt"
+
         output = open(filename, "w")
         output.write(self.prepare_report())
         output.close()

@@ -73,15 +73,22 @@ class ZxGraphWalker:
         self.node_cube_beams[root] = self.compute_beams(kind, BlockGraphSpace.ORIGIN)
 
         queue : deque[int] = deque([root])
+        visited: set[int] = set()
 
         # Proceed with the main loop of the BFS
         while queue:
             source: int = queue.popleft()
+            visited.add(source)
+
             self.node_realisation_order.append(source)
 
             for target in self.nx_graph.get_neighbours(source):
-                if self.nx_graph.is_node_realised(target) or self.nx_graph.is_edge_realised(source, target):
+                print(f"Processing {source}-{target} : ", end = "")
+                if target in visited or self.nx_graph.is_edge_realised(source, target):
+                    print(f"IGNORING [target_visited={target in visited}, edge_realised={self.nx_graph.is_edge_realised(source, target)}]")
                     continue
+                else:
+                    print(f"CONSIDERING")
 
                 path = None
 
@@ -280,7 +287,7 @@ class ZxGraphWalker:
         target_position = Coordinates.from_tuple(winner_path.tgt_coords)
 
         # Conversion needed for the path produced by the pathfinder.
-        path = self.convert_path(winner_path)
+        path = self.convert_path(winner_path.all_nodes_in_path)
 
         if not self.nx_graph.is_path_valid(source, target_kind, target_position, edge_type, path):
             return None
@@ -328,7 +335,7 @@ class ZxGraphWalker:
     def convert_path(self, winner_path):
         # Conversion needed for the path produced by the pathfinder.
         path = []
-        for coordinates, kind in winner_path.all_nodes_in_path[1:-1]:
+        for coordinates, kind in winner_path[1:-1]:
             position = Coordinates.from_tuple(coordinates)
             if BlockGraphSpace.ORIGIN.get_manhattan_distance(position) % 3 == 0:
                 path.append((position, CubeKind.from_string(kind)))
