@@ -28,7 +28,7 @@ class TikzWriter:
 
         output.write("\\begin{document}\n")
 
-        output.write("\t\\ZXGraph{\n")
+        output.write("\t\\ZxGraph{\n")
 
         for cube in self.walker.nx_graph.get_cubes():
             cube_type = self.walker.nx_graph.get_cube_kind(cube).get_type()
@@ -41,7 +41,12 @@ class TikzWriter:
             cube_position = self.walker.nx_graph.get_cube_position(cube)
             # TODO: scaling needed due to current implementation of the path-finder
             cube_position = cube_position.div(3)
-            line = f"\t\t\\Node[type={cube_type}, plane={cube_plane}, identifier=N{cube}]"
+
+            cube_label = self.walker.nx_graph.get_node(cube)
+            if cube_label is None:
+                line = f"\t\t\\Node[type={cube_type}, plane={cube_plane}, identifier=N{cube}]"
+            else:
+                line = f"\t\t\\Node[type={cube_type}, plane={cube_plane}, label={cube_label}, identifier=N{cube}]"
             line += "{" + str(cube_position) + "}\n"
             output.write(line)
 
@@ -54,15 +59,8 @@ class TikzWriter:
 
             output.write(line)
 
-            # \Edge[axis=Z]{S1}{E1}
-            # \Edge[axis=Z]{E1}{E2}
-            # \Edge[axis=X]{E2}{E3}
-            # \Edge[axis=Y]{E3}{E4}
-            # \Edge[axis=Z]{E4}{E5}
-            # \Edge[axis=X]{E5}{E6}
-            # \Edge[axis=Z]{E6}{S2}
-
         output.write("\t}\n")
+
         output.write("\\end{document}\n")
 
         output.close()

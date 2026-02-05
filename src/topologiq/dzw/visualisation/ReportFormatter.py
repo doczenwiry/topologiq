@@ -37,7 +37,7 @@ class ReportFormatter:
             current_position = self.walker.nx_graph.get_cube_position(current_cube)
             # Infer needed pipe
             step = (current_position - previous_position).normalized()
-            old_format.append((previous_position + step, ReportFormatter.infer_connecting_pipe_colors(previous_kind, step)))
+            old_format.append(((previous_position + step).as_tuple(), ReportFormatter.infer_connecting_pipe_colors(previous_kind, step)))
 
             # Append current cube
             old_format.append((current_position.as_tuple(), current_kind.name))
