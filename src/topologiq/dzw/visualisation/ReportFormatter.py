@@ -1,4 +1,4 @@
-from topologiq.dzw.ZxGraphComponents import EdgeType
+from topologiq.dzw.utils.ZxGraphComponents import EdgeType, NodeType
 from topologiq.dzw.ZxGraphWalker import ZxGraphWalker
 
 
@@ -7,9 +7,18 @@ class ReportFormatter:
         self.walker = walker
 
     @staticmethod
-    def infer_connecting_pipe_colors(previous, step):
-        current_type = previous.get_type()
-        current_reach = previous.get_reach().value.as_tuple()
+    def __flip(node_type: NodeType) -> NodeType:
+        if node_type == NodeType.X:
+            return NodeType.Z
+        elif node_type == NodeType.Z:
+            return NodeType.X
+        else:
+            raise ValueError(f"Flipping color not supported for node type: {node_type}")
+
+    @staticmethod
+    def infer_connecting_pipe_colors(previous_kind, step):
+        current_type = previous_kind.get_type()
+        current_reach = previous_kind.get_reach().value.as_tuple()
         colors = ['-', '-', '-']
 
         step = step.as_tuple()
@@ -18,7 +27,7 @@ class ReportFormatter:
             if step[index] != 0:
                 colors[index] = 'o'
             else:
-                t = current_type if current_reach[index] != 0 else current_type.flip()
+                t = current_type if current_reach[index] != 0 else ReportFormatter.__flip(current_type)
                 colors[index] = t.name.lower()
 
         return "".join(colors)

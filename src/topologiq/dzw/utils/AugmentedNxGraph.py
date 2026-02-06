@@ -1,9 +1,9 @@
 import pyzx as zx
 import networkx as nx
 
-from topologiq.dzw.BlockGraphSpace import Coordinates, Reach, Step
-from topologiq.dzw.ZxGraphComponents import NodeType, EdgeType
-from topologiq.dzw.BlockGraphComponents import CubeKind
+from topologiq.dzw.utils.Spacetime import Coordinates, Reach, Step
+from topologiq.dzw.utils.ZxGraphComponents import NodeType, EdgeType
+from topologiq.dzw.utils.CubeKind import CubeKind
 
 from logging import getLogger
 

@@ -1,8 +1,8 @@
 from unittest import TestCase
 
-from topologiq.dzw.BlockGraphComponents import CubeKind
-from topologiq.dzw.BlockGraphSpace import Step, BlockGraphSpace, Coordinates
-from topologiq.dzw.ZxGraphComponents import EdgeType
+from topologiq.dzw.utils.CubeKind import CubeKind
+from topologiq.dzw.utils.Spacetime import Step, Spacetime, Coordinates
+from topologiq.dzw.utils.ZxGraphComponents import EdgeType
 from topologiq.dzw.helpers.SpacetimeHelper import SpacetimeHelper
 
 class TestSpacetimeHelper(TestCase):
@@ -28,7 +28,7 @@ class TestSpacetimeHelper(TestCase):
 
     def test_get_constellation(self):
         produced = sorted(SpacetimeHelper.get_candidate_constellation(
-            origin_kind = CubeKind.XZZ, origin_position = BlockGraphSpace.ORIGIN, pipe_type = EdgeType.IDENTITY)
+            origin_kind = CubeKind.XZZ, origin_position = Spacetime.ORIGIN, pipe_type = EdgeType.IDENTITY)
         )
         specification = {
             CubeKind.XZZ: [Step.YM, Step.YP, Step.ZM, Step.ZP],
@@ -52,5 +52,5 @@ class TestSpacetimeHelper(TestCase):
         self.assertEqual(set1, set2)
 
     def test_bgc2(self):
-        set1 = { (CubeKind.XZZ, BlockGraphSpace.ORIGIN) }
-        self.assertTrue((CubeKind.XZZ, BlockGraphSpace.ORIGIN) in set1)
+        set1 = {(CubeKind.XZZ, Spacetime.ORIGIN)}
+        self.assertTrue((CubeKind.XZZ, Spacetime.ORIGIN) in set1)

@@ -7,10 +7,10 @@ import networkx as nx
 from logging import getLogger
 console = getLogger(__name__)
 
-from topologiq.dzw.AugmentedNxGraph import AugmentedNxGraph
-from topologiq.dzw.BlockGraphSpace import BlockGraphSpace, Coordinates
-from topologiq.dzw.BlockGraphComponents import CubeKind
-from topologiq.dzw.ZxGraphComponents import EdgeType, NodeType
+from topologiq.dzw.utils.AugmentedNxGraph import AugmentedNxGraph
+from topologiq.dzw.utils.Spacetime import Spacetime, Coordinates
+from topologiq.dzw.utils.CubeKind import CubeKind
+from topologiq.dzw.utils.ZxGraphComponents import EdgeType, NodeType
 
 from topologiq.dzw.SpacetimePathFinder import SpacetimePathFinder
 
@@ -74,8 +74,8 @@ class ZxGraphWalker:
             kind = random.choice(CubeKind.suitable_kinds(self.nx_graph.get_node_type(root)))
         else:
             (root, kind) = root_choice
-        self.nx_graph.realise_node(root, kind, BlockGraphSpace.ORIGIN)
-        self.node_cube_beams[root] = self.compute_beams(kind, BlockGraphSpace.ORIGIN)
+        self.nx_graph.realise_node(root, kind, Spacetime.ORIGIN)
+        self.node_cube_beams[root] = self.compute_beams(kind, Spacetime.ORIGIN)
 
         queue : deque[int] = deque([root])
         visited: set[int] = set()
@@ -333,7 +333,7 @@ class ZxGraphWalker:
         path = []
         for coordinates, kind in winner_path[1:-1]:
             position = Coordinates.from_tuple(coordinates)
-            if BlockGraphSpace.ORIGIN.get_manhattan_distance(position) % 3 == 0:
+            if Spacetime.ORIGIN.get_manhattan_distance(position) % 3 == 0:
                 path.append((position, CubeKind.from_string(kind)))
 
         return path

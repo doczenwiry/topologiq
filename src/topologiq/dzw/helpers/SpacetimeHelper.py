@@ -1,6 +1,6 @@
-from topologiq.dzw.BlockGraphComponents import CubeKind
-from topologiq.dzw.BlockGraphSpace import Step, Coordinates, BlockGraphSpace
-from topologiq.dzw.ZxGraphComponents import NodeType, EdgeType
+from topologiq.dzw.utils.CubeKind import CubeKind
+from topologiq.dzw.utils.Spacetime import Coordinates, Spacetime
+from topologiq.dzw.utils.ZxGraphComponents import NodeType, EdgeType
 
 class SpacetimeHelper:
     @staticmethod
@@ -22,9 +22,18 @@ class SpacetimeHelper:
         return EdgeType.IDENTITY if same_type == same_reach else EdgeType.HADAMARD
 
     @staticmethod
+    def __flip(node_type: NodeType) -> NodeType:
+        if node_type == NodeType.X:
+            return NodeType.Z
+        elif node_type == NodeType.Z:
+            return NodeType.X
+        else:
+            raise ValueError(f"Flipping color not supported for node type: {node_type}")
+
+    @staticmethod
     def get_candidate_constellation(
         origin_kind: CubeKind,
-        origin_position: Coordinates = BlockGraphSpace.ORIGIN,
+        origin_position: Coordinates = Spacetime.ORIGIN,
         pipe_type: EdgeType = EdgeType.IDENTITY
     ) -> list[tuple[CubeKind, Coordinates]]:
         constellation = []
@@ -32,12 +41,12 @@ class SpacetimeHelper:
         origin_type = origin_kind.get_type()
         origin_reach = origin_kind.get_reach()
 
-        for step in BlockGraphSpace.STEPS:
+        for step in Spacetime.STEPS:
             if not origin_reach.contains(step):
                 continue
 
             candidate_position = origin_position + step
-            orthogonal_reach = BlockGraphSpace.get_orthogonal_plane(origin_reach, step.value)
+            orthogonal_reach = Spacetime.get_orthogonal_plane(origin_reach, step.value)
 
             # A cube can always have an adjacent cube of type X connected by
             # - IDENTITY pipe in the same plane if cube type is X
@@ -49,7 +58,7 @@ class SpacetimeHelper:
             # - IDENTITY pipe in the plane orthogonal along the step
             # - HADAMARD pipe in the same plane
             candidate_reach = orthogonal_reach if pipe_type == EdgeType.IDENTITY else origin_reach
-            constellation.append( (CubeKind.convert(NodeType.flip(origin_type), candidate_reach), candidate_position) )
+            constellation.append( (CubeKind.convert(SpacetimeHelper.__flip(origin_type), candidate_reach), candidate_position) )
 
             # A cube can always have an adjacent cube of kind OOO (both IDENTITY and HADAMARD pipes are possible)
             constellation.append( (CubeKind.OOO, candidate_position) )

@@ -89,12 +89,12 @@ class Reach(Enum):
         return self.value.dot(point) == 0
 
     def get_step_constellation(self) -> list[Step]:
-        return [ step for step in BlockGraphSpace.STEPS if self.contains(step.value) ]
+        return [step for step in Spacetime.STEPS if self.contains(step.value)]
 
     def __str__(self):
         return f"Plane.{self.name}"
 
-class BlockGraphSpace:
+class Spacetime:
     ORIGIN = Coordinates(0, 0, 0)
 
     STEPS = [ Step.XP, Step.XM, Step.YP, Step.YM, Step.ZP, Step.ZM ]
@@ -120,7 +120,7 @@ class BlockGraphSpace:
     @staticmethod
     def get_constellation(position: Coordinates, restriction: Reach = None) -> list[Coordinates]:
         constellation = []
-        for step in BlockGraphSpace.STEPS:
+        for step in Spacetime.STEPS:
             if restriction is None or restriction.contains(step.value):
                 constellation.append(position + step.value)
         return constellation

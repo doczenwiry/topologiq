@@ -1,13 +1,16 @@
 from logging import getLogger
+
+from topologiq.dzw.utils.Spacetime import Coordinates
+
 console = getLogger(__name__)
 
 from collections import deque
 
 from topologiq.utils.classes import NodeBeams
 
-from topologiq.dzw.AugmentedNxGraph import AugmentedNxGraph
-from topologiq.dzw.BlockGraphComponents import CubeKind
-from topologiq.dzw.BlockGraphSpace import Coordinates
+from topologiq.dzw.utils.AugmentedNxGraph import AugmentedNxGraph
+from topologiq.dzw.utils.CubeKind import CubeKind
+from topologiq.dzw.utils.Spacetime import Coordinates
 
 from topologiq.dzw.helpers.SpacetimeHelper import SpacetimeHelper
 

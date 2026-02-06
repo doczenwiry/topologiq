@@ -1,8 +1,8 @@
 from enum import Enum
 import functools
 
-from topologiq.dzw.ZxGraphComponents import NodeType
-from topologiq.dzw.BlockGraphSpace import Reach, Coordinates
+from topologiq.dzw.utils.ZxGraphComponents import NodeType
+from topologiq.dzw.utils.Spacetime import Reach, Coordinates
 
 class CubeKind(Enum):
     OOO = 0
