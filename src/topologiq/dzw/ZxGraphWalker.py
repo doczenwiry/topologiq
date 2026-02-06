@@ -152,10 +152,10 @@ class ZxGraphWalker:
         target_type = self.nx_graph.get_node_type(target)
         target_degree = self.nx_graph.get_degree(target)
 
-        target_kind, target_position = clean_path[-1]
+        target_position, target_kind = clean_path[-1]
         console.debug(f"> Clean path [{target_kind}@{target_position}]: {clean_path}")
         coordinates_in_path = get_taken_coords(clean_path)
-        target_beams = self.compute_beams(target_kind, target_position, coordinates_in_path)
+        target_beams = self.compute_beams(CubeKind.from_string(target_kind), Coordinates.from_tuple(target_position), coordinates_in_path)
         target_unobstructed_exits = len(target_beams)
 
         if target_type == NodeType.O:
@@ -163,7 +163,7 @@ class ZxGraphWalker:
 
         source_beams = self.node_cube_beams[source]
 
-        if not (target_unobstructed_exits >= target_degree - 1 or any(
+        if not (target_unobstructed_exits >= target_degree - 1 and any(
                 [clean_path[1][0] in beam for beam in source_beams])):
             console.debug(f">> enough_exits={target_unobstructed_exits >= target_degree - 1} broken={any(
                 [clean_path[1][0] in beam for beam in source_beams])}")
@@ -208,25 +208,31 @@ class ZxGraphWalker:
         return viable, beams_broken_by_path, critical_clash
 
     # TODO: the BgPathFinder should provide a function to find a path towards some position where a suitable cube can be placed
-    def place_nxt_block(self, source: int, target: int):
+    def place_nxt_block(self, source: int, target: int, init_step: int = 3):
         if not self.nx_graph.is_node_realised(source):
             raise Exception(f"{source} is not placed and has no kind; cannot connect with a path.")
 
         if self.nx_graph.is_node_realised(target):
             raise Exception(f"{target} is already placed and has a kind.")
 
-        clean_paths = self.pathfinder.find_target_realisation(source, target)
+        source_cube = self.nx_graph.get_cube(source)
+        source_kind = self.nx_graph.get_cube_kind(source_cube)
+        source_position = self.nx_graph.get_cube_position(source_cube)
 
-        # clean_paths, pathfinder_vis_data = run_pathfinder(
-        #     (source_position.as_tuple(), source_kind.name.lower()),
-        #     target_type.name,
-        #     init_step,
-        #     taken = [ position.as_tuple() for position in self.nx_graph.occupied if position != source_position ],
-        #     hdm = is_hadamard,
-        #     min_succ_rate = 60,
-        #     src_tgt_ids = (source, target),
-        #     log_stats_id = log_stats_id
-        # )
+        target_type = self.nx_graph.get_node_type(target)
+        is_hadamard = self.nx_graph.get_edge_type(source, target) == EdgeType.HADAMARD
+        # clean_paths = self.pathfinder.find_target_realisation(source, target)
+
+        clean_paths, pathfinder_vis_data = run_pathfinder(
+            (source_position.as_tuple(), source_kind.name.lower()),
+            target_type.name,
+            init_step,
+            taken = [ position.as_tuple() for position in self.nx_graph.occupied if position != source_position ],
+            hdm = is_hadamard,
+            min_succ_rate = 60,
+            src_tgt_ids = (source, target)
+            # log_stats_id = log_stats_id
+        )
 
         viable_paths = []
 
@@ -237,17 +243,17 @@ class ZxGraphWalker:
             if not viable:
                 continue
 
-            target_kind, target_position = clean_path[-1]
+            target_position, target_kind = clean_path[-1]
             console.debug(f"> Clean path [{target_kind}@{target_position}]: {clean_path}")
             coordinates_in_path = get_taken_coords(clean_path)
-            target_beams = self.compute_beams(target_kind, target_position, coordinates_in_path)
+            target_beams = self.compute_beams(CubeKind.from_string(target_kind), Coordinates.from_tuple(target_position), coordinates_in_path)
             target_unobstructed_exits = len(target_beams)
 
             all_nodes_in_path = [p for p in clean_path]
 
-            # if target_type == NodeType.O:
-            #     target_kind = CubeKind.OOO.name.lower()
-            #     all_nodes_in_path[-1] = (all_nodes_in_path[-1][0], target_kind)
+            if target_type == NodeType.O:
+                target_kind = CubeKind.OOO.name.lower()
+                all_nodes_in_path[-1] = (all_nodes_in_path[-1][0], target_kind)
 
             path_data = {
                 "tgt_coords": target_position,
@@ -276,8 +282,12 @@ class ZxGraphWalker:
 
         edge_type = self.nx_graph.get_edge_type(source, target)
 
-        target_kind = winner_path.tgt_kind
-        target_position = winner_path.tgt_coords
+        target_kind = CubeKind.from_string(winner_path.tgt_kind)
+        target_position = Coordinates.from_tuple(winner_path.tgt_coords)
+
+        # TODO: remove once rewrite is done
+        # if Spacetime.ORIGIN.get_manhattan_distance(target_position) % 3 == 0:
+        #     target_position = target_position.div(3)
 
         # Conversion needed for the path produced by the pathfinder.
         path = self.convert_path(winner_path.all_nodes_in_path)

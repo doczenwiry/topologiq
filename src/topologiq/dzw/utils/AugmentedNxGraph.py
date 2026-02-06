@@ -326,7 +326,7 @@ class AugmentedNxGraph:
         source_position = self.get_cube_position(source_cube)
         target_position = self.get_cube_position(target_cube)
         # TODO: replace 3 with 1 once the pathfinder has been rewritten
-        if source_position.get_manhattan_distance(target_position) != 1:
+        if source_position.get_manhattan_distance(target_position) != 3:
             raise Exception(f"Cubes #{source_cube}@{source_position} and #{target_cube}@{target_position} are not at adjacent positions.")
 
         self.__bg_graph.add_edge(source_cube, target_cube)

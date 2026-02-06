@@ -12,8 +12,8 @@ if __name__ == '__main__':
     circuit_name = "cnots"
     c = zx.Circuit(2)
     c.add_gate("CNOT", 1, 0)
-    # c.add_gate("CNOT", 0, 1)
-    # c.add_gate("CNOT", 0, 1)
+    c.add_gate("CNOT", 0, 1)
+    c.add_gate("CNOT", 0, 1)
     zx_input = c.to_graph()
 
     walker = ZxGraphWalker(zx_input, circuit_name)
