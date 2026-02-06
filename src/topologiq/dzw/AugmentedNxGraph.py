@@ -143,10 +143,6 @@ class AugmentedNxGraph:
 
         return source_kind.get_candidate_constellation(pipe_type)
 
-    # TODO: provide number of unobstructed ports, number of legs, information to check the beams
-    def get_unobstructed_ports(self, node_id: int) -> int:
-        return 0
-
     def is_node_realised(self, node_id: int) -> bool:
         return self.__zx_graph.nodes[node_id][AugmentedNxGraph.KEY_ZX_BG_CUBE] is not None
 
@@ -171,8 +167,8 @@ class AugmentedNxGraph:
     def is_edge_realised(self, source: int, target: int) -> bool:
         return self.__zx_graph.get_edge_data(source, target)[AugmentedNxGraph.KEY_ZX_BG_PATH] is not None
 
-    # TODO: reject loopy paths
-    def is_path_valid(self, source: int, target_kind: CubeKind, target_position: Coordinates, edge_type: EdgeType, path: list[tuple[Coordinates, CubeKind]]) -> bool:
+    def is_path_valid(self, source: int, target_kind: CubeKind, target_position: Coordinates,
+                      edge_type: EdgeType, extras: list[tuple[Coordinates, CubeKind]]) -> bool:
             is_hadamard_path = False
 
             source_cube = self.get_cube(source)
@@ -180,10 +176,16 @@ class AugmentedNxGraph:
             previous_reach: Reach = previous_kind.get_reach()
             previous_position: Coordinates = self.get_cube_position(source_cube)
 
-            for (current_position, current_kind) in path:
+            extra_positions = set()
+
+            for (current_position, current_kind) in extras:
                 current_reach = current_kind.get_reach()
 
-                # Check that the step taken lies in both planes of successive cubes
+                # Check that the cube type is either X or Z (Y and boundaries must be leaves)
+                if current_kind.get_type() not in [NodeType.X, NodeType.Z]:
+                    return False
+
+                # Check that the step taken lies in both reaches of successive cubes
                 step_taken = current_position - previous_position
                 if not previous_reach.contains(step_taken) or not current_reach.contains(step_taken):
                     return False
@@ -191,6 +193,11 @@ class AugmentedNxGraph:
                 # Check that the current_position is not already occupied
                 if current_position in self.occupied:
                     return False
+
+                # Check that the current_position is not already occupied by an extra cube
+                if current_position in extra_positions:
+                    return False
+                extra_positions.add(current_position)
 
                 # Update the type of the path based on the type of the pipe
                 if CubeKind.infer_pipe_type(previous_kind, current_kind) == EdgeType.HADAMARD:
@@ -204,7 +211,7 @@ class AugmentedNxGraph:
             target_reach = target_kind.get_reach()
             # target_position = self.get_position(target)
 
-            # Check that the step taken lies in both planes of successive cubes
+            # Check that the step taken lies in both reaches of successive cubes
             step_taken = target_position - previous_position
             if not previous_reach.contains(step_taken) or not target_reach.contains(step_taken):
                 return False

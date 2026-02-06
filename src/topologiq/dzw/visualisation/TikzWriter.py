@@ -1,5 +1,4 @@
 from topologiq.dzw.BlockGraphSpace import Coordinates
-from topologiq.dzw.ZxGraphComponents import EdgeType
 from topologiq.dzw.ZxGraphWalker import ZxGraphWalker
 
 class TikzWriter:

@@ -110,7 +110,7 @@ class ZxGraphWalker:
                     # Second-pass edge
                     # Goal: find a path towards the position of a cube representing the target node
 
-                    path = self.connect_cubes(source, target)
+                    path = self.find_edge_realisation(source, target)
 
                     self.number_2nd_pass_edges += 1
 
@@ -292,7 +292,7 @@ class ZxGraphWalker:
 
         return target_kind, target_position, path
 
-    def connect_cubes(self, source, target):
+    def find_edge_realisation(self, source, target):
         source_cube = self.nx_graph.get_cube(source)
         target_cube = self.nx_graph.get_cube(target)
         source_position = self.nx_graph.get_cube_position(source_cube)
