@@ -105,5 +105,8 @@ class CubeKind(Enum):
     def __lt__(self, other):
         return self.value.__lt__(other.value)
 
+    def __repr__(self):
+        return str(self)
+
     def __str__(self):
         return self.name

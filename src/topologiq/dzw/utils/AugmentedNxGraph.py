@@ -1,3 +1,8 @@
+import logging
+from logging import getLogger
+console = getLogger(__name__)
+console.setLevel(logging.CRITICAL + 10)
+
 import pyzx as zx
 import networkx as nx
 
@@ -5,11 +10,8 @@ from topologiq.dzw.utils.Spacetime import Coordinates, Reach, Step
 from topologiq.dzw.utils.ZxGraphComponents import NodeType, EdgeType
 from topologiq.dzw.utils.CubeKind import CubeKind
 
-from logging import getLogger
-
 from topologiq.dzw.helpers.SpacetimeHelper import SpacetimeHelper
 
-console = getLogger(__name__)
 
 # TODO: figure out what the other VertexType and EdgeType represent
 # TODO: how do we deal with the last four VertexType (i.e. H_BOX, W_INPUT, W_OUTPUT, Z_BOX) ?
@@ -181,24 +183,34 @@ class AugmentedNxGraph:
 
             extra_positions = set()
 
+            console.info(f"Checking path validity:")
+            console.info(f"> From source : {source_cube} [{previous_kind}@{previous_position}]")
+            console.info(f"> Towards target : {target_kind}@{target_position}")
+            console.info(f"> With extras : {extras}")
+
             for (current_position, current_kind) in extras:
                 current_reach = current_kind.get_reach()
 
                 # Check that the cube type is either X or Z (Y and boundaries must be leaves)
                 if current_kind.get_type() not in [NodeType.X, NodeType.Z]:
+                    console.debug(f"> Current kind : {current_kind.get_type()}")
                     return False
 
                 # Check that the step taken lies in both reaches of successive cubes
                 step_taken = current_position - previous_position
                 if not previous_reach.contains(step_taken) or not current_reach.contains(step_taken):
+                    console.debug(f"> Previous reach contains step : {previous_reach.contains(step_taken)}")
+                    console.debug(f"> Current reach contains step : {current_reach.contains(step_taken)}")
                     return False
 
                 # Check that the current_position is not already occupied
                 if current_position in self.occupied:
+                    console.debug(f"> Current position is already occupied : {current_kind}@{current_position}")
                     return False
 
                 # Check that the current_position is not already occupied by an extra cube
                 if current_position in extra_positions:
+                    console.debug(f"> Current position is already in path : {current_kind}@{current_position}")
                     return False
                 extra_positions.add(current_position)
 
@@ -217,7 +229,7 @@ class AugmentedNxGraph:
             # Check that the step taken lies in both reaches of successive cubes
             step_taken = target_position - previous_position
             if not previous_reach.contains(step_taken) or not target_reach.contains(step_taken):
-                console.debug(f"> Proposed path have successive cubes not within reach of each other.")
+                console.debug(f"> Proposed path has successive cubes not within reach of each other.")
                 return False
 
             # Update the type of the path based on the type of the pipe
