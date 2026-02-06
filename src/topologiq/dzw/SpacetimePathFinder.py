@@ -54,13 +54,19 @@ class SpacetimePathFinder:
             else:
                 console.debug(f"Terminal cube : {terminal_kind}@{terminal_position}.")
 
+            # Discard current_path if its terminal cube has a leaf cube-kind
+            if terminal_kind in [ CubeKind.OOO , CubeKind.YYY ]:
+                continue
+
             # Discard current_path if it is beyond the maximal Manhattan Distance requested
             current_md = source_position.get_manhattan_distance(terminal_position)
             if current_md > maximal_md:
                 continue
 
             # TODO: deal with Hadamard-consistency
-            for next_position, next_kind in SpacetimeHelper.get_candidate_constellation(terminal_kind, terminal_position):
+            constellation = SpacetimeHelper.get_candidate_constellation(terminal_kind, terminal_position)
+            console.info(f"Constellation of {terminal_kind}@{terminal_position} : {constellation}.")
+            for next_kind, next_position in constellation:
                 next_md = source_position.get_manhattan_distance(next_position)
 
                 # Ignore step if it brings us to an occupied position

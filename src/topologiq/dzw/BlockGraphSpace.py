@@ -1,3 +1,4 @@
+import functools
 import math
 from enum import Enum
 
@@ -46,14 +47,18 @@ class Coordinates:
     def as_tuple(self):
         return self.x, self.y, self.z
 
+    def __repr__(self):
+        return str(self)
+
     def __hash__(self):
-        return hash(repr(self))
+        return hash(self.as_tuple())
 
     def __eq__(self, other):
         return self.x == other.x and self.y == other.y and self.z == other.z
 
-    def __cmp__(self, other):
-        return self.as_tuple().__cmp__(other.as_tuple())
+    @functools.total_ordering
+    def __lt__(self, other):
+        return self.as_tuple().__lt__(other.as_tuple())
 
     def __str__(self):
         return f"({self.x}, {self.y}, {self.z})"
@@ -103,13 +108,13 @@ class BlockGraphSpace:
         if not plane.contains(line_of_intersection):
             raise ValueError(f"Line of intersection {line_of_intersection} does not lie in plane {plane}.")
 
-        plane = plane.value
+        reach = plane.value
 
-        if abs(plane.x) != abs(line_of_intersection.x):
+        if abs(reach.x) == abs(line_of_intersection.x):
             return Reach.YZ
-        elif abs(plane.y) != abs(line_of_intersection.y):
+        elif abs(reach.y) == abs(line_of_intersection.y):
             return Reach.XZ
-        else: # abs(plane.z) != abs(line_of_intersection.z)
+        else: # abs(reach.z) != abs(line_of_intersection.z)
             return Reach.XY
 
     @staticmethod

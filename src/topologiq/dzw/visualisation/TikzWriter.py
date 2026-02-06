@@ -1,4 +1,4 @@
-from topologiq.dzw.BlockGraphSpace import Coordinates
+from topologiq.dzw.BlockGraphSpace import Coordinates, BlockGraphSpace
 from topologiq.dzw.ZxGraphWalker import ZxGraphWalker
 
 class TikzWriter:
@@ -39,7 +39,8 @@ class TikzWriter:
 
             cube_position = self.walker.nx_graph.get_cube_position(cube)
             # TODO: scaling down needed due to current implementation of the path-finder
-            cube_position = cube_position.div(3)
+            if BlockGraphSpace.ORIGIN.get_manhattan_distance(cube_position) % 3 == 0:
+                cube_position = cube_position.div(3)
 
             cube_label = self.walker.nx_graph.get_node(cube)
             if cube_label is None:

@@ -1,4 +1,5 @@
 from enum import Enum
+import functools
 
 from topologiq.dzw.ZxGraphComponents import NodeType
 from topologiq.dzw.BlockGraphSpace import Reach, Coordinates
@@ -99,6 +100,10 @@ class CubeKind(Enum):
             return Reach.XYZ
         else:
             raise ValueError(f"Not applicable to cube kind {self.name}")
+
+    @functools.total_ordering
+    def __lt__(self, other):
+        return self.value.__lt__(other.value)
 
     def __str__(self):
         return self.name
