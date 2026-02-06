@@ -1,8 +1,7 @@
 from enum import Enum
 
-from topologiq.dzw.ZxGraphComponents import NodeType, EdgeType
-from topologiq.dzw.BlockGraphSpace import Reach, BlockGraphSpace, Coordinates, Step
-
+from topologiq.dzw.ZxGraphComponents import NodeType
+from topologiq.dzw.BlockGraphSpace import Reach, Coordinates
 
 class CubeKind(Enum):
     OOO = 0
@@ -57,29 +56,6 @@ class CubeKind(Enum):
         kk_consistent = True  # kind1.compatible(kind2, position1 - position2)
         return md_consistent and kk_consistent
 
-    def get_candidate_constellation(self, pipe_type : EdgeType = EdgeType.IDENTITY)\
-            -> list[ tuple[Step, 'CubeKind'] ]:
-        constellation = []
-
-        source_type = self.get_type()
-        source_reach = self.get_reach()
-
-        for step in BlockGraphSpace.STEPS:
-            if source_reach.contains(step):
-                orthogonal_plane = BlockGraphSpace.get_orthogonal_plane(source_reach, step)
-                # A cube can always have an adjacent cube of the same color connected by
-                # - IDENTITY pipe in the same plane
-                # - HADAMARD pipe in the plane orthogonal along the step
-                candidate_plane = source_reach if pipe_type == EdgeType.IDENTITY else orthogonal_plane
-                constellation.append( (step , CubeKind.convert(source_type, candidate_plane)) )
-                # A cube can always have an adjacent cube of the other color connected by
-                # - IDENTITY pipe in the plane orthogonal along the step
-                # - HADAMARD pipe in the same plane
-                candidate_plane = orthogonal_plane if pipe_type == EdgeType.IDENTITY else source_reach
-                constellation.append( (step , CubeKind.convert(NodeType.flip(source_type), candidate_plane)) )
-
-        return constellation
-
     @staticmethod
     def convert(node_type: NodeType, node_reach: Reach):
         if node_type == NodeType.X:
@@ -119,25 +95,10 @@ class CubeKind(Enum):
             return Reach.XZ
         elif self == CubeKind.ZZX or self == CubeKind.XXZ:
             return Reach.XY
-        elif self == CubeKind.OOO:
+        elif self == CubeKind.OOO or self == CubeKind.YYY:
             return Reach.XYZ
-        else: # self.name == CubeKind.YYY
+        else:
             raise ValueError(f"Not applicable to cube kind {self.name}")
-
-    @staticmethod
-    def infer_pipe_type(source: 'CubeKind', target: 'CubeKind') -> EdgeType:
-        source_type = source.get_type()
-        target_type = target.get_type()
-        source_reach = source.get_reach()
-        target_reach = target.get_reach()
-
-        if source_type in [ NodeType.Y ] or target_type in [ NodeType.Y ]:
-            raise NotImplemented("Cannot infer type of pipe w.r.t Y nodes for now.")
-
-        same_type = source_type == target_type
-        same_reach = source_reach == target_reach
-
-        return EdgeType.IDENTITY if same_type == same_reach else EdgeType.HADAMARD
 
     def __str__(self):
         return self.name

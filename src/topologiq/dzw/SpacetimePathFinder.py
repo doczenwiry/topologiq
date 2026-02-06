@@ -1,7 +1,4 @@
 from logging import getLogger
-
-from topologiq.scripts.pathfinder import get_taken_coords
-
 console = getLogger(__name__)
 
 from collections import deque
@@ -10,7 +7,9 @@ from topologiq.utils.classes import NodeBeams
 
 from topologiq.dzw.AugmentedNxGraph import AugmentedNxGraph
 from topologiq.dzw.BlockGraphComponents import CubeKind
-from topologiq.dzw.BlockGraphSpace import Coordinates, BlockGraphSpace
+from topologiq.dzw.BlockGraphSpace import Coordinates
+
+from topologiq.dzw.helpers.SpacetimeHelper import SpacetimeHelper
 
 class SpacetimePathFinder:
     def __init__(self, nx_graph: AugmentedNxGraph):
@@ -21,65 +20,78 @@ class SpacetimePathFinder:
     # TODO: add cutoff threshold once enough of the bounding box has been reached
     def find_target_realisation(self,
         source: int, target: int,
-        critical: dict[int, tuple[int, NodeBeams]],
-        maximal_md: int = 3
+        critical: dict[int, tuple[int, NodeBeams]] = None,
+        maximal_md: int = 1
     ):
+        if critical is None:
+            critical = {}
+
         if not self.nx_graph.is_node_realised(source):
             raise Exception(f"Node #{source} is not realised; cannot use as a source for path-finding.")
 
-        console.info(f"Searching for placement of target node #{target} from source node #{source}.")
+        console.info(f"Searching for placement of target node #{target} [type={self.nx_graph.get_node_type(target)}] from source node #{source} [type={self.nx_graph.get_node_type(source)}].")
 
         source_cube = self.nx_graph.get_cube(source)
         source_kind = self.nx_graph.get_cube_kind(source_cube)
-        source_position = self.nx_graph.get_cube_position(source)
+        source_position = self.nx_graph.get_cube_position(source_cube)
 
         target_suitable_kinds = CubeKind.suitable_kinds(self.nx_graph.get_node_type(target))
 
         # Initialize queue with the source cube
         start_cube = (source_kind, source_position)
         queue = deque([ start_cube ])
-        paths = { start_cube : [] }
+        paths = { start_cube : [ start_cube] }
         visited : dict[tuple[CubeKind, Coordinates], int] = {}
         solutions = []
 
         while queue:
-            current_path = paths[queue.popleft()]
+            current_cube = queue.popleft()
+            current_path = paths[current_cube]
             terminal_kind, terminal_position = current_path[-1]
+
+            if terminal_kind in target_suitable_kinds:
+                console.info(f"Terminal cube : {terminal_kind}@{terminal_position}.")
+            else:
+                console.debug(f"Terminal cube : {terminal_kind}@{terminal_position}.")
 
             # Discard current_path if it is beyond the maximal Manhattan Distance requested
             current_md = source_position.get_manhattan_distance(terminal_position)
             if current_md > maximal_md:
                 continue
 
-            for step, next_kind in terminal_kind.get_candidate_constellation():
-                next_position = terminal_position + step
+            # TODO: deal with Hadamard-consistency
+            for next_position, next_kind in SpacetimeHelper.get_candidate_constellation(terminal_kind, terminal_position):
                 next_md = source_position.get_manhattan_distance(next_position)
 
                 # Ignore step if it brings us to an occupied position
                 if next_position in self.nx_graph.occupied:
+                    console.debug(f"> Next position is already occupied [{next_kind}@{next_position}].")
                     continue
 
                 # Ignore step if it brings us to a position used by the current path
                 if any([position == next_position for _, position in current_path]):
+                    console.debug(f"> Next position is already occupied in current_path [{next_kind}@{next_position}].")
                     continue
 
                 # Ignore step if it brings us beyond the maximal MD or is not of a suitable kind
                 if next_md > maximal_md:
+                    console.debug(f"> Next position lies beyond maximal Manhattan Distance [{next_kind}@{next_position}/md:{next_md}].")
                     continue
 
                 next_cube = (next_kind, next_position)
+                next_path = current_path + [ next_cube ]
 
                 # Ignore step if it doesn't improve our current knowledge
-                if next_cube in visited and len(current_path) + 1 >= visited[next_cube]:
+                if next_cube in visited and len(next_path) >= visited[next_cube]:
+                    console.debug(f"> Next path doesn't improve previously known [{next_path}].")
                     continue
 
                 # Happily update our current knowledge with this new path
-                next_path = current_path + [ next_cube ]
                 visited[next_cube] = len(next_path)
+                paths[next_cube] = next_path
                 queue.append( next_cube )
 
-                if next_kind in target_suitable_kinds:
-                    solutions.append(next_path)
+                console.debug(f"> Adding next path to {next_kind}@{next_position} [{next_path}].")
 
                 # TODO: deal with broken beams (cfr. pathfinder lines 299-329)
                 critical_break = False
@@ -109,5 +121,9 @@ class SpacetimePathFinder:
 
                     if critical_break:
                         continue
+
+                if not critical_break and next_kind in target_suitable_kinds:
+                    console.info(f"Found new path : {next_path}")
+                    solutions.append(next_path)
 
         return solutions

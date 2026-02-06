@@ -7,6 +7,8 @@ class NodeType(Enum):
     Y = 2 # Y-Spider
     Z = 3 # Z-Spider
 
+    ALL : list['NodeType'] = [O, X, Y, Z]
+
     @staticmethod
     def convert(vertex_type: zx.VertexType):
         if vertex_type == zx.VertexType.Z:
@@ -24,7 +26,8 @@ class NodeType(Enum):
         elif self == NodeType.Z:
             return NodeType.X
         else:
-            raise ValueError(f"Flipping color not supported for node type: {self}")
+            return self
+            # raise ValueError(f"Flipping color not supported for node type: {self}")
 
     def __str__(self):
         return self.name

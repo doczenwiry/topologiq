@@ -6,14 +6,14 @@ from topologiq.dzw.visualisation.ReportFormatter import ReportFormatter
 from topologiq.dzw.visualisation.TikzWriter import TikzWriter
 
 import logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 
 if __name__ == '__main__':
     circuit_name = "cnots"
     c = zx.Circuit(2)
     c.add_gate("CNOT", 1, 0)
-    c.add_gate("CNOT", 0, 1)
-    c.add_gate("CNOT", 0, 1)
+    # c.add_gate("CNOT", 0, 1)
+    # c.add_gate("CNOT", 0, 1)
     zx_input = c.to_graph()
 
     walker = ZxGraphWalker(zx_input, circuit_name)

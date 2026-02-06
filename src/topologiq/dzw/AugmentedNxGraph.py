@@ -6,6 +6,9 @@ from topologiq.dzw.ZxGraphComponents import NodeType, EdgeType
 from topologiq.dzw.BlockGraphComponents import CubeKind
 
 from logging import getLogger
+
+from topologiq.dzw.helpers.SpacetimeHelper import SpacetimeHelper
+
 console = getLogger(__name__)
 
 # TODO: figure out what the other VertexType and EdgeType represent
@@ -200,7 +203,7 @@ class AugmentedNxGraph:
                 extra_positions.add(current_position)
 
                 # Update the type of the path based on the type of the pipe
-                if CubeKind.infer_pipe_type(previous_kind, current_kind) == EdgeType.HADAMARD:
+                if SpacetimeHelper.infer_pipe_type(previous_kind, current_kind) == EdgeType.HADAMARD:
                     is_hadamard_path = not is_hadamard_path
 
                 previous_position = current_position
@@ -214,13 +217,16 @@ class AugmentedNxGraph:
             # Check that the step taken lies in both reaches of successive cubes
             step_taken = target_position - previous_position
             if not previous_reach.contains(step_taken) or not target_reach.contains(step_taken):
+                console.debug(f"> Proposed path have successive cubes not within reach of each other.")
                 return False
 
             # Update the type of the path based on the type of the pipe
-            if CubeKind.infer_pipe_type(previous_kind, target_kind) == EdgeType.HADAMARD:
+            if SpacetimeHelper.infer_pipe_type(previous_kind, target_kind) == EdgeType.HADAMARD:
                 is_hadamard_path = not is_hadamard_path
 
-            # return is_hadamard_path == (self.get_edge_type(source, target) == EdgeType.HADAMARD)
+            if is_hadamard_path != (edge_type == EdgeType.HADAMARD):
+                console.debug(f"> Proposed path is Hadamard-inconsistent with its purported edge.")
+
             return is_hadamard_path == (edge_type == EdgeType.HADAMARD)
 
     # Precondition: path is a sequence of (position,kind) for the extra cubes needed to connect the source to the target
@@ -265,7 +271,7 @@ class AugmentedNxGraph:
             self.__bg_graph.nodes[current_cube][AugmentedNxGraph.KEY_BG_ZX_NODE] = None
             # Place the current extra node and connect it to the previous node.
             self.place_cube(current_cube, current_position, current_kind)
-            self.connect_pipe(previous_cube, current_cube, CubeKind.infer_pipe_type(previous_kind, current_kind))
+            self.connect_pipe(previous_cube, current_cube, SpacetimeHelper.infer_pipe_type(previous_kind, current_kind))
 
             # Extend the sequence of extra node ids
             extras.append(current_cube)
@@ -277,7 +283,7 @@ class AugmentedNxGraph:
         # Make the final connection
         target_cube = self.get_cube(target)
         target_kind = self.get_cube_kind(target_cube)
-        self.connect_pipe(previous_cube, target_cube, CubeKind.infer_pipe_type(previous_kind, target_kind))
+        self.connect_pipe(previous_cube, target_cube, SpacetimeHelper.infer_pipe_type(previous_kind, target_kind))
 
         # Associate the path as a realisation of the edge
         self.__zx_graph.get_edge_data(source, target)[AugmentedNxGraph.KEY_ZX_BG_PATH] = extras
@@ -308,7 +314,7 @@ class AugmentedNxGraph:
         source_position = self.get_cube_position(source_cube)
         target_position = self.get_cube_position(target_cube)
         # TODO: replace 3 with 1 once the pathfinder has been rewritten
-        if source_position.get_manhattan_distance(target_position) != 3:
+        if source_position.get_manhattan_distance(target_position) != 1:
             raise Exception(f"Cubes #{source_cube}@{source_position} and #{target_cube}@{target_position} are not at adjacent positions.")
 
         self.__bg_graph.add_edge(source_cube, target_cube)
