@@ -237,7 +237,7 @@ class ZxGraphWalker:
 
         viable_paths = []
 
-        # print(f"Found {len(clean_paths)} clean_paths.")
+        console.debug(f"Found {len(clean_paths)} clean_paths.")
 
         for clean_path in clean_paths:
             (viable, beams_broken_by_path, clashes) = self.is_path_viable(source, target, clean_path)
@@ -245,7 +245,7 @@ class ZxGraphWalker:
                 continue
 
             target_position, target_kind = clean_path[-1]
-            # print(f"> Clean path [{target_kind}@{target_position}]: {clean_path}")
+            console.debug(f"> Clean path [{target_kind}@{target_position}]: {clean_path}")
             coordinates_in_path = get_taken_coords(clean_path)
             target_beams = self.compute_beams(
                 CubeKind.from_string(target_kind),

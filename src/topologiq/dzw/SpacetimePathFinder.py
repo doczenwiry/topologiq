@@ -1,0 +1,113 @@
+from logging import getLogger
+
+from topologiq.scripts.pathfinder import get_taken_coords
+
+console = getLogger(__name__)
+
+from collections import deque
+
+from topologiq.utils.classes import NodeBeams
+
+from topologiq.dzw.AugmentedNxGraph import AugmentedNxGraph
+from topologiq.dzw.BlockGraphComponents import CubeKind
+from topologiq.dzw.BlockGraphSpace import Coordinates, BlockGraphSpace
+
+class SpacetimePathFinder:
+    def __init__(self, nx_graph: AugmentedNxGraph):
+        self.nx_graph = nx_graph
+
+    # TODO: deal with Hadamard EdgeType !!
+    # TODO: add suggestions of candidate coordinates ?
+    # TODO: add cutoff threshold once enough of the bounding box has been reached
+    def find_target_realisation(self,
+        source: int, target: int,
+        critical: dict[int, tuple[int, NodeBeams]],
+        maximal_md: int = 3
+    ):
+        if not self.nx_graph.is_node_realised(source):
+            raise Exception(f"Node #{source} is not realised; cannot use as a source for path-finding.")
+
+        console.info(f"Searching for placement of target node #{target} from source node #{source}.")
+
+        source_cube = self.nx_graph.get_cube(source)
+        source_kind = self.nx_graph.get_cube_kind(source_cube)
+        source_position = self.nx_graph.get_cube_position(source)
+
+        target_suitable_kinds = CubeKind.suitable_kinds(self.nx_graph.get_node_type(target))
+
+        # Initialize queue with the source cube
+        start_cube = (source_kind, source_position)
+        queue = deque([ start_cube ])
+        paths = { start_cube : [] }
+        visited : dict[tuple[CubeKind, Coordinates], int] = {}
+        solutions = []
+
+        while queue:
+            current_path = paths[queue.popleft()]
+            terminal_kind, terminal_position = current_path[-1]
+
+            # Discard current_path if it is beyond the maximal Manhattan Distance requested
+            current_md = source_position.get_manhattan_distance(terminal_position)
+            if current_md > maximal_md:
+                continue
+
+            for step, next_kind in terminal_kind.get_candidate_constellation():
+                next_position = terminal_position + step
+                next_md = source_position.get_manhattan_distance(next_position)
+
+                # Ignore step if it brings us to an occupied position
+                if next_position in self.nx_graph.occupied:
+                    continue
+
+                # Ignore step if it brings us to a position used by the current path
+                if any([position == next_position for _, position in current_path]):
+                    continue
+
+                # Ignore step if it brings us beyond the maximal MD or is not of a suitable kind
+                if next_md > maximal_md:
+                    continue
+
+                next_cube = (next_kind, next_position)
+
+                # Ignore step if it doesn't improve our current knowledge
+                if next_cube in visited and len(current_path) + 1 >= visited[next_cube]:
+                    continue
+
+                # Happily update our current knowledge with this new path
+                next_path = current_path + [ next_cube ]
+                visited[next_cube] = len(next_path)
+                queue.append( next_cube )
+
+                if next_kind in target_suitable_kinds:
+                    solutions.append(next_path)
+
+                # TODO: deal with broken beams (cfr. pathfinder lines 299-329)
+                critical_break = False
+                if critical:
+                    for node, data in critical.items():
+                        broken_beams = 0
+                        min_exit_num, beams = data
+                        for beam in beams:
+                            if any([position in beam for _, position in current_path]):
+                                broken_beams += 1
+                                # Additionally, add any number of beam-to-beam clashes for the node
+                                # currently under investigation because, if they exist, they likely are already
+                                # using the cushion that allows breaking some beams
+                                if node in (source,target):
+                                    continue
+
+                                for n_id in critical.keys():
+                                    all_beams = critical[n_id][1]
+                                    for single_beam in all_beams:
+                                        if any([position in beam for position in single_beam]):
+                                            broken_beams += 1
+
+                        adjust_for_source_node = 1 if node in (source,target) else 0
+                        if len(beams) + adjust_for_source_node - broken_beams < min_exit_num:
+                            critical_break = True
+                            break
+
+                    if critical_break:
+                        continue
+
+        return solutions
