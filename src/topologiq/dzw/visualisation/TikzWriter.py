@@ -4,8 +4,9 @@ from topologiq.dzw.ZxGraphWalker import ZxGraphWalker
 class TikzWriter:
     AXES = ['X', 'Y', 'Z']
 
-    def __init__(self, walker: ZxGraphWalker):
-        self.walker = walker
+    def __init__(self, walker: ZxGraphWalker, animation: bool = False):
+        self.__walker = walker
+        self.__animation = animation
 
     @staticmethod
     def find_axis(step: Coordinates):
@@ -17,9 +18,66 @@ class TikzWriter:
 
         return "U"
 
+    def write_frame(self, output,
+                    plain_cubes: set[int], plain_pipes: set[tuple[int,int]],
+                    faint_cubes: set[int], faint_pipes: set[tuple[int,int]],
+                    style = 'bg'):
+        output.write(f"\t\\ZxGraph[style={style}]")
+        output.write("{\n")
+
+        for cube in self.__walker.nx_graph.get_cubes():
+            cube_type = self.__walker.nx_graph.get_cube_kind(cube).get_type()
+            cube_reach = self.__walker.nx_graph.get_cube_kind(cube).get_reach().value.as_tuple()
+            cube_plane = 'U'
+            for index in range(3):
+                if cube_reach[index] != 0:
+                    cube_plane = TikzWriter.AXES[index]
+
+            cube_position = self.__walker.nx_graph.get_cube_position(cube)
+            # TODO: scaling down needed due to current implementation of the path-finder
+            if Spacetime.ORIGIN.get_manhattan_distance(cube_position) % 3 == 0:
+                cube_position = cube_position.div(3)
+
+            if cube in plain_cubes:
+                cube_visibility = 'plain'
+            elif cube in faint_cubes:
+                cube_visibility = 'faint'
+            else:
+                cube_visibility = 'ghost'
+
+            cube_label = self.__walker.nx_graph.get_node(cube)
+            if cube_label is None:
+                cube_label = ''
+
+            line = f"\t\t\\Node[visibility={cube_visibility}, type={cube_type}, plane={cube_plane}, label={cube_label}, identifier=N{cube}]"
+            line += "{" + str(cube_position) + "}\n"
+
+            output.write(line)
+
+        for pipe in self.__walker.nx_graph.get_pipes():
+            (source_cube, target_cube) = pipe
+            source_position = self.__walker.nx_graph.get_cube_position(source_cube)
+            target_position = self.__walker.nx_graph.get_cube_position(target_cube)
+
+            pipe_type = self.__walker.nx_graph.get_pipe_type(source_cube, target_cube).name.lower()
+
+            if pipe in plain_pipes:
+                pipe_visibility = 'plain'
+            elif pipe in faint_pipes:
+                pipe_visibility = 'faint'
+            else:
+                pipe_visibility = 'ghost'
+
+            line = f"\t\t\\Edge[visibility={pipe_visibility}, axis={TikzWriter.find_axis(target_position - source_position)}, type={pipe_type}]"
+            line += "{N" + str(source_cube) + "}{N" + str(target_cube) + "}\n"
+
+            output.write(line)
+
+        output.write("\t}\n")
+
     def write_file(self, filename = None):
         if filename is None:
-            filename = f"../../output/tikz/volumetric-zx-diagram-{self.walker.name}.tex"
+            filename = f"../../output/tikz/volumetric-zx-diagram-{self.__walker.name}.tex"
 
         output = open(filename, "w")
         output.write("\\documentclass[tikz, preview, border=1pt]{standalone}\n")
@@ -27,39 +85,45 @@ class TikzWriter:
 
         output.write("\\begin{document}\n")
 
-        output.write("\t\\ZxGraph{\n")
+        # TODO: add the root only on the first frame
+        plain_cubes: set[int] = set()
+        plain_pipes: set[tuple[int,int]] = set()
 
-        for cube in self.walker.nx_graph.get_cubes():
-            cube_type = self.walker.nx_graph.get_cube_kind(cube).get_type()
-            cube_reach = self.walker.nx_graph.get_cube_kind(cube).get_reach().value.as_tuple()
-            cube_plane = 'U'
-            for index in range(3):
-                if cube_reach[index] != 0:
-                    cube_plane = TikzWriter.AXES[index]
+        faint_cubes: set[int] = set()
+        faint_pipes: set[tuple[int,int]] = set()
 
-            cube_position = self.walker.nx_graph.get_cube_position(cube)
-            # TODO: scaling down needed due to current implementation of the path-finder
-            if Spacetime.ORIGIN.get_manhattan_distance(cube_position) % 3 == 0:
-                cube_position = cube_position.div(3)
+        root = self.__walker.node_realisation_order[0]
+        plain_cubes.add( self.__walker.nx_graph.get_cube(root) )
+        print(f"ADDING ROOT : {plain_cubes}")
+        self.write_frame(output, plain_cubes, plain_pipes, faint_cubes, faint_pipes)
 
-            cube_label = self.walker.nx_graph.get_node(cube)
-            if cube_label is None:
-                line = f"\t\t\\Node[type={cube_type}, plane={cube_plane}, identifier=N{cube}]"
-            else:
-                line = f"\t\t\\Node[type={cube_type}, plane={cube_plane}, label={cube_label}, identifier=N{cube}]"
-            line += "{" + str(cube_position) + "}\n"
-            output.write(line)
+        for next_edge in self.__walker.edge_realisation_order:
+            faint_cubes.update(plain_cubes)
+            faint_pipes.update(plain_pipes)
+            plain_cubes.clear()
+            plain_pipes.clear()
+            (source, target) = next_edge
+            source_cube = self.__walker.nx_graph.get_cube(source)
+            target_cube = self.__walker.nx_graph.get_cube(target)
+            plain_cubes.add(source_cube)
+            plain_cubes.add(target_cube)
+            current = source_cube
+            for extra_cube in self.__walker.nx_graph.get_edge_realisation(source, target):
+                plain_cubes.add(extra_cube)
+                plain_pipes.add( (current, extra_cube) )
+                # plain_pipes.add(next_edge)
+                current = extra_cube
+            plain_cubes.add(target_cube)
+            plain_pipes.add((current, target_cube))
+            self.write_frame(output, plain_cubes, plain_pipes, faint_cubes, faint_pipes)
 
-        for source_cube, target_cube in self.walker.nx_graph.get_pipes():
-            source_position = self.walker.nx_graph.get_cube_position(source_cube)
-            target_position = self.walker.nx_graph.get_cube_position(target_cube)
+        plain_cubes.update(self.__walker.nx_graph.get_cubes())
+        plain_pipes.update(self.__walker.nx_graph.get_pipes())
 
-            line = f"\t\t\\Edge[axis={TikzWriter.find_axis(target_position - source_position)}, type={self.walker.nx_graph.get_pipe_type(source_cube, target_cube).name.lower()}]"
-            line += "{N" + str(source_cube) + "}{N" + str(target_cube) + "}\n"
+        faint_cubes.clear()
+        faint_pipes.clear()
 
-            output.write(line)
-
-        output.write("\t}\n")
+        self.write_frame(output, plain_cubes, plain_pipes, faint_cubes, faint_pipes)
 
         output.write("\\end{document}\n")
 
