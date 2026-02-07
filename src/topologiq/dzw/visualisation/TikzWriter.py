@@ -68,7 +68,8 @@ class TikzWriter:
             else:
                 pipe_visibility = 'ghost'
 
-            line = f"\t\t\\Edge[visibility={pipe_visibility}, axis={TikzWriter.find_axis(target_position - source_position)}, type={pipe_type}]"
+            line =  f"\t\t% pipe-info : {source_cube}-{target_cube}\n"
+            line += f"\t\t\\Edge[visibility={pipe_visibility}, axis={TikzWriter.find_axis(target_position - source_position)}, type={pipe_type}]"
             line += "{N" + str(source_cube) + "}{N" + str(target_cube) + "}\n"
 
             output.write(line)
@@ -94,7 +95,6 @@ class TikzWriter:
 
         root = self.__walker.node_realisation_order[0]
         plain_cubes.add( self.__walker.nx_graph.get_cube(root) )
-        print(f"ADDING ROOT : {plain_cubes}")
         self.write_frame(output, plain_cubes, plain_pipes, faint_cubes, faint_pipes)
 
         for next_edge in self.__walker.edge_realisation_order:
@@ -108,13 +108,18 @@ class TikzWriter:
             plain_cubes.add(source_cube)
             plain_cubes.add(target_cube)
             current = source_cube
-            for extra_cube in self.__walker.nx_graph.get_edge_realisation(source, target):
+            extra_cubes = self.__walker.nx_graph.get_edge_realisation(source, target)
+            for extra_cube in extra_cubes:
                 plain_cubes.add(extra_cube)
-                plain_pipes.add( (current, extra_cube) )
-                # plain_pipes.add(next_edge)
+                pipe = (current, extra_cube) if current < extra_cube else (extra_cube, current)
+                plain_pipes.add( pipe )
                 current = extra_cube
             plain_cubes.add(target_cube)
-            plain_pipes.add((current, target_cube))
+            pipe = (current, target_cube) if current < target_cube else (target_cube, current)
+            plain_pipes.add( pipe )
+            output.write(f"\t% Edge  : {source}-{target} [{source_cube}-{target_cube}] : {extra_cubes}\n")
+            output.write(f"\t% Cubes : {plain_cubes}\n")
+            output.write(f"\t% Pipes : {plain_pipes}\n")
             self.write_frame(output, plain_cubes, plain_pipes, faint_cubes, faint_pipes)
 
         plain_cubes.update(self.__walker.nx_graph.get_cubes())
