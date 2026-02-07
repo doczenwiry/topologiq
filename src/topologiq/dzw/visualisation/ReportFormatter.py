@@ -1,4 +1,5 @@
-from topologiq.dzw.utils.ZxGraphComponents import EdgeType, NodeType
+from topologiq.dzw.utils.EdgeType import EdgeType
+from topologiq.dzw.utils.NodeType import NodeType
 from topologiq.dzw.ZxGraphWalker import ZxGraphWalker
 
 

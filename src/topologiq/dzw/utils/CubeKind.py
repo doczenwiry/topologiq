@@ -1,7 +1,7 @@
 from enum import Enum
 import functools
 
-from topologiq.dzw.utils.ZxGraphComponents import NodeType
+from topologiq.dzw.utils.NodeType import NodeType
 from topologiq.dzw.utils.Spacetime import Reach, Coordinates
 
 class CubeKind(Enum):
@@ -47,15 +47,6 @@ class CubeKind(Enum):
             return [CubeKind.OOO]
         else:
             raise Exception(f"{node_type} has no representation as a cube of any kind.")
-
-    @staticmethod
-    def compatible_adjacent(kind1: 'CubeKind', kind2: 'CubeKind', step: Coordinates) -> bool:
-        md_consistent = step.dot(step) == 1
-        reach1 = kind1.get_reach()
-        reach2 = kind2.get_reach()
-        # TODO: compute kind-to-kind-consistency along the step between the two positions
-        kk_consistent = True  # kind1.compatible(kind2, position1 - position2)
-        return md_consistent and kk_consistent
 
     @staticmethod
     def convert(node_type: NodeType, node_reach: Reach):

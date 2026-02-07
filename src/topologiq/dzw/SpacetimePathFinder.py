@@ -1,7 +1,4 @@
 from logging import getLogger
-
-from topologiq.dzw.utils.Spacetime import Coordinates
-
 console = getLogger(__name__)
 
 from collections import deque

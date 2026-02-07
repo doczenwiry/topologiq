@@ -1,5 +1,7 @@
 import logging
+from collections import deque
 from logging import getLogger
+
 console = getLogger(__name__)
 console.setLevel(logging.CRITICAL + 10)
 
@@ -7,7 +9,8 @@ import pyzx as zx
 import networkx as nx
 
 from topologiq.dzw.utils.Spacetime import Coordinates, Reach, Step
-from topologiq.dzw.utils.ZxGraphComponents import NodeType, EdgeType
+from topologiq.dzw.utils.EdgeType import EdgeType
+from topologiq.dzw.utils.NodeType import NodeType
 from topologiq.dzw.utils.CubeKind import CubeKind
 
 from topologiq.dzw.helpers.SpacetimeHelper import SpacetimeHelper
@@ -102,6 +105,9 @@ class AugmentedNxGraph:
     def get_neighbours(self, node_id: int):
         return self.__zx_graph.neighbors(node_id)
 
+    def get_bg_neighbours(self, cube: int):
+        return self.__bg_graph.neighbors(cube)
+
     def get_degree(self, node_id: int):
         return self.__zx_graph.degree[node_id]
 
@@ -135,19 +141,6 @@ class AugmentedNxGraph:
     def get_edge_realisation(self, source: int, target: int):
         return self.__zx_graph.get_edge_data(source, target).get(AugmentedNxGraph.KEY_ZX_BG_PATH)
 
-    # TODO: move consistency checking to Cube classes (recommendation from J)
-    def get_candidate_adjacent(self, source: int, pipe_type: EdgeType) -> list[tuple[Step, CubeKind]]:
-        if not self.is_node_realised(source):
-            raise Exception(f"{source} is not placed and thus has no kind. Cannot determine its adjacent candidates.")
-
-        if self.get_node_type(source) not in [NodeType.X, NodeType.Z]:
-            raise NotImplemented(f"NodeType {self.get_node_type(source)} not supported.")
-
-        source_cube = self.get_cube(source)
-        source_kind = self.get_cube_kind(source_cube)
-
-        return source_kind.get_candidate_constellation(pipe_type)
-
     def is_node_realised(self, node_id: int) -> bool:
         return self.__zx_graph.nodes[node_id][AugmentedNxGraph.KEY_ZX_BG_CUBE] is not None
 
@@ -169,8 +162,26 @@ class AugmentedNxGraph:
 
         self.place_cube(cube_id, position, kind)
 
-    def is_edge_realised(self, source: int, target: int) -> bool:
-        return self.__zx_graph.get_edge_data(source, target)[AugmentedNxGraph.KEY_ZX_BG_PATH] is not None
+    def find_realising_cubes(self, node: int) -> set[int]:
+        if not self.is_node_realised(node):
+            raise Exception(f"Node #{node} is not realised by any cube.")
+
+        node_type = self.get_node_type(node)
+        queue: deque[int] = deque([ self.get_cube(node) ])
+        realising: set[int] = set()
+
+        # TODO: explore within the BlockGraph
+        while queue:
+            current = queue.popleft()
+
+            for successor in self.get_bg_neighbours(current):
+                successor_type = self.get_node_type(successor)
+                pipe_type = self.get_pipe_type(current, successor)
+                if successor_type == node_type and pipe_type == EdgeType.IDENTITY and successor not in realising:
+                    queue.append(successor)
+                    realising.add(successor)
+
+        return realising
 
     def is_path_valid(self, source: int, target_kind: CubeKind, target_position: Coordinates,
                       edge_type: EdgeType, extras: list[tuple[Coordinates, CubeKind]]) -> bool:
@@ -240,6 +251,9 @@ class AugmentedNxGraph:
                 console.debug(f"> Proposed path is Hadamard-inconsistent with its purported edge.")
 
             return is_hadamard_path == (edge_type == EdgeType.HADAMARD)
+
+    def is_edge_realised(self, source: int, target: int) -> bool:
+        return self.__zx_graph.get_edge_data(source, target)[AugmentedNxGraph.KEY_ZX_BG_PATH] is not None
 
     # Precondition: path is a sequence of (position,kind) for the extra cubes needed to connect the source to the target
     def realise_edge(self, source: int, target: int, path: list[tuple[Coordinates, CubeKind]]):

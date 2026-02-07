@@ -1,6 +1,7 @@
 from topologiq.dzw.utils.CubeKind import CubeKind
 from topologiq.dzw.utils.Spacetime import Coordinates, Spacetime
-from topologiq.dzw.utils.ZxGraphComponents import NodeType, EdgeType
+from topologiq.dzw.utils.EdgeType import EdgeType
+from topologiq.dzw.utils.NodeType import NodeType
 
 class SpacetimeHelper:
     @staticmethod
