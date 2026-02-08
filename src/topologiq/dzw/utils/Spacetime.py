@@ -47,6 +47,39 @@ class Coordinates:
     def as_tuple(self):
         return self.x, self.y, self.z
 
+    def __different_components(self, other):
+        different_x = 1 if self.x != other.x else 0
+        different_y = 1 if self.y != other.y else 0
+        different_z = 1 if self.z != other.z else 0
+        return different_x + different_y + different_z
+
+    def get_line_of_sight(self, other):
+        different_x = 1 if self.x != other.x else 0
+        different_y = 1 if self.y != other.y else 0
+        different_z = 1 if self.z != other.z else 0
+
+        if different_x + different_y + different_z != 1:
+            raise Exception(f"Coordinates are not co-linear and thus do not have a line-of-sight [{self}/{other}.")
+
+        delta_x = +1 if self.x - other.x < 0 else -1
+        delta_y = +1 if self.y - other.y < 0 else -1
+        delta_z = +1 if self.z - other.z < 0 else -1
+
+        line_of_sight = Coordinates(different_x * delta_x, different_y * delta_y, different_z * delta_z)
+
+        if Spacetime.ORIGIN.get_manhattan_distance(line_of_sight) != 1:
+            raise Exception(f"Erroneous computation of line of sight [{self}/{other} = {line_of_sight}].")
+
+        return line_of_sight
+
+    # The coordinates are colinear if they share one identical components
+    def colinear(self, other) -> bool:
+        return self.__different_components(other) == 1
+
+    # The coordinates are coplanar if they share two identical components
+    def coplanar(self, other) -> bool:
+        return self.__different_components(other) == 2
+
     def __repr__(self):
         return str(self)
 

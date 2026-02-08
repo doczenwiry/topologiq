@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from topologiq.dzw.utils.Spacetime import Spacetime, Step, Reach
+from topologiq.dzw.utils.Spacetime import Spacetime, Step, Reach, Coordinates
 
 
 class TestSpacetime(TestCase):
@@ -41,3 +41,13 @@ class TestSpacetime(TestCase):
         expected = [ step.value for step in [ Step.ZM, Step.ZP, Step.XM, Step.XP ]]
         produced = Spacetime.get_constellation(Spacetime.ORIGIN, restriction = Reach.XZ)
         self.assertEqual(sorted(expected), sorted(produced))
+
+    def test_get_line_of_sight1(self):
+        expected = Coordinates(1, 0, 0)
+        produced = Coordinates(0, 0, 0).get_line_of_sight( Coordinates(1, 0, 0) )
+        self.assertEqual(expected, produced)
+
+    def test_get_line_of_sight2(self):
+        expected = Coordinates(-1, 0, 0)
+        produced = Coordinates(0, 0, 0).get_line_of_sight( Coordinates(-27, 0, 0) )
+        self.assertEqual(expected, produced)

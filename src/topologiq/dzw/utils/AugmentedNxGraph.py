@@ -1,9 +1,5 @@
 import logging
 from collections import deque
-from logging import getLogger
-
-console = getLogger(__name__)
-console.setLevel(logging.CRITICAL + 10)
 
 import pyzx as zx
 import networkx as nx
@@ -15,6 +11,9 @@ from topologiq.dzw.utils.CubeKind import CubeKind
 
 from topologiq.dzw.helpers.SpacetimeHelper import SpacetimeHelper
 
+from logging import getLogger
+console = getLogger(__name__)
+# console.setLevel(logging.CRITICAL + 10)
 
 # TODO: figure out what the other VertexType and EdgeType represent
 # TODO: how do we deal with the last four VertexType (i.e. H_BOX, W_INPUT, W_OUTPUT, Z_BOX) ?
@@ -340,7 +339,7 @@ class AugmentedNxGraph:
         source_position = self.get_cube_position(source_cube)
         target_position = self.get_cube_position(target_cube)
         # TODO: replace 3 with 1 once the pathfinder has been rewritten
-        if source_position.get_manhattan_distance(target_position) != 3:
+        if source_position.get_manhattan_distance(target_position) != 1:
             raise Exception(f"Cubes #{source_cube}@{source_position} and #{target_cube}@{target_position} are not at adjacent positions.")
 
         self.__bg_graph.add_edge(source_cube, target_cube)
