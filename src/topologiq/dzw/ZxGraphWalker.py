@@ -83,6 +83,8 @@ class ZxGraphWalker:
         self.node_beams[root] = node_beams
         self.cube_beams[root] = cube_beams
 
+        self.node_realisation_order.append(root)
+
         queue : deque[int] = deque([root])
         visited: set[int] = set()
 
@@ -91,11 +93,9 @@ class ZxGraphWalker:
             source: int = queue.popleft()
             visited.add(source)
 
-            self.node_realisation_order.append(source)
-
             for target in self.nx_graph.get_neighbours(source):
-                console.info(f"Processing {source}-{target} : [target_visited={target in visited}, edge_realised={self.nx_graph.is_edge_realised(source, target)}]")
                 if target in visited or self.nx_graph.is_edge_realised(source, target):
+                    console.info(f"Ignoring edge {source}-{target}")
                     continue
 
                 path = None
@@ -103,26 +103,32 @@ class ZxGraphWalker:
                 if not self.nx_graph.is_node_realised(target):
                     # First-pass edge
                     # Goal: find a path to some position where a suitable cube can be placed within some maximal MD
+                    console.info(f"Processing edge {source}-{target} : Pass #1")
+
                     (target_kind, target_position, path) = self.find_target_realisation(source, target)
 
                     if target_kind is None or target_position is None:
-                        raise Exception(f"Target realisation failure [{target}]")
+                        raise Exception(f"> Target realisation failure : neither kind nor placement found.")
 
                     # Realise the target node as a cube with kind and position provided by the pathfinder
                     self.nx_graph.realise_node(target, target_kind, target_position)
+                    self.node_realisation_order.append(target)
 
                     if path is None:
-                        raise Exception(f"Pass #1 edge realisation failure [{source}-{target}]")
+                        raise Exception(f"> Edge realisation failure : no path found.")
 
                     self.number_1st_pass_edges += 1
                     queue.append(target)
                 elif not self.nx_graph.is_edge_realised(source, target):
                     # Second-pass edge
                     # Goal: find a path towards the position of a cube representing the target node
+
+                    console.info(f"Processing edge {source}-{target} : Pass #2")
+
                     path = self.find_edge_realisation(source, target)
 
                     if path is None:
-                        raise Exception(f"Pass #2 edge realisation failure [{source}-{target}]")
+                        raise Exception(f"> Edge realisation failure : no path found.")
 
                     self.number_2nd_pass_edges += 1
 
@@ -348,27 +354,16 @@ class ZxGraphWalker:
                 critical_beams[node] = (unrealised_edges, beams)
 
         # # Check if edge is Hadamard
-        clean_paths = self.run_pathfinder(source, target, critical_beams = critical_beams)
-        # clean_paths, pathfinder_vis_data = run_pathfinder(
-        #     src_block_info=(source_position.as_tuple(), source_kind.name.lower()),
-        #     tgt_zx_type=target_type.name,
-        #     init_step=3,
-        #     taken = [position.as_tuple() for position in self.nx_graph.occupied],
-        #     tgt_block_info = (target_position.as_tuple(), target_kind.name.lower()),
-        #     hdm = (edge_type == EdgeType.HADAMARD),
-        #     min_succ_rate=60,
-        #     critical_beams=critical_beams,
-        #     # log_stats_id = log_stats_id,
-        #     src_tgt_ids=(source, target)
-        # )
-
-        console.debug(f"[P#2] Found {len(clean_paths)} clean_paths.")
+        clean_paths = []
+        max_md = 3
+        while not clean_paths and max_md <= 9:
+            clean_paths = self.pathfinder.find_edge_realisation(
+                source = source, target = target, critical = critical_beams, maximal_md = max_md
+            )
+            max_md += 1
 
         if not clean_paths:
             return None
-
-        for clean_path in clean_paths:
-            console.debug(f"> {clean_path}")
 
         return self.convert_path(clean_paths[0])
 
@@ -376,10 +371,13 @@ class ZxGraphWalker:
     def convert_path(winner_path) -> list[tuple[Coordinates, CubeKind]]:
         # Conversion needed for the path produced by the pathfinder.
         path = []
-        for coordinates, kind in winner_path[1:-1]:
-            position = Coordinates.from_tuple(coordinates)
-            if Spacetime.ORIGIN.get_manhattan_distance(position) % 3 == 0:
-                path.append((position, CubeKind.from_string(kind)))
+        for kind, position in winner_path[1:-1]:
+            if not isinstance(position, Coordinates):
+                position = Coordinates.from_tuple(position)
+            if not isinstance(kind, CubeKind):
+                kind = CubeKind.from_string(kind)
+            # if Spacetime.ORIGIN.get_manhattan_distance(position) % 3 == 0:
+            path.append((position, kind))
 
         return path
 
@@ -433,6 +431,8 @@ class ZxGraphWalker:
                     src_tgt_ids=(source, target),
                     log_stats_id=log_stats_id,
                 )
+
+                console.debug(f"Valid paths from pathfinder: {valid_paths}")
 
                 # A clean_path is one that doesn't pass through a taken coordinate
                 for path in valid_paths.values():

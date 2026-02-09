@@ -35,8 +35,8 @@ class TikzWriter:
 
             cube_position = self.__walker.nx_graph.get_cube_position(cube)
             # TODO: scaling down needed due to current implementation of the path-finder
-            if Spacetime.ORIGIN.get_manhattan_distance(cube_position) % 3 == 0:
-                cube_position = cube_position.div(3)
+            # if Spacetime.ORIGIN.get_manhattan_distance(cube_position) % 3 == 0:
+            #     cube_position = cube_position.div(3)
 
             if cube in plain_cubes:
                 cube_visibility = 'plain'
@@ -76,7 +76,7 @@ class TikzWriter:
 
         output.write("\t}\n")
 
-    def write_file(self, filename = None):
+    def write_file(self, filename = None, frame_by_frame = False, show_initial = True, show_completed = True):
         if filename is None:
             filename = f"../../output/tikz/volumetric-zx-diagram-{self.__walker.name}.tex"
 
@@ -93,42 +93,45 @@ class TikzWriter:
         faint_cubes: set[int] = set()
         faint_pipes: set[tuple[int,int]] = set()
 
-        root = self.__walker.node_realisation_order[0]
-        plain_cubes.add( self.__walker.nx_graph.get_cube(root) )
-        self.write_frame(output, plain_cubes, plain_pipes, faint_cubes, faint_pipes)
-
-        for next_edge in self.__walker.edge_realisation_order:
-            faint_cubes.update(plain_cubes)
-            faint_pipes.update(plain_pipes)
-            plain_cubes.clear()
-            plain_pipes.clear()
-            (source, target) = next_edge
-            source_cube = self.__walker.nx_graph.get_cube(source)
-            target_cube = self.__walker.nx_graph.get_cube(target)
-            plain_cubes.add(source_cube)
-            plain_cubes.add(target_cube)
-            current = source_cube
-            extra_cubes = self.__walker.nx_graph.get_edge_realisation(source, target)
-            for extra_cube in extra_cubes:
-                plain_cubes.add(extra_cube)
-                pipe = (current, extra_cube) if current < extra_cube else (extra_cube, current)
-                plain_pipes.add( pipe )
-                current = extra_cube
-            plain_cubes.add(target_cube)
-            pipe = (current, target_cube) if current < target_cube else (target_cube, current)
-            plain_pipes.add( pipe )
-            output.write(f"\t% Edge  : {source}-{target} [{source_cube}-{target_cube}] : {extra_cubes}\n")
-            output.write(f"\t% Cubes : {plain_cubes}\n")
-            output.write(f"\t% Pipes : {plain_pipes}\n")
+        if show_initial:
+            root = self.__walker.node_realisation_order[0]
+            plain_cubes.add( self.__walker.nx_graph.get_cube(root) )
             self.write_frame(output, plain_cubes, plain_pipes, faint_cubes, faint_pipes)
 
-        plain_cubes.update(self.__walker.nx_graph.get_cubes())
-        plain_pipes.update(self.__walker.nx_graph.get_pipes())
+        if frame_by_frame:
+            for next_edge in self.__walker.edge_realisation_order:
+                faint_cubes.update(plain_cubes)
+                faint_pipes.update(plain_pipes)
+                plain_cubes.clear()
+                plain_pipes.clear()
+                (source, target) = next_edge
+                source_cube = self.__walker.nx_graph.get_cube(source)
+                target_cube = self.__walker.nx_graph.get_cube(target)
+                plain_cubes.add(source_cube)
+                plain_cubes.add(target_cube)
+                current = source_cube
+                extra_cubes = self.__walker.nx_graph.get_edge_realisation(source, target)
+                for extra_cube in extra_cubes:
+                    plain_cubes.add(extra_cube)
+                    pipe = (current, extra_cube) if current < extra_cube else (extra_cube, current)
+                    plain_pipes.add( pipe )
+                    current = extra_cube
+                plain_cubes.add(target_cube)
+                pipe = (current, target_cube) if current < target_cube else (target_cube, current)
+                plain_pipes.add( pipe )
+                output.write(f"\t% Edge  : {source}-{target} [{source_cube}-{target_cube}] : {extra_cubes}\n")
+                output.write(f"\t% Cubes : {plain_cubes}\n")
+                output.write(f"\t% Pipes : {plain_pipes}\n")
+                self.write_frame(output, plain_cubes, plain_pipes, faint_cubes, faint_pipes)
 
-        faint_cubes.clear()
-        faint_pipes.clear()
+        if show_completed:
+            plain_cubes.update(self.__walker.nx_graph.get_cubes())
+            plain_pipes.update(self.__walker.nx_graph.get_pipes())
 
-        self.write_frame(output, plain_cubes, plain_pipes, faint_cubes, faint_pipes)
+            faint_cubes.clear()
+            faint_pipes.clear()
+
+            self.write_frame(output, plain_cubes, plain_pipes, faint_cubes, faint_pipes)
 
         output.write("\\end{document}\n")
 

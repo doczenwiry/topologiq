@@ -15,25 +15,63 @@ class SpacetimePathFinder:
     def __init__(self, nx_graph: AugmentedNxGraph):
         self.nx_graph = nx_graph
 
-    # TODO: deal with Hadamard EdgeType !!
-    # TODO: add suggestions of candidate coordinates ?
-    # TODO: add cutoff threshold once enough of the bounding box has been reached
     def find_target_realisation(self,
         source: int, target: int,
         critical: dict[int, tuple[int, NodeBeams]] = None,
-        maximal_md: int = 1
+        maximal_md: int = 3
+    ):
+        target_suitable_kinds = CubeKind.suitable_kinds(self.nx_graph.get_node_type(target))
+
+        console.info(f"Searching for realisation of target node #{target} [type={self.nx_graph.get_node_type(target)}]")
+        console.info(f"> Suitable target kinds : {target_suitable_kinds}")
+
+        return self.__core_pathfinder(
+            source = source, target = target,
+            critical = critical, maximal_md = maximal_md,
+            goal_reached =
+                lambda next_kind, next_position : next_kind in target_suitable_kinds
+        )
+
+    def find_edge_realisation(self,
+        source: int, target: int,
+        critical: dict[int, tuple[int, NodeBeams]] = None,
+        maximal_md: int = 3
+    ):
+        target_cube = self.nx_graph.get_cube(target)
+        target_kind = self.nx_graph.get_cube_kind(target_cube)
+        target_position = self.nx_graph.get_cube_position(target_cube)
+        edge_type = self.nx_graph.get_edge_type(source, target)
+
+        console.info(f"Searching for realisation of edge {source}-{target} [type={edge_type}]")
+        console.info(f"> Target cube #{target_cube} : {target_kind}@{target_position}")
+
+        return self.__core_pathfinder(
+            source = source, target = target,
+            critical = critical, maximal_md = maximal_md,
+            goal_reached =
+                lambda next_kind, next_position : next_kind == target_kind and next_position == target_position
+        )
+
+    # TODO: deal with Hadamard EdgeType !!
+    # TODO: add suggestions of candidate coordinates ?
+    # TODO: add cutoff threshold once enough of the bounding box has been reached
+    def __core_pathfinder(self,
+        source: int, target: int,
+        critical: dict[int, tuple[int, NodeBeams]] = None,
+        maximal_md: int = 3,
+        goal_reached = lambda next_kind, next_position : True
     ):
         if critical is None:
             critical = {}
 
         if not self.nx_graph.is_node_realised(source):
-            raise Exception(f"Node #{source} is not realised; cannot use as a source for path-finding.")
-
-        console.info(f"Searching for placement of target node #{target} [type={self.nx_graph.get_node_type(target)}] from source node #{source} [type={self.nx_graph.get_node_type(source)}].")
+            raise Exception(f"Source node #{source} is not realised; cannot use as a start for path-finding.")
 
         source_cube = self.nx_graph.get_cube(source)
         source_kind = self.nx_graph.get_cube_kind(source_cube)
         source_position = self.nx_graph.get_cube_position(source_cube)
+
+        console.info(f"> Source cube #{source_cube} : {source_kind}@{source_position}")
 
         target_suitable_kinds = CubeKind.suitable_kinds(self.nx_graph.get_node_type(target))
 
@@ -49,8 +87,8 @@ class SpacetimePathFinder:
             current_path = paths[current_cube]
             terminal_kind, terminal_position = current_path[-1]
 
-            if terminal_kind in target_suitable_kinds:
-                console.info(f"Terminal cube : {terminal_kind}@{terminal_position}.")
+            if goal_reached(terminal_kind, terminal_position):
+                console.debug(f"Goal reached : {terminal_kind}@{terminal_position}.")
             else:
                 console.debug(f"Terminal cube : {terminal_kind}@{terminal_position}.")
 
@@ -65,12 +103,12 @@ class SpacetimePathFinder:
 
             # TODO: deal with Hadamard-consistency
             constellation = SpacetimeHelper.get_candidate_constellation(terminal_kind, terminal_position)
-            console.info(f"Constellation of {terminal_kind}@{terminal_position} : {constellation}.")
+            console.debug(f"> Constellation of {terminal_kind}@{terminal_position} : {constellation}.")
             for next_kind, next_position in constellation:
                 next_md = source_position.get_manhattan_distance(next_position)
 
-                # Ignore step if it brings us to an occupied position
-                if next_position in self.nx_graph.occupied:
+                # Ignore step if it brings us to an occupied position, unless that is the goal
+                if next_position in self.nx_graph.occupied and not goal_reached(next_kind, next_position):
                     console.debug(f"> Next position is already occupied [{next_kind}@{next_position}].")
                     continue
 
@@ -106,7 +144,7 @@ class SpacetimePathFinder:
                         broken_beams = 0
                         min_exit_num, beams = data
                         for beam in beams:
-                            if any([position in beam for _, position in current_path]):
+                            if any([position.as_tuple() in beam for _, position in current_path]):
                                 broken_beams += 1
                                 # Additionally, add any number of beam-to-beam clashes for the node
                                 # currently under investigation because, if they exist, they likely are already
@@ -128,8 +166,10 @@ class SpacetimePathFinder:
                     if critical_break:
                         continue
 
-                if not critical_break and next_kind in target_suitable_kinds:
-                    console.info(f"Found new path : {next_path}")
+                if not critical_break and goal_reached(next_kind, next_position):
+                    console.debug(f"Found new path to {next_kind}@{next_position} : {next_path}")
                     solutions.append(next_path)
+
+        console.info(f"Solutions found : {len(solutions)}")
 
         return solutions

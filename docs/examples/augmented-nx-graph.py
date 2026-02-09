@@ -8,8 +8,11 @@ from topologiq.dzw.visualisation.TikzWriter import TikzWriter
 import logging
 logging.basicConfig(level=logging.DEBUG)
 
+logging.getLogger('topologiq.dzw.SpacetimePathFinder').setLevel(logging.INFO)
+logging.getLogger('topologiq.dzw.ZxGraphWalker').setLevel(logging.INFO)
+
 if __name__ == '__main__':
-    circuit_name = "cnots"
+    circuit_name = "cnots-partial"
     c = zx.Circuit(2)
     c.add_gate("CNOT", 1, 0)
     c.add_gate("CNOT", 0, 1)
@@ -40,19 +43,19 @@ if __name__ == '__main__':
             print(f"{node}", end=" ")
     print("")
 
-    root = 3  # builder.pick_root()
+    root = 3
     kind = CubeKind.suitable_kinds(nx_graph.get_node_type(root))[0]
 
-    kwargs: dict[str, tuple[int, int] | int] = {
-        "weights": (-1, -1),
-        "length_of_beams": 99,
-    }
-
-    walker.construct( root_choice = (root,kind) )
+    completed = False
+    try:
+        completed = walker.construct( root_choice = (root,kind) )
+    except Exception as e:
+        print(f"Construction failed")
+        print(f"Error : {e}")
 
     formatter = ReportFormatter(walker)
     formatter.print_report(append_cube_report = True)
     formatter.write_report()
 
     tikz_writer = TikzWriter(walker)
-    tikz_writer.write_file()
+    tikz_writer.write_file( show_initial = False, show_completed = completed )
