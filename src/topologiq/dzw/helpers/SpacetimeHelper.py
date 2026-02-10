@@ -42,12 +42,9 @@ class SpacetimeHelper:
         origin_type = origin_kind.get_type()
         origin_reach = origin_kind.get_reach()
 
-        for step in Spacetime.STEPS:
-            if not origin_reach.contains(step):
-                continue
-
+        for step in origin_reach.get_step_constellation():
             candidate_position = origin_position + step
-            orthogonal_reach = Spacetime.get_orthogonal_plane(origin_reach, step.value)
+            orthogonal_reach = Spacetime.get_orthogonal_plane(origin_reach, step)
 
             # A cube can always have an adjacent cube of type X connected by
             # - IDENTITY pipe in the same plane if cube type is X

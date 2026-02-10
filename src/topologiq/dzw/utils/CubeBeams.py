@@ -7,28 +7,39 @@ from logging import getLogger
 console = getLogger(__name__)
 
 class CubeBeams:
-    class ConflictType(Enum):
-        TYPE0 = 0 # No line-of-sight
-        TYPE1 = 1 # Cubes are CO-PLANAR (beams clash)
-        TYPE2 = 2 # Cubes are CO-LINEAR (beams break)
-
-    def __init__(self, cube_kind: CubeKind, cube_position: Coordinates, occupied: set[Coordinates] = None):
-        if occupied is None:
-            occupied = set()
+    def __init__(self,
+                 cube_kind: CubeKind, cube_position: Coordinates,
+                 extras: list[tuple[CubeKind, Coordinates]] = None,
+                 occupied: set[Coordinates] = None
+                 ):
+        cube_reach = cube_kind.get_reach()
 
         self.__cube_kind: CubeKind = cube_kind
         self.__cube_position: Coordinates = cube_position
-        self.__available_beams: list[Coordinates] = []
-        cube_reach = cube_kind.get_reach()
+        self.__available_beams: list[Coordinates] = cube_reach.get_step_constellation()
 
-        lines_of_sight = set()
-        for position in occupied:
-            if cube_position.colinear(position):
-                lines_of_sight.add(cube_position.get_line_of_sight(position))
+        console.debug(f"Cube kind : {self.__cube_kind}@{self.__cube_position} [{cube_reach}].")
+        console.debug(f"> Occupied : {occupied}")
 
-        for step in Spacetime.STEPS:
-            if cube_reach.contains(step) and step.value not in lines_of_sight:
-                self.__available_beams.append( step.value )
+        if occupied is not None:
+            for position in occupied:
+                console.debug(f"> {cube_position} colinear with {position} ? {cube_position.colinear(position)}")
+                if cube_position.colinear(position):
+                    los = cube_position.get_line_of_sight(position)
+                    console.debug(f">> LOS[Occ] : {los} in {self.__available_beams} : {los in self.__available_beams}")
+                    if los in self.__available_beams:
+                        self.__available_beams.remove( los )
+
+        if extras is not None:
+            for _, position in extras:
+                console.debug(f"> {cube_position} colinear with {position} ? {cube_position.colinear(position)}")
+                if cube_position.colinear(position):
+                    los = cube_position.get_line_of_sight(position)
+                    console.debug(f">> LOS[Ext] : {los} in {self.__available_beams} : {los in self.__available_beams}")
+                    if los in self.__available_beams:
+                        self.__available_beams.remove( los )
+
+        console.debug(f"> Available beams : {self.__available_beams}")
 
     def number_available(self):
         return len(self.__available_beams)
@@ -54,11 +65,18 @@ class CubeBeams:
 
         self.__available_beams.remove(beam)
 
+    def __eq__(self, other):
+        return self.__cube_kind == other.__cube_kind and self.__cube_position == other.__cube_position \
+            and self.__available_beams == other.__available_beams
+
     def __repr__(self):
         formatted = f"{self.__cube_kind}@{self.__cube_position} :"
         for beam in self.__available_beams:
             formatted += f" {beam}"
         return formatted
+
+    def __iter__(self):
+        return iter(self.__available_beams)
 
     # # TODO: deal with broken beams (cfr. pathfinder lines 299-329)
     # critical_break = False

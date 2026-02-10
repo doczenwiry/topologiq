@@ -183,7 +183,7 @@ class AugmentedNxGraph:
         return realising
 
     def is_path_valid(self, source: int, target_kind: CubeKind, target_position: Coordinates,
-                      edge_type: EdgeType, extras: list[tuple[Coordinates, CubeKind]]) -> bool:
+                      edge_type: EdgeType, extras: list[tuple[CubeKind, Coordinates]]) -> bool:
             is_hadamard_path = False
 
             source_cube = self.get_cube(source)
@@ -198,7 +198,7 @@ class AugmentedNxGraph:
             console.info(f"> Towards target : {target_kind}@{target_position}")
             console.info(f"> With extras : {extras}")
 
-            for (current_position, current_kind) in extras:
+            for (current_kind, current_position) in extras:
                 current_reach = current_kind.get_reach()
 
                 # Check that the cube type is either X or Z (Y and boundaries must be leaves)
@@ -255,7 +255,7 @@ class AugmentedNxGraph:
         return self.__zx_graph.get_edge_data(source, target)[AugmentedNxGraph.KEY_ZX_BG_PATH] is not None
 
     # Precondition: path is a sequence of (position,kind) for the extra cubes needed to connect the source to the target
-    def realise_edge(self, source: int, target: int, path: list[tuple[Coordinates, CubeKind]]):
+    def realise_edge(self, source: int, target: int, path: list[tuple[CubeKind, Coordinates]]):
         if not self.is_node_realised(source):
             raise Exception(f"{source} is not placed; cannot connect with a path.")
 
@@ -289,7 +289,7 @@ class AugmentedNxGraph:
         # Add all the extra cubes and pipes of the path to the BlockGraph
         previous_cube: int = source_cube
         previous_kind: CubeKind = self.get_cube_kind(source_cube)
-        for (current_position, current_kind) in path:
+        for (current_kind, current_position) in path:
             current_cube = self.get_next_cube_id() #len(self.__nx_graph.nodes)
             self.__bg_graph.add_node(current_cube)
             console.debug(f"> Adding cube #{current_cube} [{current_kind}@{current_position}].")

@@ -4,6 +4,10 @@ from topologiq.dzw.ZxGraphWalker import ZxGraphWalker
 class TikzWriter:
     AXES = ['X', 'Y', 'Z']
 
+    STYLE = 'zx'
+    ROTATIONX = 58
+    ROTATIONZ = 112
+
     def __init__(self, walker: ZxGraphWalker, animation: bool = False):
         self.__walker = walker
         self.__animation = animation
@@ -21,8 +25,8 @@ class TikzWriter:
     def write_frame(self, output,
                     plain_cubes: set[int], plain_pipes: set[tuple[int,int]],
                     faint_cubes: set[int], faint_pipes: set[tuple[int,int]],
-                    style = 'bg'):
-        output.write(f"\t\\ZxGraph[style={style}]")
+                    style = 'zx', rotation_x = 58, rotation_z = 112):
+        output.write(f"\t\\ZxGraph[style={TikzWriter.STYLE},rotationX={TikzWriter.ROTATIONX},rotationZ={TikzWriter.ROTATIONZ}]")
         output.write("{\n")
 
         for cube in self.__walker.nx_graph.get_cubes():

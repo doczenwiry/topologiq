@@ -121,8 +121,8 @@ class Reach(Enum):
         # Dot product will tell us whether the step lies in this plane
         return self.value.dot(point) == 0
 
-    def get_step_constellation(self) -> list[Step]:
-        return [step for step in Spacetime.STEPS if self.contains(step.value)]
+    def get_step_constellation(self) -> list[Coordinates]:
+        return [ step for step in Spacetime.STEPS if self.contains(step) ]
 
     def __str__(self):
         return f"Plane.{self.name}"
@@ -130,7 +130,7 @@ class Reach(Enum):
 class Spacetime:
     ORIGIN = Coordinates(0, 0, 0)
 
-    STEPS = [ Step.XP, Step.XM, Step.YP, Step.YM, Step.ZP, Step.ZM ]
+    STEPS = [ Step.XP.value, Step.XM.value, Step.YP.value, Step.YM.value, Step.ZP.value, Step.ZM.value ]
     PLANES = [Reach.XY, Reach.XZ, Reach.YZ]
 
     @staticmethod
