@@ -61,9 +61,9 @@ class CubeBeams:
 
     def close_beam(self, beam: Coordinates):
         if beam not in self.__available_beams:
-            raise Exception(f"Closing non-existent beam for cube {self.__cube_kind}@{self.__cube_position} [{beam}].")
-
-        self.__available_beams.remove(beam)
+            console.warning(f"Closing non-existent beam for cube {self.__cube_kind}@{self.__cube_position} [{beam}].")
+        else:
+            self.__available_beams.remove(beam)
 
     def __eq__(self, other):
         return self.__cube_kind == other.__cube_kind and self.__cube_position == other.__cube_position \

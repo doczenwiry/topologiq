@@ -29,7 +29,7 @@ class SpacetimePathFinder:
             source = source, target = target,
             critical = critical, maximal_md = maximal_md,
             goal_reached =
-                lambda next_kind, next_position : next_kind in target_suitable_kinds
+                lambda kind, position : kind in target_suitable_kinds and position not in self.nx_graph.occupied
         )
 
     def find_edge_realisation(self,
@@ -49,7 +49,7 @@ class SpacetimePathFinder:
             source = source, target = target,
             critical = critical, maximal_md = maximal_md,
             goal_reached =
-                lambda next_kind, next_position : next_kind == target_kind and next_position == target_position
+                lambda kind, position : kind == target_kind and position == target_position
         )
 
     # TODO: deal with Hadamard EdgeType !!
@@ -71,9 +71,8 @@ class SpacetimePathFinder:
         source_kind = self.nx_graph.get_cube_kind(source_cube)
         source_position = self.nx_graph.get_cube_position(source_cube)
 
-        console.info(f"> Source cube #{source_cube} : {source_kind}@{source_position}")
-
-        target_suitable_kinds = CubeKind.suitable_kinds(self.nx_graph.get_node_type(target))
+        console.info(f"> Start cube #{source_cube} : {source_kind}@{source_position}")
+        console.info(f"> Occupied : {self.nx_graph.occupied}")
 
         # Initialize queue with the source cube
         start_cube = (source_kind, source_position)

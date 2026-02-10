@@ -143,7 +143,7 @@ class AugmentedNxGraph:
     def is_node_realised(self, node_id: int) -> bool:
         return self.__zx_graph.nodes[node_id][AugmentedNxGraph.KEY_ZX_BG_CUBE] is not None
 
-    def realise_node(self, node_id: int, kind: CubeKind, position: Coordinates):
+    def realise_node(self, node_id: int, kind: CubeKind, position: Coordinates) -> int:
         """Realise the node as a cube of the given kind placed at the given coordinates."""
         if kind not in CubeKind.suitable_kinds(self.get_node_type(node_id)):
             raise Exception(f"Requested {kind} is not compatible with {self.get_node_type(node_id)}")
@@ -160,6 +160,8 @@ class AugmentedNxGraph:
         self.__zx_graph.nodes[node_id][AugmentedNxGraph.KEY_ZX_BG_CUBE] = cube_id
 
         self.place_cube(cube_id, position, kind)
+
+        return cube_id
 
     def find_realising_cubes(self, node: int) -> set[int]:
         if not self.is_node_realised(node):
@@ -319,7 +321,7 @@ class AugmentedNxGraph:
 
     def place_cube(self, cube_id: int, position: Coordinates, kind: CubeKind):
         if position in self.occupied:
-            raise Exception(f"Proposed {position} is already occupied by another cube.")
+            raise Exception(f"Proposed position for {kind}@{position} is already occupied by another cube.")
 
         self.__bg_graph.nodes[cube_id][AugmentedNxGraph.KEY_BG_CUBE_KIND] = kind
         self.__bg_graph.nodes[cube_id][AugmentedNxGraph.KEY_BG_CUBE_POSITION] = position
