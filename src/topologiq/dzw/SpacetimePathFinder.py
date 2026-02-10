@@ -34,8 +34,7 @@ class SpacetimePathFinder:
 
     def find_edge_realisation(self,
         source: int, target: int,
-        critical: dict[int, tuple[int, NodeBeams]] = None,
-        maximal_md: int = 3
+        critical: dict[int, tuple[int, NodeBeams]] = None
     ):
         target_cube = self.nx_graph.get_cube(target)
         target_kind = self.nx_graph.get_cube_kind(target_cube)
@@ -47,9 +46,10 @@ class SpacetimePathFinder:
 
         return self.__core_pathfinder(
             source = source, target = target,
-            critical = critical, maximal_md = maximal_md,
+            critical = critical, maximal_md = 20,
             goal_reached =
-                lambda kind, position : kind == target_kind and position == target_position
+                lambda kind, position : kind == target_kind and position == target_position,
+            terminate_on_first_found = True
         )
 
     # TODO: deal with Hadamard EdgeType !!
@@ -59,7 +59,8 @@ class SpacetimePathFinder:
         source: int, target: int,
         critical: dict[int, tuple[int, NodeBeams]] = None,
         maximal_md: int = 3,
-        goal_reached = lambda next_kind, next_position : True
+        goal_reached = lambda next_kind, next_position : True,
+        terminate_on_first_found = False
     ):
         if critical is None:
             critical = {}
@@ -169,6 +170,8 @@ class SpacetimePathFinder:
                     console.debug(f"Found new path to {next_kind}@{next_position} : {next_path}")
                     solutions.append(next_path)
 
-        console.info(f"Solutions found : {len(solutions)}")
+            if terminate_on_first_found and len(solutions) > 0:
+                break
 
+        console.info(f"Solutions found : {len(solutions)}")
         return solutions

@@ -150,14 +150,6 @@ class ZxGraphWalker:
         # Prepare final BlockGraph and return it ?
         return True
 
-    def find_target_realisation(self, source, target):
-        outcome = self.place_nxt_block(source, target)
-
-        if outcome is None:
-            outcome = (None, None, None)
-
-        return outcome
-
     @staticmethod
     def format_beam(beam: list[tuple[int,int,int]]):
         return f"{beam[0]}-{beam[-1]},"
@@ -229,17 +221,18 @@ class ZxGraphWalker:
         viable = not critical_interruption and not critical_intersection
         return viable, total_beams_interrupted, critical_intersection
 
-    # TODO: the BgPathFinder should provide a function to find a path towards some position where a suitable cube can be placed
-    def place_nxt_block(self, source: int, target: int):
+    def find_target_realisation(self, source: int, target: int):
         if not self.nx_graph.is_node_realised(source):
             raise Exception(f"{source} is not placed and has no kind; cannot connect with a path.")
 
         if self.nx_graph.is_node_realised(target):
             raise Exception(f"{target} is already placed and has a kind.")
 
-        target_type = self.nx_graph.get_node_type(target)
-
-        clean_paths = self.pathfinder.find_target_realisation(source, target)
+        clean_paths = []
+        for max_md in range(3,10):
+            clean_paths = self.pathfinder.find_target_realisation(source, target, maximal_md = max_md)
+            if clean_paths:
+                break
 
         viable_paths = []
 
@@ -278,7 +271,7 @@ class ZxGraphWalker:
 
         if winner_path is None:
             console.debug("No winner")
-            return None
+            return None, None, None
 
         source_cube = self.nx_graph.get_cube(source)
         source_kind = self.nx_graph.get_cube_kind(source_cube)
@@ -298,7 +291,7 @@ class ZxGraphWalker:
 
         if not self.nx_graph.is_path_valid(source, target_kind, target_position, edge_type, path):
             console.info(f"> Path is invalid ...")
-            return None
+            return None, None, None
 
         return target_kind, target_position, path
 
@@ -310,15 +303,8 @@ class ZxGraphWalker:
             if unrealised_edges > 0:
                 critical_beams[node] = (unrealised_edges, beams)
 
-        # # Check if edge is Hadamard
-        clean_paths = []
-        max_md = 3
-        # TODO: remove maximal_md limit (pathfinder should be left to roam free)
-        while not clean_paths and max_md <= 9:
-            clean_paths = self.pathfinder.find_edge_realisation(
-                source = source, target = target, critical = critical_beams, maximal_md = max_md
-            )
-            max_md += 1
+        # TODO: take into account whether the edge has HADAMARD type
+        clean_paths = self.pathfinder.find_edge_realisation(source, target, critical = critical_beams)
 
         if not clean_paths:
             return None
