@@ -162,39 +162,41 @@ class ZxGraphWalker:
         formatted += "]"
         return formatted
 
-    def is_path_viable(self, source, target, clean_path: list[tuple[CubeKind, Coordinates]]) -> tuple[bool, int, int]:
-        target_type = self.nx_graph.get_node_type(target)
-        target_degree = self.nx_graph.get_degree(target)
+    def is_path_viable(self,
+        source, target, target_kind, target_position,
+        extras: list[tuple[CubeKind, Coordinates]]
+    ) -> tuple[bool, int]:
 
-        target_kind, target_position = clean_path[-1]
-        console.debug(f"> Clean path [{target_kind}@{target_position}]: {clean_path}")
-        target_beams = CubeBeams(target_kind, target_position, extras = clean_path, occupied = self.nx_graph.occupied)
-        target_unobstructed_exits = target_beams.number_available()
+        console.debug(f"Checking validity of proposed path [{target_kind}@{target_position}]: {extras}")
+        target_beams = CubeBeams(target_kind, target_position, extras = extras, occupied = self.nx_graph.occupied)
+        beams_remaining = target_beams.number_available()
+        edges_unrealised = self.nx_graph.get_degree(target) - 1
 
-        if target_type == NodeType.O:
-            target_unobstructed_exits, target_beams = (6, [])
+        if target_kind == CubeKind.OOO:
+            beams_remaining, target_beams = (6, [])
 
-        source_beams = self.node_beams[source]
-
-        enough_remaining_exits = target_unobstructed_exits >= target_degree - 1
-        hello = any([clean_path[1][1].as_tuple() in beam for beam in source_beams])
-        if not (enough_remaining_exits and hello):
-            console.debug(f">> enough_exits={enough_remaining_exits} broken={hello}")
-            return False, 0, 0
-
-        # Deal with the constraints on BEAMS
         total_beams_interrupted = 0
+
+        if beams_remaining < edges_unrealised:
+            console.debug(f"Target node #{target} has {edges_unrealised} unrealised edges for {beams_remaining} beams.")
+            return False, total_beams_interrupted
+
+        egress_position = extras[0][1].as_tuple() if len(extras) > 0 else target_position.as_tuple()
+        if not any([egress_position in beam for beam in self.node_beams[source]]):
+            console.debug(f"Egress cube is not connected to a beam at the source node #{source}.")
+            return False, total_beams_interrupted
+
+        # Deal with the constraints on beams
         critical_interruption = False
         critical_intersection = False
-        # converted_path = ZxGraphWalker.convert_path(clean_path)
         for cube, beams in self.cube_beams.items():
             node = self.nx_graph.get_node(cube)
             cube_position = self.nx_graph.get_cube_position(cube)
             edges_unrealised = self.nx_graph.get_edges_unrealised(node)
 
-            # Determine whether the current node has too many beams interrupted by extra cubes from the path
+            # Determine whether the current node has too many beams interrupted by cubes from the path
             lines_of_sight = set()
-            for _, position in clean_path:
+            for _, position in extras:
                 if cube_position.colinear(position):
                     lines_of_sight.add( cube_position.get_line_of_sight(position) )
             if cube_position.colinear(target_position):
@@ -219,7 +221,7 @@ class ZxGraphWalker:
                 critical_intersection = True
 
         viable = not critical_interruption and not critical_intersection
-        return viable, total_beams_interrupted, critical_intersection
+        return viable, total_beams_interrupted
 
     def find_target_realisation(self, source: int, target: int):
         if not self.nx_graph.is_node_realised(source):
@@ -228,36 +230,33 @@ class ZxGraphWalker:
         if self.nx_graph.is_node_realised(target):
             raise Exception(f"{target} is already placed and has a kind.")
 
-        clean_paths = []
-        for max_md in range(3,10):
-            clean_paths = self.pathfinder.find_target_realisation(source, target, maximal_md = max_md)
-            if clean_paths:
-                break
+        proposed_paths = self.pathfinder.find_target_realisation(source, target)
+        console.info(f"Pathfinder proposed {len(proposed_paths)} paths.")
 
         viable_paths = []
-
-        console.debug(f"Found {len(clean_paths)} clean_paths.")
-
-        for clean_path in clean_paths:
-            (viable, beams_broken_by_path, clashes) = self.is_path_viable(source, target, clean_path)
+        for proposed_path in proposed_paths:
+            proposed_target_kind, proposed_target_position = proposed_path[-1]
+            proposed_extras = proposed_path[1:-1]
+            viable, total_beams_interrupted = self.is_path_viable(
+                source, target, proposed_target_kind, proposed_target_position, proposed_extras
+            )
             if not viable:
                 continue
 
-            target_kind, target_position = clean_path[-1]
-            console.debug(f"> Clean path [{target_kind}@{target_position}]: {clean_path}")
-            target_beams = CubeBeams(target_kind, target_position, extras= clean_path, occupied = self.nx_graph.occupied)
+            console.debug(f"> Proposed path [{proposed_target_kind}@{proposed_target_position}]: {proposed_path}")
+            target_beams = CubeBeams(proposed_target_kind, proposed_target_position, extras= proposed_path, occupied = self.nx_graph.occupied)
             target_unobstructed_exits = target_beams.number_available()
 
-            all_nodes_in_path = [p for p in clean_path]
+            all_nodes_in_path = [p for p in proposed_path]
 
             path_data = {
-                "tgt_coords": target_position,
-                "tgt_kind": target_kind,
+                "tgt_coords": proposed_target_position,
+                "tgt_kind": proposed_target_kind,
                 "tgt_beams": target_beams,
-                "coords_in_path": get_taken_coords(clean_path),
+                "coords_in_path": get_taken_coords(proposed_path),
                 "all_nodes_in_path": all_nodes_in_path,
-                "beams_broken_by_path": beams_broken_by_path,
-                "len_of_path": len(clean_path),
+                "beams_broken_by_path": total_beams_interrupted,
+                "len_of_path": len(proposed_path),
                 "tgt_unobstr_exit_n": target_unobstructed_exits,
             }
 
@@ -279,21 +278,21 @@ class ZxGraphWalker:
 
         edge_type = self.nx_graph.get_edge_type(source, target)
 
-        target_kind = winner_path.tgt_kind
-        if isinstance(target_kind, str):
-            target_kind = CubeKind.from_string(target_kind)
-        target_position = winner_path.tgt_coords
+        proposed_target_kind = winner_path.tgt_kind
+        if isinstance(proposed_target_kind, str):
+            proposed_target_kind = CubeKind.from_string(proposed_target_kind)
+        proposed_target_position = winner_path.tgt_coords
 
         # Conversion needed for the path produced by the pathfinder.
-        path = winner_path.all_nodes_in_path[1:-1]
+        proposed_path = winner_path.all_nodes_in_path[1:-1]
 
-        console.info(f"Winner path {source_kind}@{source_position} - {target_kind}@{target_position}] w/ extras {path}")
+        console.info(f"Winner path {source_kind}@{source_position} - {proposed_target_kind}@{proposed_target_position}] w/ extras {proposed_path}")
 
-        if not self.nx_graph.is_path_valid(source, target_kind, target_position, edge_type, path):
+        if not self.nx_graph.is_path_valid(source, proposed_target_kind, proposed_target_position, edge_type, proposed_path):
             console.info(f"> Path is invalid ...")
             return None, None, None
 
-        return target_kind, target_position, path
+        return proposed_target_kind, proposed_target_position, proposed_path
 
     def find_edge_realisation(self, source, target):
         # # TODO: deal with the critical beams (cfr. graph_manager.py Lines 301-313)

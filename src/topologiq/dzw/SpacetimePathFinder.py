@@ -15,22 +15,23 @@ class SpacetimePathFinder:
     def __init__(self, nx_graph: AugmentedNxGraph):
         self.nx_graph = nx_graph
 
-    def find_target_realisation(self,
-        source: int, target: int,
-        critical: dict[int, tuple[int, NodeBeams]] = None,
-        maximal_md: int = 3
-    ):
+    def find_target_realisation(self, source: int, target: int):
         target_suitable_kinds = CubeKind.suitable_kinds(self.nx_graph.get_node_type(target))
 
         console.info(f"Searching for realisation of target node #{target} [type={self.nx_graph.get_node_type(target)}]")
         console.info(f"> Suitable target kinds : {target_suitable_kinds}")
 
-        return self.__core_pathfinder(
-            source = source, target = target,
-            critical = critical, maximal_md = maximal_md,
-            goal_reached =
-                lambda kind, position : kind in target_suitable_kinds and position not in self.nx_graph.occupied
-        )
+        proposed_paths = []
+        for max_md in range(1, 10):
+            proposed_paths = self.__core_pathfinder(
+                source = source, target = target, maximal_md = max_md,
+                goal_reached =
+                    lambda kind, position : kind in target_suitable_kinds and position not in self.nx_graph.occupied
+            )
+            if len(proposed_paths) > 0:
+                break
+
+        return proposed_paths
 
     def find_edge_realisation(self,
         source: int, target: int,
@@ -61,7 +62,7 @@ class SpacetimePathFinder:
         maximal_md: int = 3,
         goal_reached = lambda next_kind, next_position : True,
         terminate_on_first_found = False
-    ):
+    ) -> list[list[tuple[CubeKind, Coordinates]]]:
         if critical is None:
             critical = {}
 
@@ -75,12 +76,12 @@ class SpacetimePathFinder:
         console.info(f"> Start cube #{source_cube} : {source_kind}@{source_position}")
         console.info(f"> Occupied : {self.nx_graph.occupied}")
 
-        # Initialize queue with the source cube
+        # Initialise queue with the source cube
         start_cube = (source_kind, source_position)
         queue = deque([ start_cube ])
         paths = { start_cube : [ start_cube] }
         visited : dict[tuple[CubeKind, Coordinates], int] = {}
-        solutions = []
+        solutions : list[list[tuple[CubeKind, Coordinates]]] = []
 
         while queue:
             current_cube = queue.popleft()
@@ -91,10 +92,6 @@ class SpacetimePathFinder:
                 console.debug(f"Goal reached : {terminal_kind}@{terminal_position}.")
             else:
                 console.debug(f"Terminal cube : {terminal_kind}@{terminal_position}.")
-
-            # Discard current_path if its terminal cube has a leaf cube-kind
-            if terminal_kind in [ CubeKind.OOO , CubeKind.YYY ]:
-                continue
 
             # Discard current_path if it is beyond the maximal Manhattan Distance requested
             current_md = source_position.get_manhattan_distance(terminal_position)
@@ -133,7 +130,9 @@ class SpacetimePathFinder:
                 # Happily update our current knowledge with this new path
                 visited[next_cube] = len(next_path)
                 paths[next_cube] = next_path
-                queue.append( next_cube )
+                # Consider next_path for further extension only if its terminal cube is not a leaf cube-kind
+                if next_kind not in [ CubeKind.OOO , CubeKind.YYY ]:
+                    queue.append( next_cube )
 
                 console.debug(f"> Adding next path to {next_kind}@{next_position} [{next_path}].")
 
@@ -141,6 +140,9 @@ class SpacetimePathFinder:
                 critical_break = False
                 if critical:
                     for node, data in critical.items():
+                        if node in (source, target):
+                            continue
+
                         broken_beams = 0
                         min_exit_num, beams = data
                         for beam in beams:
@@ -149,9 +151,6 @@ class SpacetimePathFinder:
                                 # Additionally, add any number of beam-to-beam clashes for the node
                                 # currently under investigation because, if they exist, they likely are already
                                 # using the cushion that allows breaking some beams
-                                if node in (source,target):
-                                    continue
-
                                 for n_id in critical.keys():
                                     all_beams = critical[n_id][1]
                                     for single_beam in all_beams:
