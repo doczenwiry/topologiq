@@ -80,7 +80,7 @@ class SpacetimePathFinder:
         start_cube = (source_kind, source_position)
         queue = deque([ start_cube ])
         paths = { start_cube : [ start_cube] }
-        visited : dict[tuple[CubeKind, Coordinates], int] = {}
+        visited : dict[tuple[tuple[CubeKind, Coordinates], Coordinates], int] = {}
         solutions : list[list[tuple[CubeKind, Coordinates]]] = []
 
         while queue:
@@ -123,12 +123,13 @@ class SpacetimePathFinder:
                 next_path = current_path + [ next_cube ]
 
                 # Ignore step if it doesn't improve our current knowledge
-                if next_cube in visited and len(next_path) >= visited[next_cube]:
+                next_visitation = (next_cube, next_position - terminal_position)
+                if next_cube in visited and len(next_path) >= visited[next_visitation]:
                     console.debug(f"> Next path doesn't improve previously known [{next_path}].")
                     continue
 
                 # Happily update our current knowledge with this new path
-                visited[next_cube] = len(next_path)
+                visited[next_visitation] = len(next_path)
                 paths[next_cube] = next_path
                 # Consider next_path for further extension only if its terminal cube is not a leaf cube-kind
                 if next_kind not in [ CubeKind.OOO , CubeKind.YYY ]:

@@ -130,7 +130,12 @@ class Reach(Enum):
 class Spacetime:
     ORIGIN = Coordinates(0, 0, 0)
 
-    STEPS = [ Step.XP.value, Step.XM.value, Step.YP.value, Step.YM.value, Step.ZP.value, Step.ZM.value ]
+    STEPS = [ Step.XP.value,
+              Step.YP.value,
+              Step.ZP.value,
+              Step.XM.value,
+              Step.YM.value,
+              Step.ZM.value ]
     PLANES = [Reach.XY, Reach.XZ, Reach.YZ]
 
     @staticmethod

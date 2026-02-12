@@ -1,7 +1,7 @@
-from enum import Enum
-
 from topologiq.dzw.utils.CubeKind import CubeKind
-from topologiq.dzw.utils.Spacetime import Spacetime, Coordinates, Step
+from topologiq.dzw.utils.Spacetime import Spacetime, Coordinates
+
+from topologiq.utils.classes import NodeBeams
 
 from logging import getLogger
 console = getLogger(__name__)
@@ -50,7 +50,7 @@ class CubeBeams:
 
         return sum(1 for los in lines_of_sight if los in self.__available_beams)
 
-    def count_intersected(self, node_beams, target_beams) -> int:
+    def old_count_intersected(self, node_beams: NodeBeams, target_beams: NodeBeams) -> int:
         beams_intersected = 0
         for node_beam in node_beams:
             for target_beam in target_beams:

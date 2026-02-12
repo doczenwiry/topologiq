@@ -7,8 +7,8 @@ class TikzWriter:
     AXES = ['X', 'Y', 'Z']
 
     STYLE = 'zx'
-    ROTATIONX = 58
-    ROTATIONZ = 112
+    ROTATION_X = 58
+    ROTATION_Z = 112
 
     def __init__(self, walker: ZxGraphWalker, animation: bool = False):
         self.__walker = walker
@@ -28,7 +28,7 @@ class TikzWriter:
                     plain_cubes: set[int], plain_pipes: set[tuple[int,int]],
                     faint_cubes: set[int], faint_pipes: set[tuple[int,int]],
                     style = 'zx', rotation_x = 58, rotation_z = 112):
-        output.write(f"\t\\ZxGraph[style={TikzWriter.STYLE},rotationX={TikzWriter.ROTATIONX},rotationZ={TikzWriter.ROTATIONZ}]")
+        output.write(f"\t\\ZxGraph[style={TikzWriter.STYLE},rotationX={TikzWriter.ROTATION_X},rotationZ={TikzWriter.ROTATION_Z}]")
         output.write("{\n")
 
         for cube in self.__walker.nx_graph.get_cubes():
