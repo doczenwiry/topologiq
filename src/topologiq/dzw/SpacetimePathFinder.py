@@ -11,6 +11,7 @@ from topologiq.dzw.utils.Spacetime import Coordinates
 
 from topologiq.dzw.helpers.SpacetimeHelper import SpacetimeHelper
 
+# pathfinder.py
 class SpacetimePathFinder:
     def __init__(self, nx_graph: AugmentedNxGraph):
         self.nx_graph = nx_graph

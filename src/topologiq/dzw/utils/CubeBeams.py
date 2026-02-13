@@ -8,10 +8,10 @@ console = getLogger(__name__)
 
 class CubeBeams:
     def __init__(self,
-                 cube_kind: CubeKind, cube_position: Coordinates,
-                 extras: list[tuple[CubeKind, Coordinates]] = None,
-                 occupied: set[Coordinates] = None
-                 ):
+        cube_kind: CubeKind, cube_position: Coordinates,
+        extras: list[tuple[CubeKind, Coordinates]] = None,
+        occupied: set[Coordinates] = None
+    ):
         cube_reach = cube_kind.get_reach()
 
         self.__cube_kind: CubeKind = cube_kind
@@ -49,6 +49,11 @@ class CubeBeams:
             raise Exception(f"Computing remaining beam count requires lines-of-sight of unit length.")
 
         return sum(1 for los in lines_of_sight if los in self.__available_beams)
+
+    def count_intersected(self, other):
+        beams_intersected = 0
+
+        return beams_intersected
 
     def old_count_intersected(self, node_beams: NodeBeams, target_beams: NodeBeams) -> int:
         beams_intersected = 0

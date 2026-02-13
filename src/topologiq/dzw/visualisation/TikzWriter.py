@@ -25,9 +25,9 @@ class TikzWriter:
         return "U"
 
     def write_frame(self, output,
-                    plain_cubes: set[int], plain_pipes: set[tuple[int,int]],
-                    faint_cubes: set[int], faint_pipes: set[tuple[int,int]],
-                    style = 'zx', rotation_x = 58, rotation_z = 112):
+        plain_cubes: set[int], plain_pipes: set[tuple[int,int]],
+        faint_cubes: set[int], faint_pipes: set[tuple[int,int]]
+    ):
         output.write(f"\t\\ZxGraph[style={TikzWriter.STYLE},rotationX={TikzWriter.ROTATION_X},rotationZ={TikzWriter.ROTATION_Z}]")
         output.write("{\n")
 
@@ -40,9 +40,6 @@ class TikzWriter:
                     cube_plane = TikzWriter.AXES[index]
 
             cube_position = self.__walker.nx_graph.get_cube_position(cube)
-            # TODO: scaling down needed due to current implementation of the path-finder
-            # if Spacetime.ORIGIN.get_manhattan_distance(cube_position) % 3 == 0:
-            #     cube_position = cube_position.div(3)
 
             if cube in plain_cubes:
                 cube_visibility = 'plain'

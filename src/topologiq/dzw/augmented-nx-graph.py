@@ -6,8 +6,6 @@ from topologiq.dzw.visualisation.ReportFormatter import ReportFormatter
 from topologiq.dzw.visualisation.TikzWriter import TikzWriter
 
 import logging
-logging.basicConfig(level=logging.DEBUG)
-
 logging.getLogger('topologiq.dzw.ZxGraphWalker').setLevel(logging.INFO)
 logging.getLogger('topologiq.dzw.SpacetimePathFinder').setLevel(logging.CRITICAL)
 logging.getLogger('topologiq.dzw.utils.CubeBeams').setLevel(logging.CRITICAL)
@@ -16,9 +14,9 @@ logging.getLogger('topologiq.dzw.utils.AugmentedNxGraph').setLevel(logging.CRITI
 if __name__ == '__main__':
     circuit_name = "cnots"
     c = zx.Circuit(2)
+    c.add_gate("CNOT", 0, 1)
     c.add_gate("CNOT", 1, 0)
-    c.add_gate("CNOT", 0, 1)
-    c.add_gate("CNOT", 0, 1)
+    c.add_gate("CNOT", 1, 0)
     zx_input = c.to_graph()
 
     walker = ZxGraphWalker(zx_input, circuit_name)
@@ -48,18 +46,14 @@ if __name__ == '__main__':
     root = 3
     kind = CubeKind.suitable_kinds(nx_graph.get_node_type(root))[0]
 
-    # try:
-    completed = walker.construct( root_choice = (root,kind) )
-    # except Exception as e:
-    #     completed = False
-    #     print(f"Construction failed")
-    #     print(f"Error : {e}")
+    walker.construct( root_choice = (root,kind) )
 
     formatter = ReportFormatter(walker)
     formatter.print_report(append_cube_report = True)
     formatter.write_report()
 
     TikzWriter.STYLE = 'zx'
-    TikzWriter.ROTATIONZ = 28
+    TikzWriter.ROTATION_X = 60
+    TikzWriter.ROTATION_Z = 118
     tikz_writer = TikzWriter(walker)
-    tikz_writer.write_file( show_initial = False, frame_by_frame = True, show_completed = completed )
+    tikz_writer.write_file( frame_by_frame = True )
