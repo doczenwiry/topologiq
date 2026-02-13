@@ -6,6 +6,7 @@ from topologiq.dzw.visualisation.ReportFormatter import ReportFormatter
 from topologiq.dzw.visualisation.TikzWriter import TikzWriter
 
 import logging
+logging.basicConfig(level=logging.DEBUG)
 logging.getLogger('topologiq.dzw.ZxGraphWalker').setLevel(logging.INFO)
 logging.getLogger('topologiq.dzw.SpacetimePathFinder').setLevel(logging.CRITICAL)
 logging.getLogger('topologiq.dzw.utils.CubeBeams').setLevel(logging.CRITICAL)
