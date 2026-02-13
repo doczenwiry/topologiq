@@ -56,4 +56,4 @@ if __name__ == '__main__':
     TikzWriter.ROTATION_X = 60
     TikzWriter.ROTATION_Z = 118
     tikz_writer = TikzWriter(walker)
-    tikz_writer.write_file( frame_by_frame = True )
+    tikz_writer.write_file(show_initial = False)

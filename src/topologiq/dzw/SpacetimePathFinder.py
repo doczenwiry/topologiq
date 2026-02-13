@@ -36,7 +36,7 @@ class SpacetimePathFinder:
 
     def find_edge_realisation(self,
         source: int, target: int,
-        critical: dict[int, tuple[int, NodeBeams]] = None
+        node_beams: dict[int, NodeBeams] = None
     ):
         target_cube = self.nx_graph.get_cube(target)
         target_kind = self.nx_graph.get_cube_kind(target_cube)
@@ -48,7 +48,7 @@ class SpacetimePathFinder:
 
         return self.__core_pathfinder(
             source = source, target = target,
-            critical = critical, maximal_md = 20,
+            node_beams= node_beams, maximal_md = 20,
             goal_reached =
                 lambda kind, position : kind == target_kind and position == target_position,
             terminate_on_first_found = True
@@ -59,13 +59,13 @@ class SpacetimePathFinder:
     # TODO: add cutoff threshold once enough of the bounding box has been reached
     def __core_pathfinder(self,
         source: int, target: int,
-        critical: dict[int, tuple[int, NodeBeams]] = None,
+        node_beams: dict[int, NodeBeams] = None,
         maximal_md: int = 3,
         goal_reached = lambda next_kind, next_position : True,
         terminate_on_first_found = False
     ) -> list[list[tuple[CubeKind, Coordinates]]]:
-        if critical is None:
-            critical = {}
+        if node_beams is None:
+            node_beams = {}
 
         if not self.nx_graph.is_node_realised(source):
             raise Exception(f"Source node #{source} is not realised; cannot use as a start for path-finding.")
@@ -139,35 +139,9 @@ class SpacetimePathFinder:
                 console.debug(f"> Adding next path to {next_kind}@{next_position} [{next_path}].")
 
                 # TODO: deal with broken beams (cfr. pathfinder lines 299-329)
-                critical_break = False
-                if critical:
-                    for node, data in critical.items():
-                        if node in (source, target):
-                            continue
+                critical_interruptions = self.check_critical_interruptions(source, target, node_beams, current_path)
 
-                        broken_beams = 0
-                        min_exit_num, beams = data
-                        for beam in beams:
-                            if any([position.as_tuple() in beam for _, position in current_path]):
-                                broken_beams += 1
-                                # Additionally, add any number of beam-to-beam clashes for the node
-                                # currently under investigation because, if they exist, they likely are already
-                                # using the cushion that allows breaking some beams
-                                for n_id in critical.keys():
-                                    all_beams = critical[n_id][1]
-                                    for single_beam in all_beams:
-                                        if any([position in beam for position in single_beam]):
-                                            broken_beams += 1
-
-                        adjust_for_source_node = 1 if node in (source,target) else 0
-                        if len(beams) + adjust_for_source_node - broken_beams < min_exit_num:
-                            critical_break = True
-                            break
-
-                    if critical_break:
-                        continue
-
-                if not critical_break and goal_reached(next_kind, next_position):
+                if not critical_interruptions and goal_reached(next_kind, next_position):
                     console.debug(f"Found new path to {next_kind}@{next_position} : {next_path}")
                     solutions.append(next_path)
 
@@ -176,3 +150,63 @@ class SpacetimePathFinder:
 
         console.info(f"Solutions found : {len(solutions)}")
         return solutions
+
+    def check_critical_interruptions(self, source, target, node_beams, current_path):
+        critical_interruptions = False
+
+        for node, beams in node_beams.items():
+            if node == source or node == target:
+                continue
+
+            beams_interrupted = 0
+            unrealised_edges = self.nx_graph.get_edges_unrealised(node)
+            for beam in beams:
+                if any([position.as_tuple() in beam for _, position in current_path]):
+                    beams_interrupted += 1
+                    # Additionally, add any number of beam-to-beam clashes for the node
+                    # currently under investigation because, if they exist, they likely are already
+                    # using the cushion that allows breaking some beams
+                    for other, obeams in node_beams.items():
+                        for obeam in obeams:
+                            if any([position in beam for position in obeam]):
+                                beams_interrupted += 1
+
+            beams_remaining = len(beams) - beams_interrupted
+            adjust_for_source_node = 1 if node in (source, target) else 0
+            if beams_remaining + adjust_for_source_node < unrealised_edges:
+                critical_interruptions = True
+                break
+
+        return critical_interruptions
+
+    def former_check_continue(self, source, target, critical_beams, full_path_coords):
+        # Abort if next position clashes with a critical beam
+        src_tgt_ids = (source, target)
+        continue_flag = False
+
+        for node, beams in critical_beams.items():
+            beams_interrupted = 0
+            unrealised_edges = self.nx_graph.get_edges_unrealised(node)
+            for beam in beams:
+                # If a coord breaks a beam, add one to broken beams because beam
+                # of node has been broken
+                if any([coord in beam[:6] for coord in full_path_coords]):
+                    beams_interrupted += 1
+                    # Additionally, add any number of beam-to-beam clashes for the node
+                    # currently under investigation because, if they exist, they likely are already
+                    # using the cushion that allows breaking some beams
+                    if node not in src_tgt_ids:
+                        for n_id in critical_beams.keys():
+                            all_beams = critical_beams[n_id][1]
+                            for single_beam in all_beams:
+                                if any([coord in beam[:6] for coord in single_beam]):
+                                    beams_interrupted += 1
+
+            adjust_for_source_node = 1 if node in src_tgt_ids else 0
+            if len(beams) + adjust_for_source_node - beams_interrupted < unrealised_edges:
+                continue_flag = True
+                break
+            else:
+                continue_flag = False
+
+        return continue_flag

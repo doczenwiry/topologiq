@@ -13,6 +13,9 @@ class Coordinates:
     def from_tuple(t: tuple[int, int, int]):
         return Coordinates(t[0], t[1], t[2])
 
+    def as_tuple(self):
+        return self.x, self.y, self.z
+
     def __add__(self, other):
         if isinstance(other, Step):
             other = other.value
@@ -22,12 +25,6 @@ class Coordinates:
         if isinstance(other, Step):
             other = other.value
         return Coordinates(self.x - other.x, self.y - other.y, self.z - other.z)
-
-    def invert(self):
-        return Coordinates(-self.x, -self.y, -self.z)
-
-    def mul(self, scalar: int):
-        return Coordinates(self.x * scalar, self.y * scalar, self.z * scalar)
 
     def div(self, scalar: int):
         return Coordinates(int(self.x / scalar), int(self.y / scalar), int(self.z / scalar))
@@ -40,12 +37,6 @@ class Coordinates:
 
     def get_manhattan_distance(self, other):
         return abs(self.x - other.x) + abs(self.y - other.y) + abs(self.z - other.z)
-
-    def __iter__(self):
-        return iter((self.x, self.y, self.z))
-
-    def as_tuple(self):
-        return self.x, self.y, self.z
 
     def __different_components(self, other):
         different_x = 1 if self.x != other.x else 0
@@ -79,6 +70,9 @@ class Coordinates:
     # The coordinates are coplanar if they share two identical components
     def coplanar(self, other) -> bool:
         return self.__different_components(other) == 2
+
+    def __iter__(self):
+        return iter((self.x, self.y, self.z))
 
     def __repr__(self):
         return str(self)

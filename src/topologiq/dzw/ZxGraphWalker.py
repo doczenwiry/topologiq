@@ -140,7 +140,7 @@ class ZxGraphWalker:
                 # Realise the edge using the path
                 self.nx_graph.realise_edge(source, target, path)
 
-                # Store the path that realises the current edge
+                # Add the current edge to the order of realisations
                 self.edge_realisation_order.append( (source,target) )
 
                 self.prune_beams_by_path(path)
@@ -307,15 +307,8 @@ class ZxGraphWalker:
         return proposed_kind, proposed_position, proposed_path
 
     def find_edge_realisation(self, source, target):
-        # # TODO: deal with the critical beams (cfr. graph_manager.py Lines 301-313)
-        critical_beams: dict[int, tuple[int, NodeBeams]] = {}
-        for node, beams in self.node_beams.items():
-            unrealised_edges = self.nx_graph.get_edges_unrealised(node)
-            if unrealised_edges > 0:
-                critical_beams[node] = (unrealised_edges, beams)
-
         # TODO: take into account whether the edge has HADAMARD type
-        proposed_paths = self.pathfinder.find_edge_realisation(source, target, critical = critical_beams)
+        proposed_paths = self.pathfinder.find_edge_realisation(source, target, node_beams = self.node_beams)
 
         console.info(f"Pathfinder proposed {len(proposed_paths)} paths.")
 
