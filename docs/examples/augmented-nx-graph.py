@@ -56,5 +56,5 @@ if __name__ == '__main__':
     TikzWriter.STYLE = 'zx'
     TikzWriter.ROTATION_X = 60
     TikzWriter.ROTATION_Z = 118
-    tikz_writer = TikzWriter(walker)
+    tikz_writer = TikzWriter(walker.nx_graph, walker.node_realisation_order, walker.edge_realisation_order)
     tikz_writer.write_file(show_initial = False)

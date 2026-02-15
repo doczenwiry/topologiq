@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from topologiq.dzw.utils.AugmentedNxGraph import AugmentedNxGraph
 from topologiq.dzw.utils.Spacetime import Coordinates
 from topologiq.dzw.ZxGraphWalker import ZxGraphWalker
 
@@ -10,9 +11,13 @@ class TikzWriter:
     ROTATION_X = 58
     ROTATION_Z = 112
 
-    def __init__(self, walker: ZxGraphWalker, animation: bool = False):
-        self.__walker = walker
-        self.__animation = animation
+    def __init__(self, nx_graph: AugmentedNxGraph,
+                 node_realisation_order: list[int] = None,
+                 edge_realisation_order: list[tuple[int,int]] = None
+    ):
+        self.__nx_graph = nx_graph
+        self.__node_realisation_order = node_realisation_order
+        self.__edge_realisation_order = edge_realisation_order
 
     @staticmethod
     def find_axis(step: Coordinates):
@@ -31,15 +36,15 @@ class TikzWriter:
         output.write(f"\t\\ZxGraph[style={TikzWriter.STYLE},rotationX={TikzWriter.ROTATION_X},rotationZ={TikzWriter.ROTATION_Z}]")
         output.write("{\n")
 
-        for cube in self.__walker.nx_graph.get_cubes():
-            cube_type = self.__walker.nx_graph.get_cube_kind(cube).get_type()
-            cube_reach = self.__walker.nx_graph.get_cube_kind(cube).get_reach().value.as_tuple()
+        for cube in self.__nx_graph.get_cubes():
+            cube_type = self.__nx_graph.get_cube_kind(cube).get_type()
+            cube_reach = self.__nx_graph.get_cube_kind(cube).get_reach().value.as_tuple()
             cube_plane = 'U'
             for index in range(3):
                 if cube_reach[index] != 0:
                     cube_plane = TikzWriter.AXES[index]
 
-            cube_position = self.__walker.nx_graph.get_cube_position(cube)
+            cube_position = self.__nx_graph.get_cube_position(cube)
 
             if cube in plain_cubes:
                 cube_visibility = 'plain'
@@ -48,7 +53,7 @@ class TikzWriter:
             else:
                 cube_visibility = 'ghost'
 
-            cube_label = self.__walker.nx_graph.get_node(cube)
+            cube_label = self.__nx_graph.get_node(cube)
             if cube_label is None:
                 cube_label = ''
 
@@ -57,12 +62,12 @@ class TikzWriter:
 
             output.write(line)
 
-        for pipe in self.__walker.nx_graph.get_pipes():
+        for pipe in self.__nx_graph.get_pipes():
             (source_cube, target_cube) = pipe
-            source_position = self.__walker.nx_graph.get_cube_position(source_cube)
-            target_position = self.__walker.nx_graph.get_cube_position(target_cube)
+            source_position = self.__nx_graph.get_cube_position(source_cube)
+            target_position = self.__nx_graph.get_cube_position(target_cube)
 
-            pipe_type = self.__walker.nx_graph.get_pipe_type(source_cube, target_cube).name.lower()
+            pipe_type = self.__nx_graph.get_pipe_type(source_cube, target_cube).name.lower()
 
             if pipe in plain_pipes:
                 pipe_visibility = 'plain'
@@ -81,7 +86,7 @@ class TikzWriter:
 
     def write_file(self, filename = None, frame_by_frame = False, show_initial = True, show_completed = True):
         if filename is None:
-            filename = f"../../output/tikz/volumetric-zx-diagram-{self.__walker.name}.tex"
+            filename = f"../../output/tikz/volumetric-zx-diagram-{self.__name}.tex"
 
         output = open(filename, "w")
         output.write("\\documentclass[tikz, preview, border=1pt]{standalone}\n")
@@ -96,24 +101,24 @@ class TikzWriter:
         faint_cubes: set[int] = set()
         faint_pipes: set[tuple[int,int]] = set()
 
-        if show_initial:
-            root = self.__walker.node_realisation_order[0]
-            plain_cubes.add( self.__walker.nx_graph.get_cube(root) )
+        if self.__node_realisation_order is not None and len(self.__node_realisation_order) > 0:
+            root = self.__node_realisation_order[0]
+            plain_cubes.add( self.__nx_graph.get_cube(root) )
             self.write_frame(output, plain_cubes, plain_pipes, faint_cubes, faint_pipes)
 
-        if frame_by_frame:
-            for next_edge in self.__walker.edge_realisation_order:
+        if self.__edge_realisation_order is not None and len(self.__edge_realisation_order) > 0:
+            for next_edge in self.__edge_realisation_order:
                 faint_cubes.update(plain_cubes)
                 faint_pipes.update(plain_pipes)
                 plain_cubes.clear()
                 plain_pipes.clear()
                 (source, target) = next_edge
-                source_cube = self.__walker.nx_graph.get_cube(source)
-                target_cube = self.__walker.nx_graph.get_cube(target)
+                source_cube = self.__nx_graph.get_cube(source)
+                target_cube = self.__nx_graph.get_cube(target)
                 plain_cubes.add(source_cube)
                 plain_cubes.add(target_cube)
                 current = source_cube
-                extra_cubes = self.__walker.nx_graph.get_edge_realisation(source, target)
+                extra_cubes = self.__nx_graph.get_edge_realisation(source, target)
                 for extra_cube in extra_cubes:
                     plain_cubes.add(extra_cube)
                     pipe = (current, extra_cube) if current < extra_cube else (extra_cube, current)
@@ -128,8 +133,8 @@ class TikzWriter:
                 self.write_frame(output, plain_cubes, plain_pipes, faint_cubes, faint_pipes)
 
         if show_completed:
-            plain_cubes.update(self.__walker.nx_graph.get_cubes())
-            plain_pipes.update(self.__walker.nx_graph.get_pipes())
+            plain_cubes.update(self.__nx_graph.get_cubes())
+            plain_pipes.update(self.__nx_graph.get_pipes())
 
             faint_cubes.clear()
             faint_pipes.clear()

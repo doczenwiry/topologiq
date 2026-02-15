@@ -338,6 +338,8 @@ class AugmentedNxGraph:
         if self.__bg_graph.has_edge(source_cube, target_cube):
             raise Exception(f"Cubes #{source_cube} and #{target_cube} are already connected by a pipe.")
 
+        # TODO: validate with respect to inferred pipe type between source and target cubes
+
         source_position = self.get_cube_position(source_cube)
         target_position = self.get_cube_position(target_cube)
         # TODO: replace 3 with 1 once the pathfinder has been rewritten
