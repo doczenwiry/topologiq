@@ -65,11 +65,6 @@ class AugmentedNxGraph:
         if max_degree > 4:
             raise NotImplemented("Enforcement of no-more-than-four-legs condition not implemented.")
 
-    def get_next_cube_id(self) -> int:
-        cube_id = self.__next_cube_id
-        self.__next_cube_id += 1
-        return cube_id
-
     def get_nodes(self):
         return self.__zx_graph.nodes()
 
@@ -150,15 +145,11 @@ class AugmentedNxGraph:
         if not self.__zx_graph.has_node(node_id):
             raise Exception(f"Node #{node_id} not found in the ZX-graph.")
 
-        cube_id = self.get_next_cube_id()
-        console.info(f"Realising node #{node_id} [{self.get_node_type(node_id)}] as cube #{cube_id} [{kind}@{position}]")
-
-        self.__bg_graph.add_node(cube_id)
-
+        cube_id = self.place_cube(kind, position)
         self.__bg_graph.nodes[cube_id][AugmentedNxGraph.KEY_BG_ZX_NODE] = node_id
         self.__zx_graph.nodes[node_id][AugmentedNxGraph.KEY_ZX_BG_CUBE] = cube_id
 
-        self.place_cube(cube_id, position, kind)
+        console.info(f"Realising node #{node_id} [{self.get_node_type(node_id)}] as cube #{cube_id} [{kind}@{position}]")
 
         return cube_id
 
@@ -182,88 +173,6 @@ class AugmentedNxGraph:
                     realising.add(successor)
 
         return realising
-
-    # def is_path_valid(self, source: int, target_kind: CubeKind, target_position: Coordinates,
-    #                   edge_type: EdgeType, extras: list[tuple[CubeKind, Coordinates]]) -> bool:
-    #         is_identity_path = True
-    #         is_hadamard_path = False
-    #
-    #         source_cube = self.get_cube(source)
-    #         previous_kind: CubeKind = self.get_cube_kind(source_cube)
-    #         previous_reach: Reach = previous_kind.get_reach()
-    #         previous_position: Coordinates = self.get_cube_position(source_cube)
-    #
-    #         extra_positions = set()
-    #
-    #         console.info(f"Checking path validity:")
-    #         console.info(f"> From source : {source_cube} [{previous_kind}@{previous_position}]")
-    #         console.info(f"> Towards target : {target_kind}@{target_position}")
-    #         console.info(f"> With extras : {extras}")
-    #
-    #         for (current_kind, current_position) in extras:
-    #             current_reach = current_kind.get_reach()
-    #
-    #             # Check that the cube type is either X or Z (Y and boundaries must be leaves)
-    #             if current_kind.get_type() not in [NodeType.X, NodeType.Z]:
-    #                 console.debug(f"> Current kind : {current_kind.get_type()}")
-    #                 return False
-    #
-    #             # Check that the step taken lies in both reaches of successive cubes
-    #             step_taken = current_position - previous_position
-    #             if not previous_reach.contains(step_taken) or not current_reach.contains(step_taken):
-    #                 console.debug(f"> Previous reach contains step : {previous_reach.contains(step_taken)}")
-    #                 console.debug(f"> Current reach contains step : {current_reach.contains(step_taken)}")
-    #                 return False
-    #
-    #             # Check that the current_position is not already occupied
-    #             if current_position in self.occupied:
-    #                 console.debug(f"> Current position is already occupied : {current_kind}@{current_position}")
-    #                 return False
-    #
-    #             # Check that the current_position is not already occupied by an extra cube
-    #             if current_position in extra_positions:
-    #                 console.debug(f"> Current position is already in path : {current_kind}@{current_position}")
-    #                 return False
-    #             extra_positions.add(current_position)
-    #
-    #             # Update the types of the path based on the type of the current pipe
-    #             inferred_pipe_types = SpacetimeHelper.infer_pipe_type(previous_kind, current_kind)
-    #             console.debug(f"> Current path types : {is_identity_path}/{is_hadamard_path}")
-    #             is_identity_path = is_identity_path and EdgeType.IDENTITY in inferred_pipe_types
-    #             is_identity_path = is_identity_path or (is_hadamard_path and EdgeType.HADAMARD in inferred_pipe_types)
-    #             is_hadamard_path = is_hadamard_path and EdgeType.IDENTITY in inferred_pipe_types
-    #             is_hadamard_path = is_hadamard_path or (is_identity_path and EdgeType.HADAMARD in inferred_pipe_types)
-    #             console.debug(f"> Updated path types : {is_identity_path}/{is_hadamard_path} [{previous_kind}/{current_kind}]")
-    #
-    #             previous_position = current_position
-    #             previous_kind = current_kind
-    #             previous_reach = current_reach
-    #
-    #         # target_kind = self.get_cube_kind(target)
-    #         target_reach = target_kind.get_reach()
-    #         # target_position = self.get_position(target)
-    #
-    #         # Check that the step taken lies in both reaches of successive cubes
-    #         step_taken = target_position - previous_position
-    #         if not previous_reach.contains(step_taken) or not target_reach.contains(step_taken):
-    #             console.debug(f"> Proposed path has successive cubes not within reach of each other.")
-    #             return False
-    #
-    #         # Update the types of the path based on the type of the final pipe
-    #         inferred_pipe_types = SpacetimeHelper.infer_pipe_type(previous_kind, target_kind)
-    #         console.debug(f"> Current path types : {is_identity_path}/{is_hadamard_path}")
-    #         is_identity_path = is_identity_path and EdgeType.IDENTITY in inferred_pipe_types
-    #         is_identity_path = is_identity_path or (is_hadamard_path and EdgeType.HADAMARD in inferred_pipe_types)
-    #         is_hadamard_path = is_hadamard_path and EdgeType.IDENTITY in inferred_pipe_types
-    #         is_hadamard_path = is_hadamard_path or (is_identity_path and EdgeType.HADAMARD in inferred_pipe_types)
-    #         console.debug(f"> Updated path types : {is_identity_path}/{is_hadamard_path} [{previous_kind}/{target_kind}]")
-    #
-    #         hadamard_consistent = (is_identity_path == (edge_type == EdgeType.IDENTITY)) or (is_hadamard_path == (edge_type == EdgeType.HADAMARD))
-    #
-    #         if not hadamard_consistent:
-    #             console.debug(f"> Proposed path is Hadamard-inconsistent with its purported edge [{edge_type}].")
-    #
-    #         return hadamard_consistent
 
     def is_edge_realised(self, source: int, target: int) -> bool:
         return self.__zx_graph.get_edge_data(source, target)[AugmentedNxGraph.KEY_ZX_BG_PATH] is not None
@@ -312,13 +221,9 @@ class AugmentedNxGraph:
             current_kind, current_position = proposed_cubes[index]
             current_pipe_type = proposed_pipes[index-1]
 
-            # Place the current cube
-            current_cube = self.get_next_cube_id()
-            self.__bg_graph.add_node(current_cube)
-            console.debug(f"> Adding cube #{current_cube} [{current_kind}@{current_position}].")
+            # Place the current cube and connect it to the previous cube.
+            current_cube = self.place_cube(current_kind, current_position)
             self.__bg_graph.nodes[current_cube][AugmentedNxGraph.KEY_BG_ZX_NODE] = None
-            # Place the current extra node and connect it to the previous node.
-            self.place_cube(current_cube, current_position, current_kind)
             self.connect_pipe(previous_cube, current_cube, current_pipe_type)
 
             # Extend the sequence of extra node ids
@@ -339,14 +244,21 @@ class AugmentedNxGraph:
         self.__zx_graph.nodes[source][AugmentedNxGraph.KEY_ZX_EDGES_REALISED] += 1
         self.__zx_graph.nodes[target][AugmentedNxGraph.KEY_ZX_EDGES_REALISED] += 1
 
-    def place_cube(self, cube_id: int, position: Coordinates, kind: CubeKind):
+    def place_cube(self, kind: CubeKind, position: Coordinates):
         if position in self.occupied:
             raise Exception(f"Proposed position for {kind}@{position} is already occupied by another cube.")
 
-        self.__bg_graph.nodes[cube_id][AugmentedNxGraph.KEY_BG_CUBE_KIND] = kind
-        self.__bg_graph.nodes[cube_id][AugmentedNxGraph.KEY_BG_CUBE_POSITION] = position
+        cube = self.__next_cube_id
+        self.__next_cube_id += 1
+
+        self.__bg_graph.add_node(cube)
+
+        self.__bg_graph.nodes[cube][AugmentedNxGraph.KEY_BG_CUBE_KIND] = kind
+        self.__bg_graph.nodes[cube][AugmentedNxGraph.KEY_BG_CUBE_POSITION] = position
 
         self.occupied.add(position)
+
+        return cube
 
     def connect_pipe(self, source_cube: int, target_cube: int, pipe_type : EdgeType):
         if not self.__bg_graph.has_node(source_cube):
@@ -374,12 +286,7 @@ class AugmentedNxGraph:
         self.__bg_graph.add_edge(source_cube, target_cube)
         self.__bg_graph.get_edge_data(source_cube, target_cube)[AugmentedNxGraph.KEY_BG_PIPE_TYPE] = pipe_type
 
-    def is_path_valid(self, path: Path
-            # nx_graph: AugmentedNxGraph,
-            # source: int, target: int,
-            # cubes: list[tuple[CubeKind, Coordinates]],
-            # pipes: list[EdgeType]
-    ) -> bool:
+    def is_path_valid(self, path: Path) -> bool:
         is_hadamard_path = False
 
         source = path.get_source()
