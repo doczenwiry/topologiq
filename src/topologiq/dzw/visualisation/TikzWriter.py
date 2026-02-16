@@ -1,8 +1,14 @@
 from datetime import datetime
 
 from topologiq.dzw.utils.AugmentedNxGraph import AugmentedNxGraph
+from topologiq.dzw.utils.EdgeType import EdgeType
 from topologiq.dzw.utils.Spacetime import Coordinates
-from topologiq.dzw.ZxGraphWalker import ZxGraphWalker
+
+from logging import getLogger
+console = getLogger(__name__)
+
+NodeList = list[int]
+EdgeList = list[tuple[int,int]]
 
 class TikzWriter:
     AXES = ['X', 'Y', 'Z']
@@ -12,12 +18,13 @@ class TikzWriter:
     ROTATION_Z = 112
 
     def __init__(self, nx_graph: AugmentedNxGraph,
-                 node_realisation_order: list[int] = None,
-                 edge_realisation_order: list[tuple[int,int]] = None
+                 realisation_order: tuple[NodeList, EdgeList] = (None,None),
+                 label : str = "circuit"
     ):
+        self.__label = label
         self.__nx_graph = nx_graph
-        self.__node_realisation_order = node_realisation_order
-        self.__edge_realisation_order = edge_realisation_order
+        self.__node_realisation_order = realisation_order[0]
+        self.__edge_realisation_order = realisation_order[1]
 
     @staticmethod
     def find_axis(step: Coordinates):
@@ -67,7 +74,10 @@ class TikzWriter:
             source_position = self.__nx_graph.get_cube_position(source_cube)
             target_position = self.__nx_graph.get_cube_position(target_cube)
 
-            pipe_type = self.__nx_graph.get_pipe_type(source_cube, target_cube).name.lower()
+            inferred_pipe_types = self.__nx_graph.get_pipe_type(source_cube, target_cube)
+            console.warning(f"Multiple inferred pipe types; picking IDENTITY [{inferred_pipe_types}]")
+            pipe_type = EdgeType.IDENTITY if EdgeType.IDENTITY in inferred_pipe_types else EdgeType.HADAMARD
+            pipe_type = pipe_type.name.lower()
 
             if pipe in plain_pipes:
                 pipe_visibility = 'plain'
@@ -84,9 +94,9 @@ class TikzWriter:
 
         output.write("\t}\n")
 
-    def write_file(self, filename = None, frame_by_frame = False, show_initial = True, show_completed = True):
+    def write_file(self, filename = None):
         if filename is None:
-            filename = f"../../output/tikz/volumetric-zx-diagram-{self.__name}.tex"
+            filename = f"../../output/tikz/volumetric-zx-diagram-{self.__label}.tex"
 
         output = open(filename, "w")
         output.write("\\documentclass[tikz, preview, border=1pt]{standalone}\n")
@@ -132,14 +142,13 @@ class TikzWriter:
                 output.write(f"\t% Pipes : {plain_pipes}\n")
                 self.write_frame(output, plain_cubes, plain_pipes, faint_cubes, faint_pipes)
 
-        if show_completed:
-            plain_cubes.update(self.__nx_graph.get_cubes())
-            plain_pipes.update(self.__nx_graph.get_pipes())
+        plain_cubes.update(self.__nx_graph.get_cubes())
+        plain_pipes.update(self.__nx_graph.get_pipes())
 
-            faint_cubes.clear()
-            faint_pipes.clear()
+        faint_cubes.clear()
+        faint_pipes.clear()
 
-            self.write_frame(output, plain_cubes, plain_pipes, faint_cubes, faint_pipes)
+        self.write_frame(output, plain_cubes, plain_pipes, faint_cubes, faint_pipes)
 
         output.write("\\end{document}\n")
 

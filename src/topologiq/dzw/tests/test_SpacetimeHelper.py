@@ -8,23 +8,23 @@ from topologiq.dzw.helpers.SpacetimeHelper import SpacetimeHelper
 class TestSpacetimeHelper(TestCase):
     def test_infer_pipe_type1(self):
         produced = SpacetimeHelper.infer_pipe_type(CubeKind.XZZ, CubeKind.XZZ)
-        expected = EdgeType.IDENTITY
-        self.assertEqual(produced, expected)
+        expected = { EdgeType.IDENTITY }
+        self.assertIn(expected, produced)
 
     def test_infer_pipe_type2(self):
         produced = SpacetimeHelper.infer_pipe_type(CubeKind.XZZ, CubeKind.ZXZ)
-        expected = EdgeType.HADAMARD
-        self.assertEqual(produced, expected)
+        expected = { EdgeType.HADAMARD }
+        self.assertEqual(expected, produced)
 
     def test_infer_pipe_type3(self):
         produced = SpacetimeHelper.infer_pipe_type(CubeKind.XZZ, CubeKind.ZXX)
-        expected = EdgeType.HADAMARD
-        self.assertEqual(produced, expected)
+        expected = { EdgeType.HADAMARD }
+        self.assertEqual(expected, produced)
 
     def test_infer_pipe_type4(self):
         produced = SpacetimeHelper.infer_pipe_type(CubeKind.XZZ, CubeKind.XZX)
-        expected = EdgeType.IDENTITY
-        self.assertEqual(produced, expected)
+        expected = { EdgeType.IDENTITY }
+        self.assertEqual(expected, produced)
 
     def test_get_constellation(self):
         produced = sorted(SpacetimeHelper.get_candidate_constellation(

@@ -27,8 +27,7 @@ kwargs: dict[str, tuple[int, int] | int] = {
 
 # graph_manager.py
 class ZxGraphWalker:
-    def __init__(self, pyzx_graph: zx.graph.base.BaseGraph, circuit_name: str = "circuit"):
-        self.name = circuit_name
+    def __init__(self, pyzx_graph: zx.graph.base.BaseGraph):
         self.hide_ports = False # This really belongs in the visualisation layer
         self.min_success_rate = 50
         self.nx_graph = AugmentedNxGraph(pyzx_graph)
@@ -150,6 +149,8 @@ class ZxGraphWalker:
                     self.nx_graph.occupied.add(position)
 
                 self.prune_beams()
+
+        console.info(f"Construction completed.")
 
         # Prepare final BlockGraph and return it ?
         return True
@@ -291,8 +292,6 @@ class ZxGraphWalker:
         edge_type = self.nx_graph.get_edge_type(source, target)
 
         proposed_kind = winner_path.tgt_kind
-        if isinstance(proposed_kind, str):
-            proposed_kind = CubeKind.from_string(proposed_kind)
         proposed_position = winner_path.tgt_coords
 
         # Conversion needed for the path produced by the pathfinder.
