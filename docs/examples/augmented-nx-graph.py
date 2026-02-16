@@ -7,20 +7,22 @@ from topologiq.dzw.visualisation.TikzWriter import TikzWriter
 
 import logging
 logging.basicConfig(level=logging.DEBUG)
-logging.getLogger('topologiq.dzw.ZxGraphWalker').setLevel(logging.INFO)
-logging.getLogger('topologiq.dzw.SpacetimePathFinder').setLevel(logging.CRITICAL)
-logging.getLogger('topologiq.dzw.utils.CubeBeams').setLevel(logging.CRITICAL)
-logging.getLogger('topologiq.dzw.utils.AugmentedNxGraph').setLevel(logging.CRITICAL)
+logging.getLogger('topologiq.dzw').setLevel(logging.INFO)
+logging.getLogger('topologiq.dzw.ZxGraphWalker').setLevel(logging.DEBUG)
+logging.getLogger('topologiq.dzw.utils').setLevel(logging.DEBUG)
+logging.getLogger('topologiq.dzw.helpers').setLevel(logging.CRITICAL)
+logging.getLogger('topologiq.dzw.visualisation').setLevel(logging.CRITICAL)
 
 if __name__ == '__main__':
-    circuit_name = "cnots"
     c = zx.Circuit(2)
+    c.add_gate("H", 0)
     c.add_gate("CNOT", 0, 1)
     c.add_gate("CNOT", 1, 0)
     c.add_gate("CNOT", 1, 0)
     zx_input = c.to_graph()
+    # zx.draw(zx_input)
 
-    walker = ZxGraphWalker(zx_input, circuit_name)
+    walker = ZxGraphWalker(zx_input)
     nx_graph = walker.nx_graph
 
     print(f"Z-Spiders:", end=" ")
@@ -49,12 +51,12 @@ if __name__ == '__main__':
 
     walker.construct( root_choice = (root,kind) )
 
-    formatter = ReportFormatter(walker)
+    formatter = ReportFormatter(walker.nx_graph, label = "3cnots")
     formatter.print_report(append_cube_report = True)
     formatter.write_report()
 
     TikzWriter.STYLE = 'zx'
     TikzWriter.ROTATION_X = 60
     TikzWriter.ROTATION_Z = 118
-    tikz_writer = TikzWriter(walker.nx_graph, walker.node_realisation_order, walker.edge_realisation_order)
-    tikz_writer.write_file(show_initial = False)
+    tikz_writer = TikzWriter(walker.nx_graph, label ="3cnots")
+    tikz_writer.write_file()

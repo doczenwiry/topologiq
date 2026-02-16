@@ -116,10 +116,8 @@ class ReportFormatter:
 
         return report
 
-
     def print_report(self, append_cube_report=False):
         print(self.prepare_report(append_cube_report = append_cube_report))
-
 
     def write_report(self, filename = None):
         if filename is None:

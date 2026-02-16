@@ -1,4 +1,8 @@
 from logging import getLogger
+
+from topologiq.dzw.utils.CubeBeams import CubeBeams
+from topologiq.dzw.utils.EdgeType import EdgeType
+
 console = getLogger(__name__)
 
 from collections import deque
@@ -8,36 +12,40 @@ from topologiq.utils.classes import NodeBeams
 from topologiq.dzw.utils.AugmentedNxGraph import AugmentedNxGraph
 from topologiq.dzw.utils.CubeKind import CubeKind
 from topologiq.dzw.utils.Spacetime import Coordinates
+from topologiq.dzw.utils.Path import Path
 
 from topologiq.dzw.helpers.SpacetimeHelper import SpacetimeHelper
+
+CubeList = list[tuple[CubeKind, Coordinates]]
+PipeList = list[EdgeType]
 
 # pathfinder.py
 class SpacetimePathFinder:
     def __init__(self, nx_graph: AugmentedNxGraph):
         self.nx_graph = nx_graph
 
-    def find_target_realisation(self, source: int, target: int):
+    def find_target_realisation(self, source: int, target: int) -> list[Path]:
         target_suitable_kinds = CubeKind.suitable_kinds(self.nx_graph.get_node_type(target))
 
         console.info(f"Searching for realisation of target node #{target} [type={self.nx_graph.get_node_type(target)}]")
         console.info(f"> Suitable target kinds : {target_suitable_kinds}")
 
-        proposed_paths = []
+        solutions = []
         for max_md in range(1, 10):
-            proposed_paths = self.__core_pathfinder(
+            solutions = self.__core_pathfinder(
                 source = source, target = target, maximal_md = max_md,
-                goal_reached =
-                    lambda kind, position : kind in target_suitable_kinds and position not in self.nx_graph.occupied
+                goal_reached = lambda kind, position :
+                    kind in target_suitable_kinds and position not in self.nx_graph.occupied
             )
-            if len(proposed_paths) > 0:
+            if len(solutions) > 0:
                 break
 
-        return proposed_paths
+        return solutions
 
     def find_edge_realisation(self,
         source: int, target: int,
         node_beams: dict[int, NodeBeams] = None
-    ):
+    ) -> list[Path]:
         target_cube = self.nx_graph.get_cube(target)
         target_kind = self.nx_graph.get_cube_kind(target_cube)
         target_position = self.nx_graph.get_cube_position(target_cube)
@@ -63,7 +71,7 @@ class SpacetimePathFinder:
         maximal_md: int = 3,
         goal_reached = lambda next_kind, next_position : True,
         terminate_on_first_found = False
-    ) -> list[list[tuple[CubeKind, Coordinates]]]:
+    ) -> list[Path]:
         if node_beams is None:
             node_beams = {}
 
@@ -74,20 +82,22 @@ class SpacetimePathFinder:
         source_kind = self.nx_graph.get_cube_kind(source_cube)
         source_position = self.nx_graph.get_cube_position(source_cube)
 
+        edge_type = self.nx_graph.get_edge_type(source, target)
+
         console.info(f"> Start cube #{source_cube} : {source_kind}@{source_position}")
         console.info(f"> Occupied : {self.nx_graph.occupied}")
 
         # Initialise queue with the source cube
         start_cube = (source_kind, source_position)
         queue = deque([ start_cube ])
-        paths = { start_cube : [ start_cube] }
+        paths = { start_cube : ([start_cube],[]) }
         visited : dict[tuple[tuple[CubeKind, Coordinates], Coordinates], int] = {}
-        solutions : list[list[tuple[CubeKind, Coordinates]]] = []
+        solutions : list[tuple[CubeList, PipeList]] = []
 
         while queue:
             current_cube = queue.popleft()
-            current_path = paths[current_cube]
-            terminal_kind, terminal_position = current_path[-1]
+            current_cubes, current_pipes = paths[current_cube]
+            terminal_kind, terminal_position = current_cubes[-1]
 
             if goal_reached(terminal_kind, terminal_position):
                 console.debug(f"Goal reached : {terminal_kind}@{terminal_position}.")
@@ -100,7 +110,8 @@ class SpacetimePathFinder:
                 continue
 
             # TODO: deal with Hadamard-consistency
-            constellation = SpacetimeHelper.get_candidate_constellation(terminal_kind, terminal_position)
+            pipe_type = EdgeType.HADAMARD if current_md == 0 and edge_type == EdgeType.HADAMARD else EdgeType.IDENTITY
+            constellation = SpacetimeHelper.get_candidate_constellation(terminal_kind, terminal_position, pipe_type)
             console.debug(f"> Constellation of {terminal_kind}@{terminal_position} : {constellation}.")
             for next_kind, next_position in constellation:
                 next_md = source_position.get_manhattan_distance(next_position)
@@ -111,7 +122,7 @@ class SpacetimePathFinder:
                     continue
 
                 # Ignore step if it brings us to a position used by the current path
-                if any([position == next_position for _, position in current_path]):
+                if any([position == next_position for _, position in current_cubes]):
                     console.debug(f"> Next position is already occupied in current_path [{next_kind}@{next_position}].")
                     continue
 
@@ -121,35 +132,47 @@ class SpacetimePathFinder:
                     continue
 
                 next_cube = (next_kind, next_position)
-                next_path = current_path + [ next_cube ]
+                next_cubes = current_cubes + [ next_cube ]
+                next_pipes = current_pipes + [ pipe_type ]
 
                 # Ignore step if it doesn't improve our current knowledge
                 next_visitation = (next_cube, next_position - terminal_position)
-                if next_cube in visited and len(next_path) >= visited[next_visitation]:
-                    console.debug(f"> Next path doesn't improve previously known [{next_path}].")
+                if next_cube in visited and len(next_cubes) >= visited[next_visitation]:
+                    console.debug(f"> Next path doesn't improve previously known [{next_cubes}].")
                     continue
 
                 # Happily update our current knowledge with this new path
-                visited[next_visitation] = len(next_path)
-                paths[next_cube] = next_path
+                visited[next_visitation] = len(next_cubes)
+                paths[next_cube] = (next_cubes, next_pipes)
                 # Consider next_path for further extension only if its terminal cube is not a leaf cube-kind
                 if next_kind not in [ CubeKind.OOO , CubeKind.YYY ]:
                     queue.append( next_cube )
 
-                console.debug(f"> Adding next path to {next_kind}@{next_position} [{next_path}].")
+                console.debug(f"> Adding next path to {next_kind}@{next_position} [{next_cubes}].")
 
                 # TODO: deal with broken beams (cfr. pathfinder lines 299-329)
-                critical_interruptions = self.check_critical_interruptions(source, target, node_beams, current_path)
+                critical_interruptions = self.check_critical_interruptions(source, target, node_beams, current_cubes)
 
                 if not critical_interruptions and goal_reached(next_kind, next_position):
-                    console.debug(f"Found new path to {next_kind}@{next_position} : {next_path}")
-                    solutions.append(next_path)
+                    console.debug(f"Found new path to {next_kind}@{next_position} : {next_cubes}")
+                    solutions.append( (next_cubes, next_pipes) )
 
             if terminate_on_first_found and len(solutions) > 0:
                 break
 
         console.info(f"Solutions found : {len(solutions)}")
-        return solutions
+
+        valid_solutions = []
+        for proposed_cubes, proposed_pipes in solutions:
+            proposed_kind, proposed_position = proposed_cubes[-1]
+            proposed_beams = CubeBeams(proposed_kind, proposed_position,
+                                       extras = proposed_cubes[1:-1], occupied = self.nx_graph.occupied
+                                       )
+            candidate_path = Path(source, target, edge_type, proposed_beams, proposed_cubes, proposed_pipes)
+            if self.nx_graph.is_path_valid(candidate_path):
+                valid_solutions.append( candidate_path )
+
+        return valid_solutions
 
     def check_critical_interruptions(self, source, target, node_beams, current_path):
         critical_interruptions = False

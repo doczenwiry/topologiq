@@ -74,10 +74,11 @@ class TikzWriter:
             source_position = self.__nx_graph.get_cube_position(source_cube)
             target_position = self.__nx_graph.get_cube_position(target_cube)
 
-            inferred_pipe_types = self.__nx_graph.get_pipe_type(source_cube, target_cube)
-            console.warning(f"Multiple inferred pipe types; picking IDENTITY [{inferred_pipe_types}]")
-            pipe_type = EdgeType.IDENTITY if EdgeType.IDENTITY in inferred_pipe_types else EdgeType.HADAMARD
-            pipe_type = pipe_type.name.lower()
+            pipe_type = self.__nx_graph.get_pipe_type(source_cube, target_cube).name.lower()
+            # inferred_pipe_types = self.__nx_graph.get_pipe_type(source_cube, target_cube)
+            # console.warning(f"Multiple inferred pipe types; picking IDENTITY [{inferred_pipe_types}]")
+            # pipe_type = EdgeType.IDENTITY if EdgeType.IDENTITY in inferred_pipe_types else EdgeType.HADAMARD
+            # pipe_type = pipe_type.name.lower()
 
             if pipe in plain_pipes:
                 pipe_visibility = 'plain'
