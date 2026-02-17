@@ -110,6 +110,9 @@ class AugmentedNxGraph:
     def is_spider(self, node_id: int) -> bool:
         return self.get_node_type(node_id) != NodeType.O
 
+    def is_cube_placed(self, cube: int) -> bool:
+        return cube in self.__bg_graph
+
     def get_cube(self, node_id: int):
         return self.__zx_graph.nodes[node_id][AugmentedNxGraph.KEY_ZX_BG_CUBE]
 
@@ -194,9 +197,11 @@ class AugmentedNxGraph:
         source_cube = self.get_cube(source)
         target_cube = self.get_cube(target)
 
+        edge_type = self.get_edge_type(source, target)
+
         # # Reject path if it is invalid.
         # if not self.is_path_valid(source, self.get_cube_kind(target_cube), self.get_cube_position(target_cube), self.get_edge_type(source, target), path):
-        if not self.is_path_valid(proposed_path):
+        if not self.is_path_valid(proposed_path, edge_type):
             raise Exception(f"Proposed path to realise edge {source}-{target} is invalid.")
 
         if not proposed_path:
@@ -286,17 +291,14 @@ class AugmentedNxGraph:
         self.__bg_graph.add_edge(source_cube, target_cube)
         self.__bg_graph.get_edge_data(source_cube, target_cube)[AugmentedNxGraph.KEY_BG_PIPE_TYPE] = pipe_type
 
-    def is_path_valid(self, path: Path) -> bool:
+    def is_path_valid(self, path: Path, edge_type: EdgeType) -> bool:
         is_hadamard_path = False
 
-        source = path.get_source()
-        target = path.get_target()
+        source_cube = path.get_source_cube()
+        target_cube = path.get_target_cube()
 
-        source_cube = self.get_cube(source)
         source_kind: CubeKind = self.get_cube_kind(source_cube)
         source_position: Coordinates = self.get_cube_position(source_cube)
-
-        edge_type = self.get_edge_type(source, target)
 
         cubes = path.get_cubes()
         pipes = path.get_pipes()
@@ -356,8 +358,10 @@ class AugmentedNxGraph:
             previous_kind = current_kind
             previous_reach = current_reach
 
-        if self.is_node_realised(target):
-            target_cube = self.get_cube(target)
+        console.debug(f"> Is cube {target_cube} placed ? {self.is_cube_placed(target_cube)}")
+        console.debug(f"> cubes {self.get_cubes()}")
+
+        if self.is_cube_placed(target_cube):
             if proposed_target_kind != self.get_cube_kind(target_cube):
                 console.debug(f"> Proposed target kind does not match its existing realisation.")
                 return False
@@ -365,7 +369,10 @@ class AugmentedNxGraph:
                 console.debug(f"> Proposed target position does not match its existing realisation.")
                 return False
         elif proposed_target_position in self.occupied:
-            console.debug(f"> Proposed target position is already occupied.")
+            occupant = self.__identify_cube_at_position(proposed_target_position)
+            occupant_kind = self.get_cube_kind(occupant)
+            occupant_position = self.get_cube_position(occupant)
+            console.debug(f"> Proposed target position is already occupied [{occupant_kind}@{occupant_position}].")
             return False
 
         hadamard_consistent = is_hadamard_path == (edge_type == EdgeType.HADAMARD)
@@ -374,3 +381,10 @@ class AugmentedNxGraph:
             console.debug(f"> Proposed path is Hadamard-inconsistent with its purported edge [{edge_type}].")
 
         return hadamard_consistent
+
+    def __identify_cube_at_position(self, position: Coordinates) -> int:
+        for cube in self.get_cubes():
+            if self.get_cube_position(cube) == position:
+                return cube
+
+        return -1

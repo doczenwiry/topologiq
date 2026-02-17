@@ -10,11 +10,11 @@ class Path:
     PATH_LEN_HP = -1
     BEAMS_BROKEN_HP = -1
 
-    def __init__(self, source: int, target: int, edge_type: EdgeType, proposed_beams: CubeBeams,
+    def __init__(self, source_cube: int, target_cube: int, edge_type: EdgeType, proposed_beams: CubeBeams,
             proposed_cubes: list[tuple[CubeKind, Coordinates]], proposed_pipes: list[EdgeType]
     ):
-        self.__source = source
-        self.__target = target
+        self.__source_cube = source_cube
+        self.__target_cube = target_cube
         self.__edge_type = edge_type
         proposed_kind, proposed_position = proposed_cubes[-1]
         self.__target_kind = proposed_kind
@@ -25,11 +25,14 @@ class Path:
         self.__cube_beams = None
         self.__total_beams_interrupted = None
 
-    def get_source(self):
-        return self.__source
+    def get_source_cube(self):
+        return self.__source_cube
 
-    def get_target(self):
-        return self.__target
+    def get_target_cube(self):
+        return self.__target_cube
+
+    def set_target_cube(self, target_cube):
+        self.__target_cube = target_cube
 
     def get_target_kind(self):
         return self.__target_kind

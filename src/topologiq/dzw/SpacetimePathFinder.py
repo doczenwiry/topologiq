@@ -168,8 +168,9 @@ class SpacetimePathFinder:
             proposed_beams = CubeBeams(proposed_kind, proposed_position,
                                        extras = proposed_cubes[1:-1], occupied = self.nx_graph.occupied
                                        )
-            candidate_path = Path(source, target, edge_type, proposed_beams, proposed_cubes, proposed_pipes)
-            if self.nx_graph.is_path_valid(candidate_path):
+            target_cube = self.nx_graph.get_cube(target)
+            candidate_path = Path(source_cube, target_cube, edge_type, proposed_beams, proposed_cubes, proposed_pipes)
+            if self.nx_graph.is_path_valid(candidate_path, edge_type):
                 valid_solutions.append( candidate_path )
 
         return valid_solutions
@@ -202,6 +203,7 @@ class SpacetimePathFinder:
 
         return critical_interruptions
 
+    # TODO: remove once its logic is integrated into the above function
     def former_check_continue(self, source, target, critical_beams, full_path_coords):
         # Abort if next position clashes with a critical beam
         src_tgt_ids = (source, target)

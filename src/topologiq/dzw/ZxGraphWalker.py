@@ -112,6 +112,7 @@ class ZxGraphWalker:
 
                     # Realise the target node as a cube with kind and position provided by the pathfinder
                     target_cube = self.nx_graph.realise_node(target, proposed_kind, proposed_position)
+                    proposed_path.set_target_cube(target_cube)
                     self.node_realisation_order.append(target)
 
                     self.prune_beams_by_cube(target)
