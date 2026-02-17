@@ -258,6 +258,7 @@ class AugmentedNxGraph:
 
         self.__bg_graph.add_node(cube)
 
+        self.__bg_graph.nodes[cube][AugmentedNxGraph.KEY_BG_ZX_NODE] = None
         self.__bg_graph.nodes[cube][AugmentedNxGraph.KEY_BG_CUBE_KIND] = kind
         self.__bg_graph.nodes[cube][AugmentedNxGraph.KEY_BG_CUBE_POSITION] = position
 
