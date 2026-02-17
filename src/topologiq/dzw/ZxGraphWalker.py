@@ -90,7 +90,7 @@ class ZxGraphWalker:
         while queue:
             source: int = queue.popleft()
 
-            for target in self.nx_graph.get_neighbours(source):
+            for target in self.nx_graph.get_node_neighbours(source):
                 if self.nx_graph.is_edge_realised(source, target):
                     console.info(f"Ignoring edge {source}-{target}")
                     continue

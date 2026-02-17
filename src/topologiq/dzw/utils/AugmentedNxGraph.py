@@ -95,10 +95,10 @@ class AugmentedNxGraph:
     def get_edges_unrealised(self, node_id: int):
         return self.get_degree(node_id) - self.get_edges_realised(node_id)
 
-    def get_neighbours(self, node_id: int):
+    def get_node_neighbours(self, node_id: int):
         return self.__zx_graph.neighbors(node_id)
 
-    def get_bg_neighbours(self, cube: int):
+    def get_cube_neighbours(self, cube: int):
         return self.__bg_graph.neighbors(cube)
 
     def get_degree(self, node_id: int):
@@ -168,7 +168,7 @@ class AugmentedNxGraph:
         while queue:
             current = queue.popleft()
 
-            for successor in self.get_bg_neighbours(current):
+            for successor in self.get_cube_neighbours(current):
                 successor_type = self.get_node_type(successor)
                 pipe_type = self.get_pipe_type(current, successor)
                 if successor_type == node_type and pipe_type == EdgeType.IDENTITY and successor not in realising:
