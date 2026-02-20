@@ -7,7 +7,7 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger('utils').setLevel(logging.INFO)
 logging.getLogger('helpers').setLevel(logging.CRITICAL)
-logging.getLogger('visualisation').setLevel(logging.CRITICAL)
+logging.getLogger('visualisation').setLevel(logging.DEBUG)
 
 from jsonpickle import encode, decode
 ANG_PATH = "../../assets/ang/"
@@ -22,9 +22,9 @@ if __name__ == '__main__':
     circuit = zx.Circuit(2)
     circuit.add_gate("CNOT", 0, 1)
     circuit.add_gate("CNOT", 1, 0)
-    circuit.add_gate("CNOT", 0, 1)
+    circuit.add_gate("CNOT", 1, 0)
     zx_input = circuit.to_graph()
-    zx.draw(zx_input)
+    zx.draw(zx_input, labels = True)
 
     name = "three-cnots"
     anx: AugmentedNxGraph = ang_read(label = name)
