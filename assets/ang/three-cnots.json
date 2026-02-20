@@ -1,0 +1,878 @@
+{
+  "py/object": "topologiq.dzw.utils.augmented_nx_graph.AugmentedNxGraph",
+  "_AugmentedNxGraph__zx_graph": {
+    "py/object": "networkx.classes.graph.Graph",
+    "graph": {},
+    "_node": {
+      "json://0": {
+        "zx_node_type": {
+          "py/reduce": [
+            {
+              "py/type": "topologiq.dzw.utils.components_zx.NodeType"
+            },
+            {
+              "py/tuple": [
+                0
+              ]
+            }
+          ]
+        },
+        "zx_edges_realised": 1,
+        "zx_bg_cube": 11
+      },
+      "json://1": {
+        "zx_node_type": {
+          "py/id": 5
+        },
+        "zx_edges_realised": 1,
+        "zx_bg_cube": 14
+      },
+      "json://2": {
+        "zx_node_type": {
+          "py/reduce": [
+            {
+              "py/type": "topologiq.dzw.utils.components_zx.NodeType"
+            },
+            {
+              "py/tuple": [
+                1
+              ]
+            }
+          ]
+        },
+        "zx_edges_realised": 3,
+        "zx_bg_cube": 12
+      },
+      "json://3": {
+        "zx_node_type": {
+          "py/reduce": [
+            {
+              "py/type": "topologiq.dzw.utils.components_zx.NodeType"
+            },
+            {
+              "py/tuple": [
+                3
+              ]
+            }
+          ]
+        },
+        "zx_edges_realised": 3,
+        "zx_bg_cube": 10
+      },
+      "json://4": {
+        "zx_node_type": {
+          "py/id": 8
+        },
+        "zx_edges_realised": 3,
+        "zx_bg_cube": 13
+      },
+      "json://5": {
+        "zx_node_type": {
+          "py/id": 10
+        },
+        "zx_edges_realised": 3,
+        "zx_bg_cube": 15
+      },
+      "json://6": {
+        "zx_node_type": {
+          "py/id": 8
+        },
+        "zx_edges_realised": 3,
+        "zx_bg_cube": 20
+      },
+      "json://7": {
+        "zx_node_type": {
+          "py/id": 10
+        },
+        "zx_edges_realised": 3,
+        "zx_bg_cube": 21
+      },
+      "json://8": {
+        "zx_node_type": {
+          "py/id": 5
+        },
+        "zx_edges_realised": 1,
+        "zx_bg_cube": 26
+      },
+      "json://9": {
+        "zx_node_type": {
+          "py/id": 5
+        },
+        "zx_edges_realised": 1,
+        "zx_bg_cube": 27
+      }
+    },
+    "_adj": {
+      "json://0": {
+        "json://3": {
+          "zx_edge_type": {
+            "py/reduce": [
+              {
+                "py/type": "topologiq.dzw.utils.components_zx.EdgeType"
+              },
+              {
+                "py/tuple": [
+                  0
+                ]
+              }
+            ]
+          },
+          "zx_bg_path": []
+        }
+      },
+      "json://1": {
+        "json://2": {
+          "zx_edge_type": {
+            "py/id": 20
+          },
+          "zx_bg_path": []
+        }
+      },
+      "json://2": {
+        "json://1": {
+          "py/id": 23
+        },
+        "json://3": {
+          "zx_edge_type": {
+            "py/id": 20
+          },
+          "zx_bg_path": []
+        },
+        "json://5": {
+          "zx_edge_type": {
+            "py/id": 20
+          },
+          "zx_bg_path": []
+        }
+      },
+      "json://3": {
+        "json://0": {
+          "py/id": 19
+        },
+        "json://2": {
+          "py/id": 26
+        },
+        "json://4": {
+          "zx_edge_type": {
+            "py/id": 20
+          },
+          "zx_bg_path": []
+        }
+      },
+      "json://4": {
+        "json://3": {
+          "py/id": 31
+        },
+        "json://5": {
+          "zx_edge_type": {
+            "py/id": 20
+          },
+          "zx_bg_path": [
+            16,
+            17,
+            18,
+            19
+          ]
+        },
+        "json://6": {
+          "zx_edge_type": {
+            "py/id": 20
+          },
+          "zx_bg_path": []
+        }
+      },
+      "json://5": {
+        "json://2": {
+          "py/id": 28
+        },
+        "json://4": {
+          "py/id": 34
+        },
+        "json://7": {
+          "zx_edge_type": {
+            "py/id": 20
+          },
+          "zx_bg_path": []
+        }
+      },
+      "json://6": {
+        "json://4": {
+          "py/id": 36
+        },
+        "json://7": {
+          "zx_edge_type": {
+            "py/id": 20
+          },
+          "zx_bg_path": [
+            22,
+            23,
+            24,
+            25
+          ]
+        },
+        "json://8": {
+          "zx_edge_type": {
+            "py/id": 20
+          },
+          "zx_bg_path": []
+        }
+      },
+      "json://7": {
+        "json://5": {
+          "py/id": 39
+        },
+        "json://6": {
+          "py/id": 42
+        },
+        "json://9": {
+          "zx_edge_type": {
+            "py/id": 20
+          },
+          "zx_bg_path": []
+        }
+      },
+      "json://8": {
+        "json://6": {
+          "py/id": 44
+        }
+      },
+      "json://9": {
+        "json://7": {
+          "py/id": 47
+        }
+      }
+    },
+    "__networkx_cache__": {},
+    "nodes": {
+      "py/object": "networkx.classes.reportviews.NodeView",
+      "py/state": {
+        "_nodes": {
+          "py/id": 3
+        }
+      }
+    },
+    "degree": {
+      "py/object": "networkx.classes.reportviews.DegreeView",
+      "_graph": {
+        "py/id": 1
+      },
+      "_succ": {
+        "py/id": 17
+      },
+      "_pred": {
+        "py/id": 17
+      },
+      "_nodes": {
+        "py/id": 17
+      },
+      "_weight": null
+    },
+    "edges": {
+      "py/object": "networkx.classes.reportviews.EdgeView",
+      "py/state": {
+        "_graph": {
+          "py/id": 1
+        },
+        "_adjdict": {
+          "py/id": 17
+        }
+      }
+    }
+  },
+  "_AugmentedNxGraph__bg_graph": {
+    "py/object": "networkx.classes.graph.Graph",
+    "graph": {},
+    "_node": {
+      "json://10": {
+        "bg_zx_node": 3,
+        "bg_cube_kind": {
+          "py/reduce": [
+            {
+              "py/type": "topologiq.dzw.utils.components_bg.CubeKind"
+            },
+            {
+              "py/tuple": [
+                4
+              ]
+            }
+          ]
+        },
+        "bg_cube_position": {
+          "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      },
+      "json://11": {
+        "bg_zx_node": 0,
+        "bg_cube_kind": {
+          "py/reduce": [
+            {
+              "py/type": "topologiq.dzw.utils.components_bg.CubeKind"
+            },
+            {
+              "py/tuple": [
+                0
+              ]
+            }
+          ]
+        },
+        "bg_cube_position": {
+          "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
+          "x": 0,
+          "y": 1,
+          "z": 0
+        }
+      },
+      "json://12": {
+        "bg_zx_node": 2,
+        "bg_cube_kind": {
+          "py/reduce": [
+            {
+              "py/type": "topologiq.dzw.utils.components_bg.CubeKind"
+            },
+            {
+              "py/tuple": [
+                2
+              ]
+            }
+          ]
+        },
+        "bg_cube_position": {
+          "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
+          "x": 0,
+          "y": 0,
+          "z": 1
+        }
+      },
+      "json://13": {
+        "bg_zx_node": 4,
+        "bg_cube_kind": {
+          "py/reduce": [
+            {
+              "py/type": "topologiq.dzw.utils.components_bg.CubeKind"
+            },
+            {
+              "py/tuple": [
+                3
+              ]
+            }
+          ]
+        },
+        "bg_cube_position": {
+          "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
+          "x": 0,
+          "y": -1,
+          "z": 0
+        }
+      },
+      "json://14": {
+        "bg_zx_node": 1,
+        "bg_cube_kind": {
+          "py/id": 64
+        },
+        "bg_cube_position": {
+          "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
+          "x": 1,
+          "y": 0,
+          "z": 1
+        }
+      },
+      "json://15": {
+        "bg_zx_node": 5,
+        "bg_cube_kind": {
+          "py/id": 61
+        },
+        "bg_cube_position": {
+          "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
+          "x": 0,
+          "y": 0,
+          "z": 2
+        }
+      },
+      "json://16": {
+        "bg_zx_node": null,
+        "bg_cube_kind": {
+          "py/id": 61
+        },
+        "bg_cube_position": {
+          "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
+          "x": 0,
+          "y": -2,
+          "z": 0
+        }
+      },
+      "json://17": {
+        "bg_zx_node": null,
+        "bg_cube_kind": {
+          "py/id": 61
+        },
+        "bg_cube_position": {
+          "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
+          "x": 0,
+          "y": -2,
+          "z": 1
+        }
+      },
+      "json://18": {
+        "bg_zx_node": null,
+        "bg_cube_kind": {
+          "py/id": 61
+        },
+        "bg_cube_position": {
+          "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
+          "x": 0,
+          "y": -2,
+          "z": 2
+        }
+      },
+      "json://19": {
+        "bg_zx_node": null,
+        "bg_cube_kind": {
+          "py/id": 70
+        },
+        "bg_cube_position": {
+          "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
+          "x": 0,
+          "y": -1,
+          "z": 2
+        }
+      },
+      "json://20": {
+        "bg_zx_node": 6,
+        "bg_cube_kind": {
+          "py/id": 70
+        },
+        "bg_cube_position": {
+          "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
+          "x": 1,
+          "y": -1,
+          "z": 0
+        }
+      },
+      "json://21": {
+        "bg_zx_node": 7,
+        "bg_cube_kind": {
+          "py/id": 61
+        },
+        "bg_cube_position": {
+          "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
+          "x": 0,
+          "y": 1,
+          "z": 2
+        }
+      },
+      "json://22": {
+        "bg_zx_node": null,
+        "bg_cube_kind": {
+          "py/id": 61
+        },
+        "bg_cube_position": {
+          "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
+          "x": 1,
+          "y": 0,
+          "z": 0
+        }
+      },
+      "json://23": {
+        "bg_zx_node": null,
+        "bg_cube_kind": {
+          "py/id": 61
+        },
+        "bg_cube_position": {
+          "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
+          "x": 1,
+          "y": 1,
+          "z": 0
+        }
+      },
+      "json://24": {
+        "bg_zx_node": null,
+        "bg_cube_kind": {
+          "py/id": 67
+        },
+        "bg_cube_position": {
+          "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
+          "x": 1,
+          "y": 1,
+          "z": 1
+        }
+      },
+      "json://25": {
+        "bg_zx_node": null,
+        "bg_cube_kind": {
+          "py/id": 67
+        },
+        "bg_cube_position": {
+          "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
+          "x": 0,
+          "y": 1,
+          "z": 1
+        }
+      },
+      "json://26": {
+        "bg_zx_node": 8,
+        "bg_cube_kind": {
+          "py/id": 64
+        },
+        "bg_cube_position": {
+          "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
+          "x": 2,
+          "y": -1,
+          "z": 0
+        }
+      },
+      "json://27": {
+        "bg_zx_node": 9,
+        "bg_cube_kind": {
+          "py/id": 64
+        },
+        "bg_cube_position": {
+          "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
+          "x": 0,
+          "y": 2,
+          "z": 2
+        }
+      }
+    },
+    "_adj": {
+      "json://10": {
+        "json://11": {
+          "bg_pipe_type": {
+            "py/id": 20
+          }
+        },
+        "json://12": {
+          "bg_pipe_type": {
+            "py/id": 20
+          }
+        },
+        "json://13": {
+          "bg_pipe_type": {
+            "py/id": 20
+          }
+        }
+      },
+      "json://11": {
+        "json://10": {
+          "py/id": 102
+        }
+      },
+      "json://12": {
+        "json://10": {
+          "py/id": 103
+        },
+        "json://14": {
+          "bg_pipe_type": {
+            "py/id": 20
+          }
+        },
+        "json://15": {
+          "bg_pipe_type": {
+            "py/id": 20
+          }
+        }
+      },
+      "json://13": {
+        "json://10": {
+          "py/id": 104
+        },
+        "json://16": {
+          "bg_pipe_type": {
+            "py/id": 20
+          }
+        },
+        "json://20": {
+          "bg_pipe_type": {
+            "py/id": 20
+          }
+        }
+      },
+      "json://14": {
+        "json://12": {
+          "py/id": 107
+        }
+      },
+      "json://15": {
+        "json://12": {
+          "py/id": 108
+        },
+        "json://19": {
+          "bg_pipe_type": {
+            "py/id": 20
+          }
+        },
+        "json://21": {
+          "bg_pipe_type": {
+            "py/id": 20
+          }
+        }
+      },
+      "json://16": {
+        "json://13": {
+          "py/id": 110
+        },
+        "json://17": {
+          "bg_pipe_type": {
+            "py/id": 20
+          }
+        }
+      },
+      "json://17": {
+        "json://16": {
+          "py/id": 117
+        },
+        "json://18": {
+          "bg_pipe_type": {
+            "py/id": 20
+          }
+        }
+      },
+      "json://18": {
+        "json://17": {
+          "py/id": 119
+        },
+        "json://19": {
+          "bg_pipe_type": {
+            "py/id": 20
+          }
+        }
+      },
+      "json://19": {
+        "json://18": {
+          "py/id": 121
+        },
+        "json://15": {
+          "py/id": 114
+        }
+      },
+      "json://20": {
+        "json://13": {
+          "py/id": 111
+        },
+        "json://22": {
+          "bg_pipe_type": {
+            "py/id": 20
+          }
+        },
+        "json://26": {
+          "bg_pipe_type": {
+            "py/id": 20
+          }
+        }
+      },
+      "json://21": {
+        "json://15": {
+          "py/id": 115
+        },
+        "json://25": {
+          "bg_pipe_type": {
+            "py/id": 20
+          }
+        },
+        "json://27": {
+          "bg_pipe_type": {
+            "py/id": 20
+          }
+        }
+      },
+      "json://22": {
+        "json://20": {
+          "py/id": 124
+        },
+        "json://23": {
+          "bg_pipe_type": {
+            "py/id": 20
+          }
+        }
+      },
+      "json://23": {
+        "json://22": {
+          "py/id": 130
+        },
+        "json://24": {
+          "bg_pipe_type": {
+            "py/id": 20
+          }
+        }
+      },
+      "json://24": {
+        "json://23": {
+          "py/id": 132
+        },
+        "json://25": {
+          "bg_pipe_type": {
+            "py/id": 20
+          }
+        }
+      },
+      "json://25": {
+        "json://24": {
+          "py/id": 134
+        },
+        "json://21": {
+          "py/id": 127
+        }
+      },
+      "json://26": {
+        "json://20": {
+          "py/id": 125
+        }
+      },
+      "json://27": {
+        "json://21": {
+          "py/id": 128
+        }
+      }
+    },
+    "__networkx_cache__": {},
+    "nodes": {
+      "py/object": "networkx.classes.reportviews.NodeView",
+      "py/state": {
+        "_nodes": {
+          "py/id": 59
+        }
+      }
+    }
+  },
+  "_AugmentedNxGraph__zx_node_realisation_order": [
+    3,
+    0,
+    2,
+    4,
+    1,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "_AugmentedNxGraph__zx_edge_realisation_order": [
+    {
+      "py/tuple": [
+        3,
+        0
+      ]
+    },
+    {
+      "py/tuple": [
+        3,
+        2
+      ]
+    },
+    {
+      "py/tuple": [
+        3,
+        4
+      ]
+    },
+    {
+      "py/tuple": [
+        2,
+        1
+      ]
+    },
+    {
+      "py/tuple": [
+        2,
+        5
+      ]
+    },
+    {
+      "py/tuple": [
+        4,
+        5
+      ]
+    },
+    {
+      "py/tuple": [
+        4,
+        6
+      ]
+    },
+    {
+      "py/tuple": [
+        5,
+        7
+      ]
+    },
+    {
+      "py/tuple": [
+        6,
+        7
+      ]
+    },
+    {
+      "py/tuple": [
+        6,
+        8
+      ]
+    },
+    {
+      "py/tuple": [
+        7,
+        9
+      ]
+    }
+  ],
+  "occupied": {
+    "py/set": [
+      {
+        "py/id": 97
+      },
+      {
+        "py/id": 73
+      },
+      {
+        "py/id": 91
+      },
+      {
+        "py/id": 79
+      },
+      {
+        "py/id": 65
+      },
+      {
+        "py/id": 85
+      },
+      {
+        "py/id": 62
+      },
+      {
+        "py/id": 71
+      },
+      {
+        "py/id": 77
+      },
+      {
+        "py/id": 89
+      },
+      {
+        "py/id": 75
+      },
+      {
+        "py/id": 87
+      },
+      {
+        "py/id": 83
+      },
+      {
+        "py/id": 99
+      },
+      {
+        "py/id": 68
+      },
+      {
+        "py/id": 93
+      },
+      {
+        "py/id": 81
+      },
+      {
+        "py/id": 95
+      }
+    ]
+  },
+  "_AugmentedNxGraph__next_cube_id": 28
+}
