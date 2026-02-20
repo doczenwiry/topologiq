@@ -6,6 +6,8 @@ from topologiq.dzw.utils.coordinates import Coordinates
 
 from topologiq.dzw.utils.components_zx import NodeType
 
+CubeId = int
+
 class CubeKind(Enum):
     OOO = 0
     XZZ = 1

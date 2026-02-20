@@ -16,14 +16,9 @@ class TikzWriter:
     ROTATION_X = 58
     ROTATION_Z = 112
 
-    def __init__(self, nx_graph: AugmentedNxGraph,
-                 realisation_order: tuple[NodeList, EdgeList] = (None,None),
-                 label : str = "circuit"
-    ):
+    def __init__(self, nx_graph: AugmentedNxGraph, label : str = "circuit"):
         self.__label = label
         self.__nx_graph = nx_graph
-        self.__node_realisation_order = realisation_order[0]
-        self.__edge_realisation_order = realisation_order[1]
 
     @staticmethod
     def find_axis(step: Coordinates):
@@ -107,13 +102,15 @@ class TikzWriter:
         faint_cubes: set[int] = set()
         faint_pipes: set[tuple[int,int]] = set()
 
-        if self.__node_realisation_order is not None and len(self.__node_realisation_order) > 0:
-            root = self.__node_realisation_order[0]
+        node_realisation_order = self.__nx_graph.get_node_realisation_order()
+        edge_realisation_order = self.__nx_graph.get_edge_realisation_order()
+        if node_realisation_order is not None and len(node_realisation_order) > 0:
+            root = node_realisation_order[0]
             plain_cubes.add( self.__nx_graph.get_cube(root) )
             self.write_frame(output, plain_cubes, plain_pipes, faint_cubes, faint_pipes)
 
-        if self.__edge_realisation_order is not None and len(self.__edge_realisation_order) > 0:
-            for next_edge in self.__edge_realisation_order:
+        if edge_realisation_order is not None and len(edge_realisation_order) > 0:
+            for next_edge in edge_realisation_order:
                 faint_cubes.update(plain_cubes)
                 faint_pipes.update(plain_pipes)
                 plain_cubes.clear()

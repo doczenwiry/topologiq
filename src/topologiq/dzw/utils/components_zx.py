@@ -1,6 +1,7 @@
 from enum import Enum
 import pyzx as zx
 
+NodeId = int
 
 class NodeType(Enum):
     O = 0 # Boundary

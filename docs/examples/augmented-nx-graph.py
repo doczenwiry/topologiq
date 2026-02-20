@@ -16,12 +16,12 @@ logging.getLogger('topologiq.dzw.visualisation').setLevel(logging.CRITICAL)
 
 if __name__ == '__main__':
     c = zx.Circuit(2)
-    c.add_gate("H", 0)
+    # c.add_gate("H", 0)
     c.add_gate("CNOT", 0, 1)
     c.add_gate("CNOT", 1, 0)
     c.add_gate("CNOT", 1, 0)
     zx_input = c.to_graph()
-    # zx.draw(zx_input)
+    zx.draw(zx_input, labels = True)
 
     walker = ZxGraphWalker(zx_input)
     nx_graph = walker.nx_graph

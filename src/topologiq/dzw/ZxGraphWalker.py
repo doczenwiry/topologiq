@@ -8,8 +8,8 @@ from topologiq.dzw.utils.CubeBeams import CubeBeams
 
 from topologiq.dzw.utils.augmented_nx_graph import AugmentedNxGraph
 from topologiq.dzw.helpers.spacetime_helper import SpacetimeHelper, Coordinates
-from topologiq.dzw.utils.components_zx import NodeType
-from topologiq.dzw.utils.components_bg import CubeKind
+from topologiq.dzw.utils.components_zx import NodeId, NodeType
+from topologiq.dzw.utils.components_bg import CubeId, CubeKind
 from topologiq.dzw.utils.path import Path
 
 from topologiq.dzw.SpacetimePathFinder import SpacetimePathFinder
@@ -34,10 +34,8 @@ class ZxGraphWalker:
         self.pathfinder = SpacetimePathFinder(self.nx_graph)
         self.number_1st_pass_edges = 0
         self.number_2nd_pass_edges = 0
-        self.node_realisation_order = []
-        self.edge_realisation_order = []
-        self.node_beams : dict[int, NodeBeams] = dict()
-        self.cube_beams : dict[int, CubeBeams] = dict()
+        self.node_beams : dict[NodeId, NodeBeams] = dict()
+        self.cube_beams : dict[CubeId, CubeBeams] = dict()
 
     def pick_root(self, central_spider: bool = True, deterministic: bool = False) -> int:
         """Pick the spider that will serve as the root of the construction.
@@ -67,7 +65,7 @@ class ZxGraphWalker:
 
         return min(candidates) if deterministic else random.choice(candidates)
 
-    def construct(self, root_choice: tuple[int, CubeKind] = None):
+    def construct(self, root_choice: tuple[NodeId, CubeKind] = None):
         # Prepare the root node of the construction.
         if root_choice is None:
             root = self.pick_root()
@@ -80,27 +78,25 @@ class ZxGraphWalker:
 
         console.info(f"Root node #{root} realised as cube #{root_cube} [{kind}@{SpacetimeHelper.ORIGIN}]")
 
-        self.node_realisation_order.append(root)
-
-        queue : deque[int] = deque([root])
+        queue : deque[NodeId] = deque([root])
 
         # Proceed with the main loop of the BFS
         while queue:
-            source: int = queue.popleft()
+            current_node: NodeId = queue.popleft()
 
-            for target in self.nx_graph.get_node_neighbours(source):
-                if self.nx_graph.is_edge_realised(source, target):
-                    console.info(f"Ignoring edge {source}-{target}")
+            for neighbour_node in self.nx_graph.get_node_neighbours(current_node):
+                if self.nx_graph.is_edge_realised(current_node, neighbour_node):
+                    console.info(f"Ignoring edge {current_node}-{neighbour_node}")
                     continue
 
                 proposed_path: Path | None = None
 
-                if not self.nx_graph.is_node_realised(target):
+                if not self.nx_graph.is_node_realised(neighbour_node):
                     # First-pass edge
                     # Goal: find a path to some position where a suitable cube can be placed within some maximal MD
-                    console.info(f"Processing edge {source}-{target} : Pass #1")
+                    console.info(f"Processing edge {current_node}-{neighbour_node} : Pass #1")
 
-                    proposed_path = self.find_target_realisation(source, target)
+                    proposed_path = self.find_target_realisation(current_node, neighbour_node)
 
                     if proposed_path is None:
                         raise Exception(f"> Target realisation failure : neither kind nor placement found.")
@@ -109,28 +105,27 @@ class ZxGraphWalker:
                     proposed_position = proposed_path.get_target_position()
 
                     # Realise the target node as a cube with kind and position provided by the pathfinder
-                    target_cube = self.nx_graph.realise_node(target, proposed_kind, proposed_position)
+                    target_cube = self.nx_graph.realise_node(neighbour_node, proposed_kind, proposed_position)
                     proposed_path.set_target_cube(target_cube)
-                    self.node_realisation_order.append(target)
 
-                    self.prune_beams_by_cube(target)
+                    self.prune_beams_by_cube(neighbour_node)
                     self.prune_beams()
 
-                    console.info(f"Realised node #{target} as cube #{target_cube} [{proposed_kind}@{proposed_position}]")
+                    console.info(f"Realised node #{neighbour_node} as cube #{target_cube} [{proposed_kind}@{proposed_position}]")
 
                     # Compute the beams for the new target cube only for X and Z nodes.
-                    if self.nx_graph.get_node_type(target) in [ NodeType.X, NodeType.Z ]:
-                        self.node_beams[target] = self.compute_beams(proposed_kind, proposed_position)
-                        self.cube_beams[target] = CubeBeams(proposed_kind, proposed_position, occupied = self.nx_graph.occupied)
+                    if self.nx_graph.get_node_type(neighbour_node) in [ NodeType.X, NodeType.Z ]:
+                        self.node_beams[neighbour_node] = self.compute_beams(proposed_kind, proposed_position)
+                        self.cube_beams[neighbour_node] = CubeBeams(proposed_kind, proposed_position, occupied = self.nx_graph.occupied)
 
                     self.number_1st_pass_edges += 1
-                    queue.append(target)
-                elif not self.nx_graph.is_edge_realised(source, target):
+                    queue.append(neighbour_node)
+                elif not self.nx_graph.is_edge_realised(current_node, neighbour_node):
                     # Second-pass edge
                     # Goal: find a path towards the position of a cube representing the target node
-                    console.info(f"Processing edge {source}-{target} : Pass #2")
+                    console.info(f"Processing edge {current_node}-{neighbour_node} : Pass #2")
 
-                    proposed_path = self.find_edge_realisation(source, target)
+                    proposed_path = self.find_edge_realisation(current_node, neighbour_node)
 
                     if proposed_path is None:
                         raise Exception(f"> Edge realisation failure : no path found.")
@@ -138,10 +133,7 @@ class ZxGraphWalker:
                     self.number_2nd_pass_edges += 1
 
                 # Realise the edge using the path
-                self.nx_graph.realise_edge(source, target, proposed_path)
-
-                # Add the current edge to the order of realisations
-                self.edge_realisation_order.append( (source,target) )
+                self.nx_graph.realise_edge(current_node, neighbour_node, proposed_path)
 
                 self.prune_beams_by_path(proposed_path.get_extra_cubes())
 
@@ -235,7 +227,7 @@ class ZxGraphWalker:
         viable = not critical_interruption and not critical_intersection
         return viable, total_beams_interrupted
 
-    def find_target_realisation(self, source: int, target: int):
+    def find_target_realisation(self, source: NodeId, target: NodeId):
         if not self.nx_graph.is_node_realised(source):
             raise Exception(f"{source} is not placed and has no kind; cannot connect with a path.")
 
@@ -287,7 +279,7 @@ class ZxGraphWalker:
 
         return winner_path
 
-    def find_edge_realisation(self, source, target) -> Path | None:
+    def find_edge_realisation(self, source: NodeId, target: NodeId) -> Path | None:
         proposed_paths = self.pathfinder.find_edge_realisation(source, target, node_beams = self.node_beams)
 
         console.info(f"Pathfinder proposed {len(proposed_paths)} paths.")

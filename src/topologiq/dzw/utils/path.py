@@ -1,7 +1,7 @@
 from topologiq.dzw.utils.coordinates import Coordinates
 
 from topologiq.dzw.utils.components_zx import EdgeType
-from topologiq.dzw.utils.components_bg import CubeKind
+from topologiq.dzw.utils.components_bg import CubeId, CubeKind
 
 from topologiq.dzw.utils.CubeBeams import CubeBeams
 
@@ -12,7 +12,7 @@ class Path:
     PATH_LEN_HP = -1
     BEAMS_BROKEN_HP = -1
 
-    def __init__(self, source_cube: int, target_cube: int, edge_type: EdgeType, proposed_beams: CubeBeams,
+    def __init__(self, source_cube: CubeId, target_cube: CubeId, edge_type: EdgeType, proposed_beams: CubeBeams,
             proposed_cubes: list[tuple[CubeKind, Coordinates]], proposed_pipes: list[EdgeType]
     ):
         self.__source_cube = source_cube
