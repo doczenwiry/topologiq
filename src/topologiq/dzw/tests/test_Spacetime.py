@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from topologiq.dzw.helpers.spacetime_helper import SpacetimeHelper, Coordinates
-
+from topologiq.dzw.utils.coordinates import Coordinates
+from topologiq.dzw.helpers.spacetime_helper import SpacetimeHelper
 
 class TestSpacetime(TestCase):
     def test_get_orthogonal_plane_XY_XP_XZ(self):

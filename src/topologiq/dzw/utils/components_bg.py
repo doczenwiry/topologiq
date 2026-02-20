@@ -1,9 +1,10 @@
 from enum import Enum
 from functools import total_ordering
 
-from topologiq.dzw.utils.coordinates import Coordinates
-from topologiq.dzw.utils.components_zx import NodeType
 from topologiq.dzw.helpers.spacetime_helper import SpacetimeHelper
+from topologiq.dzw.utils.coordinates import Coordinates
+
+from topologiq.dzw.utils.components_zx import NodeType
 
 class CubeKind(Enum):
     OOO = 0

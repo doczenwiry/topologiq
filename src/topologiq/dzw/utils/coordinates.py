@@ -1,3 +1,4 @@
+from math import sqrt
 from functools import total_ordering
 from dataclasses import dataclass
 
@@ -28,7 +29,7 @@ class Coordinates:
         return Coordinates(self.x / scalar, self.y / scalar, self.z / scalar)
 
     def normalized(self):
-        return self.div(math.sqrt(self.dot(self)))
+        return self.div(sqrt(self.dot(self)))
 
     def dot(self, other) -> float:
         return sum([ s * o for s, o in zip(self, other) ])

@@ -3,8 +3,8 @@ import pyzx as zx
 from topologiq.dzw.ZxGraphWalker import ZxGraphWalker
 from topologiq.dzw.utils.components_bg import CubeKind
 from topologiq.dzw.utils.components_zx import NodeType
-from topologiq.dzw.visualisation.ReportFormatter import ReportFormatter
-from topologiq.dzw.visualisation.TikzWriter import TikzWriter
+from topologiq.dzw.visualisation.report_formatter import ReportFormatter
+from topologiq.dzw.visualisation.tikz_writer import TikzWriter
 
 import logging
 logging.basicConfig(level=logging.DEBUG)

@@ -1,4 +1,5 @@
 from topologiq.dzw.utils.coordinates import Coordinates
+
 from topologiq.dzw.utils.components_zx import EdgeType
 from topologiq.dzw.utils.components_bg import CubeKind
 

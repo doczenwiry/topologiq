@@ -1,9 +1,11 @@
 from unittest import TestCase
 
-from topologiq.dzw.utils.components_bg import CubeKind
-from topologiq.dzw.helpers.spacetime_helper import SpacetimeHelper, Coordinates
-from topologiq.dzw.utils.components_zx import EdgeType
+from topologiq.dzw.utils.coordinates import Coordinates
+from topologiq.dzw.helpers.spacetime_helper import SpacetimeHelper
 from topologiq.dzw.helpers.blockgraph_helper import BlockGraphHelper
+
+from topologiq.dzw.utils.components_bg import CubeKind
+from topologiq.dzw.utils.components_zx import EdgeType
 
 class TestSpacetimeHelper(TestCase):
     def test_infer_pipe_type1(self):

@@ -5,12 +5,11 @@ import networkx as nx
 
 from topologiq.dzw.helpers.spacetime_helper import SpacetimeHelper
 from topologiq.dzw.utils.coordinates import Coordinates
+from topologiq.dzw.helpers.blockgraph_helper import BlockGraphHelper
 
 from topologiq.dzw.utils.components_zx import NodeType, EdgeType
 from topologiq.dzw.utils.components_bg import CubeKind
-from topologiq.dzw.utils.Path import Path
-
-from topologiq.dzw.helpers.blockgraph_helper import BlockGraphHelper
+from topologiq.dzw.utils.path import Path
 
 from logging import getLogger
 console = getLogger(__name__)
@@ -181,7 +180,6 @@ class AugmentedNxGraph:
     def is_edge_realised(self, source: int, target: int) -> bool:
         return self.__zx_graph.get_edge_data(source, target)[AugmentedNxGraph.KEY_ZX_BG_PATH] is not None
 
-    # Precondition: path is a sequence of (position,kind) for the extra cubes needed to connect the source to the target
     def realise_edge(self, source: int, target: int, proposed_path: Path):
         if not self.is_node_realised(source):
             raise Exception(f"{source} is not placed; cannot connect with a path.")
@@ -201,7 +199,6 @@ class AugmentedNxGraph:
         edge_type = self.get_edge_type(source, target)
 
         # # Reject path if it is invalid.
-        # if not self.is_path_valid(source, self.get_cube_kind(target_cube), self.get_cube_position(target_cube), self.get_edge_type(source, target), path):
         if not self.is_path_valid(proposed_path, edge_type):
             raise Exception(f"Proposed path to realise edge {source}-{target} is invalid.")
 

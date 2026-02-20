@@ -10,7 +10,7 @@ from topologiq.dzw.utils.components_zx import EdgeType
 from topologiq.dzw.utils.components_bg import CubeKind
 from topologiq.dzw.utils.CubeBeams import CubeBeams
 from topologiq.dzw.utils.coordinates import Coordinates
-from topologiq.dzw.utils.Path import Path
+from topologiq.dzw.utils.path import Path
 
 from topologiq.dzw.helpers.blockgraph_helper import BlockGraphHelper
 

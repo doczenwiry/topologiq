@@ -10,7 +10,7 @@ from topologiq.dzw.utils.augmented_nx_graph import AugmentedNxGraph
 from topologiq.dzw.helpers.spacetime_helper import SpacetimeHelper, Coordinates
 from topologiq.dzw.utils.components_zx import NodeType
 from topologiq.dzw.utils.components_bg import CubeKind
-from topologiq.dzw.utils.Path import Path
+from topologiq.dzw.utils.path import Path
 
 from topologiq.dzw.SpacetimePathFinder import SpacetimePathFinder
 

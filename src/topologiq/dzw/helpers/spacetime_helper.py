@@ -1,4 +1,4 @@
-from topologiq.dzw.utils.components_bg import Coordinates
+from topologiq.dzw.utils.coordinates import Coordinates
 
 class SpacetimeHelper:
     ORIGIN = Coordinates(0, 0, 0)

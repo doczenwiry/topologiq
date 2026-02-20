@@ -1,6 +1,8 @@
-from topologiq.dzw.utils.components_bg import CubeKind
-from topologiq.dzw.helpers.spacetime_helper import Coordinates, SpacetimeHelper
+from topologiq.dzw.helpers.spacetime_helper import SpacetimeHelper
+from topologiq.dzw.utils.coordinates import Coordinates
+
 from topologiq.dzw.utils.components_zx import NodeType, EdgeType
+from topologiq.dzw.utils.components_bg import CubeKind
 
 from logging import getLogger
 console = getLogger(__name__)
