@@ -6,13 +6,10 @@ EdgeList = list[tuple[int,int]]
 
 class ReportFormatter:
     def __init__(self, nx_graph: AugmentedNxGraph,
-                 realisation_orders: tuple[NodeList, EdgeList] = (None, None),
                  label: str = "circuit"
     ):
         self.__label = label
         self.__nx_graph = nx_graph
-        self.__node_realisation_order = realisation_orders[0]
-        self.__edge_realisation_order = realisation_orders[1]
 
     @staticmethod
     def __flip(node_type: NodeType) -> NodeType:
@@ -26,7 +23,7 @@ class ReportFormatter:
     @staticmethod
     def infer_connecting_pipe_colors(previous_kind, step):
         current_type = previous_kind.get_type()
-        current_reach = previous_kind.get_reach().value.as_tuple()
+        current_reach = previous_kind.get_reach().as_tuple()
         colors = ['-', '-', '-']
 
         step = step.as_tuple()
@@ -92,18 +89,16 @@ class ReportFormatter:
             report += f"Edge ID: ({source}, {target}). Type: {type_name}\n"
         report += "\n__________________________\n"
 
-        if self.__edge_realisation_order is not None:
-            report += "3D \"EDGE PATHS\" (Blocks needed to connect two original nodes)\n"
-            for source, target in self.__edge_realisation_order:
-                edge = (source, target) if source < target else (target, source)
-                report += f"Edge {edge}: {self.old_path_format(source, target)}\n"
+        report += "3D \"EDGE PATHS\" (Blocks needed to connect two original nodes)\n"
+        for source, target in self.__nx_graph.get_edge_realisation_order():
+            edge = (source, target) if source < target else (target, source)
+            report += f"Edge {edge}: {self.old_path_format(source, target)}\n"
         report += "\n__________________________\n"
 
-        if self.__node_realisation_order is not None:
-            report += "LATTICE SURGERY (Graph)\n"
-            for node in self.__node_realisation_order:
-                cube = self.__nx_graph.get_cube(node)
-                report += f"Node ID: {node}. Info: ({self.__nx_graph.get_cube_position(cube)}, '{self.__nx_graph.get_cube_kind(cube).name.lower()}')\n"
+        report += "LATTICE SURGERY (Graph)\n"
+        for node in self.__nx_graph.get_node_realisation_order():
+            cube = self.__nx_graph.get_cube(node)
+            report += f"Node ID: {node}. Info: ({self.__nx_graph.get_cube_position(cube)}, '{self.__nx_graph.get_cube_kind(cube).name.lower()}')\n"
 
         if append_cube_report:
             report += "\n__________________________\n"

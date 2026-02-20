@@ -3,16 +3,18 @@ console = getLogger(__name__)
 
 from collections import deque
 
-from topologiq.utils.classes import NodeBeams
+from topologiq.dzw.utils.coordinates import Coordinates
+from topologiq.dzw.helpers.blockgraph import BlockGraphHelper
 
 from topologiq.dzw.utils.augmented_nx_graph import AugmentedNxGraph
+
 from topologiq.dzw.utils.components_zx import NodeId, EdgeType
 from topologiq.dzw.utils.components_bg import CubeKind
-from topologiq.dzw.utils.CubeBeams import CubeBeams
-from topologiq.dzw.utils.coordinates import Coordinates
 from topologiq.dzw.utils.path import Path
 
-from topologiq.dzw.helpers.blockgraph_helper import BlockGraphHelper
+from topologiq.utils.classes import NodeBeams
+from topologiq.dzw.utils.CubeBeams import CubeBeams
+
 
 CubeList = list[tuple[CubeKind, Coordinates]]
 PipeList = list[EdgeType]

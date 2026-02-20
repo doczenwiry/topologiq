@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from topologiq.dzw.utils.augmented_nx_graph import AugmentedNxGraph
-from topologiq.dzw.helpers.spacetime_helper import Coordinates
+from topologiq.dzw.utils.coordinates import Coordinates
 
 from logging import getLogger
 console = getLogger(__name__)
@@ -104,12 +104,13 @@ class TikzWriter:
 
         node_realisation_order = self.__nx_graph.get_node_realisation_order()
         edge_realisation_order = self.__nx_graph.get_edge_realisation_order()
-        if node_realisation_order is not None and len(node_realisation_order) > 0:
+
+        if len(node_realisation_order) > 0:
             root = node_realisation_order[0]
             plain_cubes.add( self.__nx_graph.get_cube(root) )
             self.write_frame(output, plain_cubes, plain_pipes, faint_cubes, faint_pipes)
 
-        if edge_realisation_order is not None and len(edge_realisation_order) > 0:
+        if len(edge_realisation_order) > 0:
             for next_edge in edge_realisation_order:
                 faint_cubes.update(plain_cubes)
                 faint_pipes.update(plain_pipes)

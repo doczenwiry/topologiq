@@ -1,4 +1,4 @@
-from topologiq.dzw.helpers.spacetime_helper import SpacetimeHelper
+from topologiq.dzw.helpers.spacetime import Spacetime
 from topologiq.dzw.utils.coordinates import Coordinates
 
 from topologiq.dzw.utils.components_zx import NodeType, EdgeType
@@ -26,19 +26,19 @@ class BlockGraphHelper:
     @staticmethod
     def get_candidate_constellation(
         origin_kind: CubeKind,
-        origin_position: Coordinates = SpacetimeHelper.ORIGIN,
+        origin_position: Coordinates = Spacetime.ORIGIN,
         pipe_type: EdgeType = EdgeType.IDENTITY
     ) -> list[tuple[CubeKind, Coordinates]]:
         constellation = []
 
         origin_reach = origin_kind.get_reach()
 
-        for step in SpacetimeHelper.get_step_constellation(origin_reach):
+        for step in Spacetime.get_step_constellation(origin_reach):
             candidate_position = origin_position + step
 
             for node_type in [ NodeType.X, NodeType.Z ]:
-                for node_reach in SpacetimeHelper.PLANES:
-                    if SpacetimeHelper.contains(node_reach, step):
+                for node_reach in Spacetime.PLANES:
+                    if Spacetime.contains(node_reach, step):
                         candidate_kind = CubeKind.convert(node_type, node_reach)
                         if pipe_type in BlockGraphHelper.infer_pipe_type(candidate_kind, origin_kind):
                             constellation.append( (candidate_kind, candidate_position) )

@@ -3,9 +3,9 @@ from collections import deque
 import pyzx as zx
 import networkx as nx
 
-from topologiq.dzw.helpers.spacetime_helper import SpacetimeHelper
 from topologiq.dzw.utils.coordinates import Coordinates
-from topologiq.dzw.helpers.blockgraph_helper import BlockGraphHelper
+from topologiq.dzw.helpers.spacetime import Spacetime
+from topologiq.dzw.helpers.blockgraph import BlockGraphHelper
 
 from topologiq.dzw.utils.components_zx import NodeId, NodeType, EdgeType
 from topologiq.dzw.utils.components_bg import CubeId, CubeKind
@@ -345,9 +345,9 @@ class AugmentedNxGraph:
 
             # Check that the step taken lies in both reaches of successive cubes
             step_taken = current_position - previous_position
-            if not SpacetimeHelper.contains(previous_reach, step_taken) or not SpacetimeHelper.contains(current_reach, step_taken):
-                console.debug(f"> Previous reach contains step : {SpacetimeHelper.contains(previous_reach, step_taken)}")
-                console.debug(f"> Current reach contains step : {SpacetimeHelper.contains(current_reach, step_taken)}")
+            if not Spacetime.contains(previous_reach, step_taken) or not Spacetime.contains(current_reach, step_taken):
+                console.debug(f"> Previous reach contains step : {Spacetime.contains(previous_reach, step_taken)}")
+                console.debug(f"> Current reach contains step : {Spacetime.contains(current_reach, step_taken)}")
                 return False
 
             # Check that the current_position is not already occupied by an extra cube

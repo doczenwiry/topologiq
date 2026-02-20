@@ -1,7 +1,7 @@
 from enum import Enum
 from functools import total_ordering
 
-from topologiq.dzw.helpers.spacetime_helper import SpacetimeHelper
+from topologiq.dzw.helpers.spacetime import Spacetime
 from topologiq.dzw.utils.coordinates import Coordinates
 
 from topologiq.dzw.utils.components_zx import NodeType
@@ -34,16 +34,16 @@ class CubeKind(Enum):
     @staticmethod
     def convert(node_type: NodeType, node_reach: Coordinates):
         if node_type == NodeType.X:
-            if node_reach == SpacetimeHelper.XY:
+            if node_reach == Spacetime.XY:
                 return CubeKind.ZZX
-            elif node_reach == SpacetimeHelper.XZ:
+            elif node_reach == Spacetime.XZ:
                 return CubeKind.ZXZ
             else:
                 return CubeKind.XZZ
         elif node_type == NodeType.Z:
-            if node_reach == SpacetimeHelper.XY:
+            if node_reach == Spacetime.XY:
                 return CubeKind.XXZ
-            elif node_reach == SpacetimeHelper.XZ:
+            elif node_reach == Spacetime.XZ:
                 return CubeKind.XZX
             else:
                 return CubeKind.ZXX
@@ -65,13 +65,13 @@ class CubeKind(Enum):
     # TODO: a CubeKind.YYY has Spacetime.XYZ and single port ?
     def get_reach(self) -> Coordinates:
         if self == CubeKind.XZZ or self == CubeKind.ZXX:
-            return SpacetimeHelper.YZ
+            return Spacetime.YZ
         elif self == CubeKind.ZXZ or self == CubeKind.XZX:
-            return SpacetimeHelper.XZ
+            return Spacetime.XZ
         elif self == CubeKind.ZZX or self == CubeKind.XXZ:
-            return SpacetimeHelper.XY
+            return Spacetime.XY
         elif self == CubeKind.OOO or self == CubeKind.YYY:
-            return SpacetimeHelper.XYZ
+            return Spacetime.XYZ
         else:
             raise ValueError(f"Not applicable to cube kind {self.name}")
 

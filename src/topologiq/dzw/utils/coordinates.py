@@ -2,12 +2,17 @@ from math import sqrt
 from functools import total_ordering
 from dataclasses import dataclass
 
-# Essentially vectors with their basic operations
 @dataclass(frozen = True)
 class Coordinates:
     x: float
     y: float
     z: float
+
+    @staticmethod
+    def from_list(l: list[float]):
+        if len(l) != 3:
+            raise Exception(f"Provided list is too long. Needs to have 3 components.")
+        return Coordinates(l[0], l[1], l[2])
 
     @staticmethod
     def from_tuple(t: tuple[float, float, float]):

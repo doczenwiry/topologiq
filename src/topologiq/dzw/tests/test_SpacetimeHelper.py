@@ -1,8 +1,8 @@
 from unittest import TestCase
 
 from topologiq.dzw.utils.coordinates import Coordinates
-from topologiq.dzw.helpers.spacetime_helper import SpacetimeHelper
-from topologiq.dzw.helpers.blockgraph_helper import BlockGraphHelper
+from topologiq.dzw.helpers.spacetime import Spacetime
+from topologiq.dzw.helpers.blockgraph import BlockGraphHelper
 
 from topologiq.dzw.utils.components_bg import CubeKind
 from topologiq.dzw.utils.components_zx import EdgeType
@@ -30,14 +30,14 @@ class TestSpacetimeHelper(TestCase):
 
     def test_get_constellation(self):
         produced = sorted(BlockGraphHelper.get_candidate_constellation(
-            origin_kind = CubeKind.XZZ, origin_position = SpacetimeHelper.ORIGIN, pipe_type = EdgeType.IDENTITY)
+            origin_kind = CubeKind.XZZ, origin_position = Spacetime.ORIGIN, pipe_type = EdgeType.IDENTITY)
         )
         specification = {
-            CubeKind.XZZ: [SpacetimeHelper.YM, SpacetimeHelper.YP, SpacetimeHelper.ZM, SpacetimeHelper.ZP],
-            CubeKind.XZX: [SpacetimeHelper.ZM, SpacetimeHelper.ZP],
-            CubeKind.XXZ: [SpacetimeHelper.YM, SpacetimeHelper.YP],
-            CubeKind.OOO: [SpacetimeHelper.YM, SpacetimeHelper.YP, SpacetimeHelper.ZM, SpacetimeHelper.ZP],
-            CubeKind.YYY: [SpacetimeHelper.YM, SpacetimeHelper.YP, SpacetimeHelper.ZM, SpacetimeHelper.ZP],
+            CubeKind.XZZ: [Spacetime.YM, Spacetime.YP, Spacetime.ZM, Spacetime.ZP],
+            CubeKind.XZX: [Spacetime.ZM, Spacetime.ZP],
+            CubeKind.XXZ: [Spacetime.YM, Spacetime.YP],
+            CubeKind.OOO: [Spacetime.YM, Spacetime.YP, Spacetime.ZM, Spacetime.ZP],
+            CubeKind.YYY: [Spacetime.YM, Spacetime.YP, Spacetime.ZM, Spacetime.ZP],
         }
 
         expected : list[tuple[CubeKind, Coordinates]] = []
@@ -54,5 +54,5 @@ class TestSpacetimeHelper(TestCase):
         self.assertEqual(set1, set2)
 
     def test_bgc2(self):
-        set1 = {(CubeKind.XZZ, SpacetimeHelper.ORIGIN)}
-        self.assertTrue((CubeKind.XZZ, SpacetimeHelper.ORIGIN) in set1)
+        set1 = {(CubeKind.XZZ, Spacetime.ORIGIN)}
+        self.assertTrue((CubeKind.XZZ, Spacetime.ORIGIN) in set1)
