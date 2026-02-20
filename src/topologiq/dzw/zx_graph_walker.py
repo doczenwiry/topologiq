@@ -13,7 +13,7 @@ from topologiq.dzw.utils.components_zx import NodeId, NodeType
 from topologiq.dzw.utils.components_bg import CubeId, CubeKind
 from topologiq.dzw.utils.path import Path
 
-from topologiq.dzw.utils.CubeBeams import CubeBeams
+from topologiq.dzw.utils.cube_beams import CubeBeams
 from topologiq.dzw.spacetime_pathfinder import SpacetimePathFinder
 
 # TODO: remove once rewrite is done

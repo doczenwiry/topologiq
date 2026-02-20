@@ -13,7 +13,7 @@ from topologiq.dzw.utils.components_bg import CubeKind
 from topologiq.dzw.utils.path import Path
 
 from topologiq.utils.classes import NodeBeams
-from topologiq.dzw.utils.CubeBeams import CubeBeams
+from topologiq.dzw.utils.cube_beams import CubeBeams
 
 
 CubeList = list[tuple[CubeKind, Coordinates]]
