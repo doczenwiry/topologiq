@@ -3,12 +3,14 @@ from collections import deque
 import pyzx as zx
 import networkx as nx
 
-from topologiq.dzw.utils.Spacetime import Coordinates, Reach
+from topologiq.dzw.helpers.spacetime_helper import SpacetimeHelper
+from topologiq.dzw.utils.coordinates import Coordinates
+
 from topologiq.dzw.utils.components_zx import NodeType, EdgeType
-from topologiq.dzw.utils.CubeKind import CubeKind
+from topologiq.dzw.utils.components_bg import CubeKind
 from topologiq.dzw.utils.Path import Path
 
-from topologiq.dzw.helpers.SpacetimeHelper import SpacetimeHelper
+from topologiq.dzw.helpers.blockgraph_helper import BlockGraphHelper
 
 from logging import getLogger
 console = getLogger(__name__)
@@ -277,7 +279,7 @@ class AugmentedNxGraph:
 
         source_kind = self.get_cube_kind(source_cube)
         target_kind = self.get_cube_kind(target_cube)
-        if not pipe_type in SpacetimeHelper.infer_pipe_type(source_kind, target_kind):
+        if not pipe_type in BlockGraphHelper.infer_pipe_type(source_kind, target_kind):
             raise Exception(f"Pipe type {pipe_type} is incompatible with source and target kinds [{source_kind}-{target_kind}].")
 
         # TODO: validate with respect to inferred pipe type between source and target cubes
@@ -314,7 +316,7 @@ class AugmentedNxGraph:
 
         previous_kind = source_kind
         previous_position = source_position
-        previous_reach: Reach = source_kind.get_reach()
+        previous_reach: Coordinates = source_kind.get_reach()
 
         n = len(cubes)
         for index in range(1, n):
@@ -334,9 +336,9 @@ class AugmentedNxGraph:
 
             # Check that the step taken lies in both reaches of successive cubes
             step_taken = current_position - previous_position
-            if not previous_reach.contains(step_taken) or not current_reach.contains(step_taken):
-                console.debug(f"> Previous reach contains step : {previous_reach.contains(step_taken)}")
-                console.debug(f"> Current reach contains step : {current_reach.contains(step_taken)}")
+            if not SpacetimeHelper.contains(previous_reach, step_taken) or not SpacetimeHelper.contains(current_reach, step_taken):
+                console.debug(f"> Previous reach contains step : {SpacetimeHelper.contains(previous_reach, step_taken)}")
+                console.debug(f"> Current reach contains step : {SpacetimeHelper.contains(current_reach, step_taken)}")
                 return False
 
             # Check that the current_position is not already occupied by an extra cube
@@ -347,8 +349,9 @@ class AugmentedNxGraph:
 
             # Check that the current pipe has a type consistent with what is allowed
             current_pipe_type = pipes[index-1]
-            if not current_pipe_type in SpacetimeHelper.infer_pipe_type(previous_kind, current_kind):
-                console.debug(f"> Current pipe type is not allowed between {previous_kind} and {current_kind} [{current_pipe_type} not in {SpacetimeHelper.infer_pipe_type(previous_kind, current_kind)}].")
+            inferred = BlockGraphHelper.infer_pipe_type(previous_kind, current_kind)
+            if not current_pipe_type in inferred:
+                console.debug(f"> Current pipe type is not allowed between {previous_kind} and {current_kind} [{current_pipe_type} not in {inferred}].")
                 return False
 
             if current_pipe_type == EdgeType.HADAMARD:

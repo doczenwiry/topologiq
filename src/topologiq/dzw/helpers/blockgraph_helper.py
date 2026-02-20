@@ -1,11 +1,11 @@
-from topologiq.dzw.utils.CubeKind import CubeKind
-from topologiq.dzw.utils.Spacetime import Coordinates, Spacetime
+from topologiq.dzw.utils.components_bg import CubeKind
+from topologiq.dzw.helpers.spacetime_helper import Coordinates, SpacetimeHelper
 from topologiq.dzw.utils.components_zx import NodeType, EdgeType
 
 from logging import getLogger
 console = getLogger(__name__)
 
-class SpacetimeHelper:
+class BlockGraphHelper:
     @staticmethod
     def infer_pipe_type(source: CubeKind, target: CubeKind) -> set[EdgeType]:
         source_type = source.get_type()
@@ -24,21 +24,21 @@ class SpacetimeHelper:
     @staticmethod
     def get_candidate_constellation(
         origin_kind: CubeKind,
-        origin_position: Coordinates = Spacetime.ORIGIN,
+        origin_position: Coordinates = SpacetimeHelper.ORIGIN,
         pipe_type: EdgeType = EdgeType.IDENTITY
     ) -> list[tuple[CubeKind, Coordinates]]:
         constellation = []
 
         origin_reach = origin_kind.get_reach()
 
-        for step in origin_reach.get_step_constellation():
+        for step in SpacetimeHelper.get_step_constellation(origin_reach):
             candidate_position = origin_position + step
 
             for node_type in [ NodeType.X, NodeType.Z ]:
-                for node_reach in Spacetime.PLANES:
-                    if node_reach.contains(step):
+                for node_reach in SpacetimeHelper.PLANES:
+                    if SpacetimeHelper.contains(node_reach, step):
                         candidate_kind = CubeKind.convert(node_type, node_reach)
-                        if pipe_type in SpacetimeHelper.infer_pipe_type(candidate_kind, origin_kind):
+                        if pipe_type in BlockGraphHelper.infer_pipe_type(candidate_kind, origin_kind):
                             constellation.append( (candidate_kind, candidate_position) )
 
             # A cube can always have an adjacent cube of kind OOO (both IDENTITY and HADAMARD pipes are possible)

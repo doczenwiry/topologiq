@@ -1,41 +1,41 @@
 from unittest import TestCase
 
-from topologiq.dzw.utils.CubeKind import CubeKind
-from topologiq.dzw.utils.Spacetime import Step, Spacetime, Coordinates
+from topologiq.dzw.utils.components_bg import CubeKind
+from topologiq.dzw.helpers.spacetime_helper import SpacetimeHelper, Coordinates
 from topologiq.dzw.utils.components_zx import EdgeType
-from topologiq.dzw.helpers.SpacetimeHelper import SpacetimeHelper
+from topologiq.dzw.helpers.blockgraph_helper import BlockGraphHelper
 
 class TestSpacetimeHelper(TestCase):
     def test_infer_pipe_type1(self):
-        produced = SpacetimeHelper.infer_pipe_type(CubeKind.XZZ, CubeKind.XZZ)
+        produced = BlockGraphHelper.infer_pipe_type(CubeKind.XZZ, CubeKind.XZZ)
         expected = { EdgeType.IDENTITY }
         self.assertIn(expected, produced)
 
     def test_infer_pipe_type2(self):
-        produced = SpacetimeHelper.infer_pipe_type(CubeKind.XZZ, CubeKind.ZXZ)
+        produced = BlockGraphHelper.infer_pipe_type(CubeKind.XZZ, CubeKind.ZXZ)
         expected = { EdgeType.HADAMARD }
         self.assertEqual(expected, produced)
 
     def test_infer_pipe_type3(self):
-        produced = SpacetimeHelper.infer_pipe_type(CubeKind.XZZ, CubeKind.ZXX)
+        produced = BlockGraphHelper.infer_pipe_type(CubeKind.XZZ, CubeKind.ZXX)
         expected = { EdgeType.HADAMARD }
         self.assertEqual(expected, produced)
 
     def test_infer_pipe_type4(self):
-        produced = SpacetimeHelper.infer_pipe_type(CubeKind.XZZ, CubeKind.XZX)
+        produced = BlockGraphHelper.infer_pipe_type(CubeKind.XZZ, CubeKind.XZX)
         expected = { EdgeType.IDENTITY }
         self.assertEqual(expected, produced)
 
     def test_get_constellation(self):
-        produced = sorted(SpacetimeHelper.get_candidate_constellation(
-            origin_kind = CubeKind.XZZ, origin_position = Spacetime.ORIGIN, pipe_type = EdgeType.IDENTITY)
+        produced = sorted(BlockGraphHelper.get_candidate_constellation(
+            origin_kind = CubeKind.XZZ, origin_position = SpacetimeHelper.ORIGIN, pipe_type = EdgeType.IDENTITY)
         )
         specification = {
-            CubeKind.XZZ: [Step.YM, Step.YP, Step.ZM, Step.ZP],
-            CubeKind.XZX: [Step.ZM, Step.ZP],
-            CubeKind.XXZ: [Step.YM, Step.YP],
-            CubeKind.OOO: [Step.YM, Step.YP, Step.ZM, Step.ZP],
-            CubeKind.YYY: [Step.YM, Step.YP, Step.ZM, Step.ZP],
+            CubeKind.XZZ: [SpacetimeHelper.YM, SpacetimeHelper.YP, SpacetimeHelper.ZM, SpacetimeHelper.ZP],
+            CubeKind.XZX: [SpacetimeHelper.ZM, SpacetimeHelper.ZP],
+            CubeKind.XXZ: [SpacetimeHelper.YM, SpacetimeHelper.YP],
+            CubeKind.OOO: [SpacetimeHelper.YM, SpacetimeHelper.YP, SpacetimeHelper.ZM, SpacetimeHelper.ZP],
+            CubeKind.YYY: [SpacetimeHelper.YM, SpacetimeHelper.YP, SpacetimeHelper.ZM, SpacetimeHelper.ZP],
         }
 
         expected : list[tuple[CubeKind, Coordinates]] = []
@@ -52,5 +52,5 @@ class TestSpacetimeHelper(TestCase):
         self.assertEqual(set1, set2)
 
     def test_bgc2(self):
-        set1 = {(CubeKind.XZZ, Spacetime.ORIGIN)}
-        self.assertTrue((CubeKind.XZZ, Spacetime.ORIGIN) in set1)
+        set1 = {(CubeKind.XZZ, SpacetimeHelper.ORIGIN)}
+        self.assertTrue((CubeKind.XZZ, SpacetimeHelper.ORIGIN) in set1)

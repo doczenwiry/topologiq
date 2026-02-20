@@ -1,20 +1,18 @@
 from logging import getLogger
-
-from topologiq.dzw.utils.CubeBeams import CubeBeams
-from topologiq.dzw.utils.components_zx import EdgeType
-
 console = getLogger(__name__)
 
 from collections import deque
 
 from topologiq.utils.classes import NodeBeams
 
-from topologiq.dzw.utils.AugmentedNxGraph import AugmentedNxGraph
-from topologiq.dzw.utils.CubeKind import CubeKind
-from topologiq.dzw.utils.Spacetime import Coordinates
+from topologiq.dzw.utils.augmented_nx_graph import AugmentedNxGraph
+from topologiq.dzw.utils.components_zx import EdgeType
+from topologiq.dzw.utils.components_bg import CubeKind
+from topologiq.dzw.utils.CubeBeams import CubeBeams
+from topologiq.dzw.utils.coordinates import Coordinates
 from topologiq.dzw.utils.Path import Path
 
-from topologiq.dzw.helpers.SpacetimeHelper import SpacetimeHelper
+from topologiq.dzw.helpers.blockgraph_helper import BlockGraphHelper
 
 CubeList = list[tuple[CubeKind, Coordinates]]
 PipeList = list[EdgeType]
@@ -111,7 +109,7 @@ class SpacetimePathFinder:
 
             # TODO: deal with Hadamard-consistency
             pipe_type = EdgeType.HADAMARD if current_md == 0 and edge_type == EdgeType.HADAMARD else EdgeType.IDENTITY
-            constellation = SpacetimeHelper.get_candidate_constellation(terminal_kind, terminal_position, pipe_type)
+            constellation = BlockGraphHelper.get_candidate_constellation(terminal_kind, terminal_position, pipe_type)
             console.debug(f"> Constellation of {terminal_kind}@{terminal_position} : {constellation}.")
             for next_kind, next_position in constellation:
                 next_md = source_position.get_manhattan_distance(next_position)

@@ -6,17 +6,16 @@ import networkx as nx
 
 from topologiq.dzw.utils.CubeBeams import CubeBeams
 
-from topologiq.dzw.utils.AugmentedNxGraph import AugmentedNxGraph
-from topologiq.dzw.utils.Spacetime import Spacetime, Coordinates
-from topologiq.dzw.utils.CubeKind import CubeKind
+from topologiq.dzw.utils.augmented_nx_graph import AugmentedNxGraph
+from topologiq.dzw.helpers.spacetime_helper import SpacetimeHelper, Coordinates
 from topologiq.dzw.utils.components_zx import NodeType
+from topologiq.dzw.utils.components_bg import CubeKind
 from topologiq.dzw.utils.Path import Path
 
 from topologiq.dzw.SpacetimePathFinder import SpacetimePathFinder
 
 # TODO: remove once rewrite is done
-from topologiq.scripts.pathfinder import get_taken_coords
-from topologiq.utils.classes import NodeBeams, PathBetweenNodes
+from topologiq.utils.classes import NodeBeams
 
 from logging import getLogger
 console = getLogger(__name__)
@@ -75,11 +74,11 @@ class ZxGraphWalker:
             kind = random.choice(CubeKind.suitable_kinds(self.nx_graph.get_node_type(root)))
         else:
             (root, kind) = root_choice
-        root_cube = self.nx_graph.realise_node(root, kind, Spacetime.ORIGIN)
-        self.node_beams[root] = self.compute_beams(kind, Spacetime.ORIGIN)
-        self.cube_beams[root] = CubeBeams(kind, Spacetime.ORIGIN, occupied = self.nx_graph.occupied)
+        root_cube = self.nx_graph.realise_node(root, kind, SpacetimeHelper.ORIGIN)
+        self.node_beams[root] = self.compute_beams(kind, SpacetimeHelper.ORIGIN)
+        self.cube_beams[root] = CubeBeams(kind, SpacetimeHelper.ORIGIN, occupied = self.nx_graph.occupied)
 
-        console.info(f"Root node #{root} realised as cube #{root_cube} [{kind}@{Spacetime.ORIGIN}]")
+        console.info(f"Root node #{root} realised as cube #{root_cube} [{kind}@{SpacetimeHelper.ORIGIN}]")
 
         self.node_realisation_order.append(root)
 
@@ -212,9 +211,9 @@ class ZxGraphWalker:
             lines_of_sight = set()
             for _, position in extras:
                 if cube_position.colinear(position):
-                    lines_of_sight.add( cube_position.get_line_of_sight(position) )
+                    lines_of_sight.add( SpacetimeHelper.get_line_of_sight(cube_position, position) )
             if cube_position.colinear(target_position):
-                lines_of_sight.add( cube_position.get_line_of_sight(target_position) )
+                lines_of_sight.add( SpacetimeHelper.get_line_of_sight(cube_position, target_position) )
 
             beams_interrupted  = beams.count_interrupted(lines_of_sight)
             beams_remaining = beams.number_available() - beams_interrupted
@@ -311,9 +310,9 @@ class ZxGraphWalker:
         node_beams: NodeBeams = []
         cube_reach = cube_kind.get_reach()
 
-        console.debug(f"Computing beams [{cube_kind}@{cube_position}] : {cube_reach.get_step_constellation()}")
+        console.debug(f"Computing beams [{cube_kind}@{cube_position}] : {SpacetimeHelper.get_step_constellation(cube_reach)}")
         console.debug(f"> Occupied : {self.nx_graph.occupied}")
-        for step in cube_reach.get_step_constellation():
+        for step in SpacetimeHelper.get_step_constellation(cube_reach):
 
             beam = [] # from cube_position up to beams_len steps away
 
@@ -369,7 +368,7 @@ class ZxGraphWalker:
 
             cube_position = self.nx_graph.get_cube_position(cube)
             if cube_position.colinear(target_position):
-                los = cube_position.get_line_of_sight(target_position)
+                los = SpacetimeHelper.get_line_of_sight(cube_position, target_position)
                 console.debug(f">> Cube @{cube_position} colinear with {target_position} : {los}")
                 beams.close_beam( los )
 
@@ -379,7 +378,7 @@ class ZxGraphWalker:
             cube_position = self.nx_graph.get_cube_position(cube)
             for _, position in path:
                 if cube_position.colinear(position):
-                    beams.close_beam( cube_position.get_line_of_sight(position) )
+                    beams.close_beam( SpacetimeHelper.get_line_of_sight(cube_position, position) )
 
     def prune_beams(self):
         for node, beams in self.node_beams.items():

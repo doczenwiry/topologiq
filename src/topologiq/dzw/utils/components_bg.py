@@ -1,8 +1,9 @@
 from enum import Enum
-import functools
+from functools import total_ordering
 
+from topologiq.dzw.utils.coordinates import Coordinates
 from topologiq.dzw.utils.components_zx import NodeType
-from topologiq.dzw.utils.Spacetime import Reach, Coordinates
+from topologiq.dzw.helpers.spacetime_helper import SpacetimeHelper
 
 class CubeKind(Enum):
     OOO = 0
@@ -28,18 +29,18 @@ class CubeKind(Enum):
             raise Exception(f"{node_type} has no representation as a cube of any kind.")
 
     @staticmethod
-    def convert(node_type: NodeType, node_reach: Reach):
+    def convert(node_type: NodeType, node_reach: Coordinates):
         if node_type == NodeType.X:
-            if node_reach == Reach.XY:
+            if node_reach == SpacetimeHelper.XY:
                 return CubeKind.ZZX
-            elif node_reach == Reach.XZ:
+            elif node_reach == SpacetimeHelper.XZ:
                 return CubeKind.ZXZ
             else:
                 return CubeKind.XZZ
         elif node_type == NodeType.Z:
-            if node_reach == Reach.XY:
+            if node_reach == SpacetimeHelper.XY:
                 return CubeKind.XXZ
-            elif node_reach == Reach.XZ:
+            elif node_reach == SpacetimeHelper.XZ:
                 return CubeKind.XZX
             else:
                 return CubeKind.ZXX
@@ -58,20 +59,20 @@ class CubeKind(Enum):
         else: # self == CubeKind.OOO
             return NodeType.O
 
-    # TODO: a CubeKind.YYY has Reach.XYZ and single port ?
-    def get_reach(self) -> Reach:
+    # TODO: a CubeKind.YYY has Spacetime.XYZ and single port ?
+    def get_reach(self) -> Coordinates:
         if self == CubeKind.XZZ or self == CubeKind.ZXX:
-            return Reach.YZ
+            return SpacetimeHelper.YZ
         elif self == CubeKind.ZXZ or self == CubeKind.XZX:
-            return Reach.XZ
+            return SpacetimeHelper.XZ
         elif self == CubeKind.ZZX or self == CubeKind.XXZ:
-            return Reach.XY
+            return SpacetimeHelper.XY
         elif self == CubeKind.OOO or self == CubeKind.YYY:
-            return Reach.XYZ
+            return SpacetimeHelper.XYZ
         else:
             raise ValueError(f"Not applicable to cube kind {self.name}")
 
-    @functools.total_ordering
+    @total_ordering
     def __lt__(self, other):
         return self.value.__lt__(other.value)
 

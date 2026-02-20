@@ -1,8 +1,7 @@
 from datetime import datetime
 
-from topologiq.dzw.utils.AugmentedNxGraph import AugmentedNxGraph
-from topologiq.dzw.utils.components_zx import EdgeType
-from topologiq.dzw.utils.Spacetime import Coordinates
+from topologiq.dzw.utils.augmented_nx_graph import AugmentedNxGraph
+from topologiq.dzw.helpers.spacetime_helper import Coordinates
 
 from logging import getLogger
 console = getLogger(__name__)
@@ -45,7 +44,7 @@ class TikzWriter:
 
         for cube in self.__nx_graph.get_cubes():
             cube_type = self.__nx_graph.get_cube_kind(cube).get_type()
-            cube_reach = self.__nx_graph.get_cube_kind(cube).get_reach().value.as_tuple()
+            cube_reach = self.__nx_graph.get_cube_kind(cube).get_reach().as_tuple()
             cube_plane = 'U'
             for index in range(3):
                 if cube_reach[index] != 0:
