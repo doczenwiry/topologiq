@@ -1,7 +1,7 @@
 from enum import Enum
 import functools
 
-from topologiq.dzw.utils.NodeType import NodeType
+from topologiq.dzw.utils.components_zx import NodeType
 from topologiq.dzw.utils.Spacetime import Reach, Coordinates
 
 class CubeKind(Enum):

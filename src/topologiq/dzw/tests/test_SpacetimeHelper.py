@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from topologiq.dzw.utils.CubeKind import CubeKind
 from topologiq.dzw.utils.Spacetime import Step, Spacetime, Coordinates
-from topologiq.dzw.utils.EdgeType import EdgeType
+from topologiq.dzw.utils.components_zx import EdgeType
 from topologiq.dzw.helpers.SpacetimeHelper import SpacetimeHelper
 
 class TestSpacetimeHelper(TestCase):

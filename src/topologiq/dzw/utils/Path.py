@@ -1,6 +1,6 @@
 from topologiq.dzw.utils.CubeBeams import CubeBeams
 from topologiq.dzw.utils.CubeKind import CubeKind
-from topologiq.dzw.utils.EdgeType import EdgeType
+from topologiq.dzw.utils.components_zx import EdgeType
 from topologiq.dzw.utils.Spacetime import Coordinates, Reach
 
 from logging import getLogger

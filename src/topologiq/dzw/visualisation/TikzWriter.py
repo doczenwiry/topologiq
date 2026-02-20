@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from topologiq.dzw.utils.AugmentedNxGraph import AugmentedNxGraph
-from topologiq.dzw.utils.EdgeType import EdgeType
+from topologiq.dzw.utils.components_zx import EdgeType
 from topologiq.dzw.utils.Spacetime import Coordinates
 
 from logging import getLogger

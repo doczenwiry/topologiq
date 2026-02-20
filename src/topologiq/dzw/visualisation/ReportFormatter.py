@@ -1,6 +1,5 @@
 from topologiq.dzw.utils.AugmentedNxGraph import AugmentedNxGraph
-from topologiq.dzw.utils.EdgeType import EdgeType
-from topologiq.dzw.utils.NodeType import NodeType
+from topologiq.dzw.utils.components_zx import NodeType, EdgeType
 
 NodeList = list[int]
 EdgeList = list[tuple[int,int]]

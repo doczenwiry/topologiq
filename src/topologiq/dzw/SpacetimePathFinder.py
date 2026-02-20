@@ -1,7 +1,7 @@
 from logging import getLogger
 
 from topologiq.dzw.utils.CubeBeams import CubeBeams
-from topologiq.dzw.utils.EdgeType import EdgeType
+from topologiq.dzw.utils.components_zx import EdgeType
 
 console = getLogger(__name__)
 

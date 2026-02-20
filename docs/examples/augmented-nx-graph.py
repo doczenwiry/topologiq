@@ -1,7 +1,8 @@
 import pyzx as zx
 
 from topologiq.dzw.ZxGraphWalker import ZxGraphWalker
-from topologiq.dzw.utils.CubeKind import CubeKind, NodeType
+from topologiq.dzw.utils.CubeKind import CubeKind
+from topologiq.dzw.utils.components_zx import NodeType
 from topologiq.dzw.visualisation.ReportFormatter import ReportFormatter
 from topologiq.dzw.visualisation.TikzWriter import TikzWriter
 

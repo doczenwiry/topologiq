@@ -7,10 +7,9 @@ import networkx as nx
 from topologiq.dzw.utils.CubeBeams import CubeBeams
 
 from topologiq.dzw.utils.AugmentedNxGraph import AugmentedNxGraph
-from topologiq.dzw.utils.EdgeType import EdgeType
 from topologiq.dzw.utils.Spacetime import Spacetime, Coordinates
 from topologiq.dzw.utils.CubeKind import CubeKind
-from topologiq.dzw.utils.NodeType import NodeType
+from topologiq.dzw.utils.components_zx import NodeType
 from topologiq.dzw.utils.Path import Path
 
 from topologiq.dzw.SpacetimePathFinder import SpacetimePathFinder

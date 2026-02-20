@@ -4,8 +4,7 @@ import pyzx as zx
 import networkx as nx
 
 from topologiq.dzw.utils.Spacetime import Coordinates, Reach
-from topologiq.dzw.utils.EdgeType import EdgeType
-from topologiq.dzw.utils.NodeType import NodeType
+from topologiq.dzw.utils.components_zx import NodeType, EdgeType
 from topologiq.dzw.utils.CubeKind import CubeKind
 from topologiq.dzw.utils.Path import Path
 
@@ -349,7 +348,7 @@ class AugmentedNxGraph:
             # Check that the current pipe has a type consistent with what is allowed
             current_pipe_type = pipes[index-1]
             if not current_pipe_type in SpacetimeHelper.infer_pipe_type(previous_kind, current_kind):
-                console.debug(f"> Current pipe type is not allowed between {previous_kind} and {current_kind} [{current_pipe_type}].")
+                console.debug(f"> Current pipe type is not allowed between {previous_kind} and {current_kind} [{current_pipe_type} not in {SpacetimeHelper.infer_pipe_type(previous_kind, current_kind)}].")
                 return False
 
             if current_pipe_type == EdgeType.HADAMARD:
