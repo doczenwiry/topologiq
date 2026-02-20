@@ -6,7 +6,7 @@ from collections import deque
 from topologiq.utils.classes import NodeBeams
 
 from topologiq.dzw.utils.augmented_nx_graph import AugmentedNxGraph
-from topologiq.dzw.utils.components_zx import EdgeType
+from topologiq.dzw.utils.components_zx import NodeId, EdgeType
 from topologiq.dzw.utils.components_bg import CubeKind
 from topologiq.dzw.utils.CubeBeams import CubeBeams
 from topologiq.dzw.utils.coordinates import Coordinates
@@ -22,7 +22,7 @@ class SpacetimePathFinder:
     def __init__(self, nx_graph: AugmentedNxGraph):
         self.nx_graph = nx_graph
 
-    def find_target_realisation(self, source: int, target: int) -> list[Path]:
+    def find_target_realisation(self, source: NodeId, target: NodeId) -> list[Path]:
         target_suitable_kinds = CubeKind.suitable_kinds(self.nx_graph.get_node_type(target))
 
         console.info(f"Searching for realisation of target node #{target} [type={self.nx_graph.get_node_type(target)}]")
@@ -41,8 +41,8 @@ class SpacetimePathFinder:
         return solutions
 
     def find_edge_realisation(self,
-        source: int, target: int,
-        node_beams: dict[int, NodeBeams] = None
+        source: NodeId, target: NodeId,
+        node_beams: dict[NodeId, NodeBeams] = None
     ) -> list[Path]:
         target_cube = self.nx_graph.get_cube(target)
         target_kind = self.nx_graph.get_cube_kind(target_cube)
@@ -64,8 +64,8 @@ class SpacetimePathFinder:
     # TODO: add suggestions of candidate coordinates ?
     # TODO: add cutoff threshold once enough of the bounding box has been reached
     def __core_pathfinder(self,
-        source: int, target: int,
-        node_beams: dict[int, NodeBeams] = None,
+        source: NodeId, target: NodeId,
+        node_beams: dict[NodeId, NodeBeams] = None,
         maximal_md: int = 3,
         goal_reached = lambda next_kind, next_position : True,
         terminate_on_first_found = False

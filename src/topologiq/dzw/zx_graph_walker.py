@@ -12,7 +12,7 @@ from topologiq.dzw.utils.components_zx import NodeId, NodeType
 from topologiq.dzw.utils.components_bg import CubeId, CubeKind
 from topologiq.dzw.utils.path import Path
 
-from topologiq.dzw.SpacetimePathFinder import SpacetimePathFinder
+from topologiq.dzw.spacetime_pathfinder import SpacetimePathFinder
 
 # TODO: remove once rewrite is done
 from topologiq.utils.classes import NodeBeams
@@ -37,7 +37,7 @@ class ZxGraphWalker:
         self.node_beams : dict[NodeId, NodeBeams] = dict()
         self.cube_beams : dict[CubeId, CubeBeams] = dict()
 
-    def pick_root(self, central_spider: bool = True, deterministic: bool = False) -> int:
+    def pick_root(self, central_spider: bool = True, deterministic: bool = False) -> NodeId:
         """Pick the spider that will serve as the root of the construction.
 
         Args:
@@ -161,7 +161,7 @@ class ZxGraphWalker:
         return formatted
 
     def is_path_viable(self,
-        source, target, target_kind, target_position,
+        source: NodeId, target: NodeId, target_kind: CubeKind, target_position: Coordinates,
         extras: list[tuple[CubeKind, Coordinates]]
     ) -> tuple[bool, int]:
 
