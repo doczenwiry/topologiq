@@ -10,9 +10,6 @@ from topologiq.dzw.vedo.color_scheme import COLOR_RGBS
 
 GLOBAL_SPACING_FACTOR = 3.0
 
-def cross(vector1: Coordinates, vector2: Coordinates):
-    return Coordinates(vector1.y * vector2.z - vector1.z * vector2.y, vector1.z * vector2.x + vector1.x * vector2.z, vector1.x * vector2.y)
-
 class BgCube(Assembly):
     LARGE_CUBE = 1.00
     LARGE_TEXT = 0.50
@@ -42,7 +39,7 @@ class BgCube(Assembly):
             face_center = (position + step_scale * direction).as_tuple()
             text = Text3D(txt = label, pos = face_center, s = text_size, font ='Roboto', justify ='centered', c ='white')
             # Rotate the text to line it up with its face
-            rotation_axis = cross(Spacetime.ZP, direction).as_tuple()
+            rotation_axis = Spacetime.ZP.cross(direction).as_tuple()
             text.rotate(angle = 90.0, axis = rotation_axis, point = face_center)
             # Rotate the text to
             if   direction == Spacetime.XP: rotation_angle =  90.0
@@ -86,7 +83,7 @@ class BgPipe(Box):
         target_kind = anx.get_cube_kind(target)
         target_position = anx.get_cube_position(target)
         distances = target_position - source_position
-        position = GLOBAL_SPACING_FACTOR * (source_position + distances.div(2.0))
+        position = GLOBAL_SPACING_FACTOR * (source_position + distances / 2.0)
         # Compute the measurements of this pipe (i.e. length, width, height) according to its direction
         measures = [
             GLOBAL_SPACING_FACTOR * (BgPipe.LENGTH if d != 0 else BgPipe.DIAMETER)

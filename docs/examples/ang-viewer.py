@@ -5,9 +5,9 @@ from topologiq.dzw.vedo.ang_viewer import AugmentedNxGraphViewer
 
 import logging
 logging.basicConfig(level=logging.DEBUG)
-logging.getLogger('utils').setLevel(logging.INFO)
-logging.getLogger('helpers').setLevel(logging.CRITICAL)
-logging.getLogger('vedo').setLevel(logging.INFO)
+logging.getLogger('topologiq.dzw.utils').setLevel(logging.INFO)
+logging.getLogger('topologiq.dzw.helpers').setLevel(logging.CRITICAL)
+logging.getLogger('topologiq.dzw.vedo').setLevel(logging.INFO)
 
 from jsonpickle import encode, decode
 ANG_PATH = "../../assets/ang/"

@@ -26,6 +26,11 @@ class AugmentedNxGraphViewer(Plotter):
     def __init__(self, anx: AugmentedNxGraph, label: str):
         super().__init__(shape = VIEWPORTS, sharecam = False, title = f"ang-viewer [{label}]")
 
+        # Initialise the camera for the BG Graph
+        zx_camera = self.at(ZX_VIEWPORT).camera
+        zx_camera.SetParallelProjection(True)
+        zx_camera.SetViewUp(0, 1, 0)
+
         self.__reset_camera()
 
         # Store the original AugmentedNxGraph
@@ -48,7 +53,7 @@ class AugmentedNxGraphViewer(Plotter):
     def __reset_camera(self):
         # Initialise the camera for the BG Graph
         bg_camera = self.at(BG_VIEWPORT).camera
-        bg_camera.SetPosition(5, 3, 3)
+        bg_camera.SetPosition(22, 14, 15)
         bg_camera.SetFocalPoint(0, 0, 0)
         bg_camera.SetViewUp(0, 0, 1)
 
@@ -70,7 +75,21 @@ class AugmentedNxGraphViewer(Plotter):
             self.__bg_scene_manager.show_cube_highlight(bg_cube)
         elif isinstance(selected_object, ZxEdge):
             # Highlight all the pipes of that path
-            pass
+            zx_source = selected_object.zx_source
+            zx_target = selected_object.zx_target
+            self.__zx_scene_manager.show_node_highlight(zx_source)
+            self.__zx_scene_manager.show_node_highlight(zx_target)
+            self.__zx_scene_manager.show_edge_highlight(zx_source, zx_target)
+            bg_source_cube = self.__nx_graph.get_cube(zx_source)
+            self.__bg_scene_manager.show_cube_highlight(bg_source_cube)
+            previous_cube = bg_source_cube
+            for extra_cube in self.__nx_graph.get_edge_realisation(zx_source, zx_target):
+                self.__bg_scene_manager.show_cube_highlight(extra_cube)
+                self.__bg_scene_manager.show_pipe_highlight(previous_cube, extra_cube)
+                previous_cube = extra_cube
+            bg_target_cube = self.__nx_graph.get_cube(zx_target)
+            self.__bg_scene_manager.show_cube_highlight(bg_target_cube)
+            self.__bg_scene_manager.show_pipe_highlight(previous_cube, bg_target_cube)
         elif isinstance(selected_object, BgCube):
             # Highlight the bg-cube and its corresponding zx-node
             bg_cube = selected_object.bg_cube
@@ -78,14 +97,12 @@ class AugmentedNxGraphViewer(Plotter):
             if zx_node is not None:
                 self.__zx_scene_manager.show_node_highlight(zx_node)
             self.__bg_scene_manager.show_cube_highlight(bg_cube)
-
-            pass
         elif isinstance(selected_object, BgPipe):
             bg_source_cube = selected_object.bg_source
             bg_target_cube = selected_object.bg_target
-            self.__bg_scene_manager.show_pipe_highlight(bg_source_cube, bg_target_cube)
             self.__bg_scene_manager.show_cube_highlight(bg_source_cube)
             self.__bg_scene_manager.show_cube_highlight(bg_target_cube)
+            self.__bg_scene_manager.show_pipe_highlight(bg_source_cube, bg_target_cube)
             # Show the highlighting for the entire path this pipe belongs to
 
     def __hide_highlight(self, selected_object):
@@ -95,7 +112,21 @@ class AugmentedNxGraphViewer(Plotter):
             self.__zx_scene_manager.hide_node_highlight(zx_node)
             self.__bg_scene_manager.hide_cube_highlight(bg_cube)
         elif isinstance(selected_object, ZxEdge):
-            pass  # Highlight all the pipes of that path
+            zx_source = selected_object.zx_source
+            zx_target = selected_object.zx_target
+            self.__zx_scene_manager.hide_node_highlight(zx_source)
+            self.__zx_scene_manager.hide_node_highlight(zx_target)
+            self.__zx_scene_manager.hide_edge_highlight(zx_source, zx_target)
+            bg_source_cube = self.__nx_graph.get_cube(zx_source)
+            self.__bg_scene_manager.hide_cube_highlight(bg_source_cube)
+            previous_cube = bg_source_cube
+            for extra_cube in self.__nx_graph.get_edge_realisation(zx_source, zx_target):
+                self.__bg_scene_manager.hide_cube_highlight(extra_cube)
+                self.__bg_scene_manager.hide_pipe_highlight(previous_cube, extra_cube)
+                previous_cube = extra_cube
+            bg_target_cube = self.__nx_graph.get_cube(zx_target)
+            self.__bg_scene_manager.hide_cube_highlight(bg_target_cube)
+            self.__bg_scene_manager.hide_pipe_highlight(previous_cube, bg_target_cube)
         elif isinstance(selected_object, BgCube):
             bg_cube = selected_object.bg_cube
             zx_node = self.__nx_graph.get_node(bg_cube)
@@ -123,10 +154,10 @@ class AugmentedNxGraphViewer(Plotter):
             self.__selected_object = event.object
             self.__show_highlight(self.__selected_object)
 
-        self.at(ZX_VIEWPORT).show(self.__zx_scene_manager.elements)
-        self.at(BG_VIEWPORT).show(self.__bg_scene_manager.elements)
+        self.at(ZX_VIEWPORT).render() # show(self.__zx_scene_manager.elements, resetcam = False)
+        self.at(BG_VIEWPORT).render() # show(self.__bg_scene_manager.elements, resetcam = False)
 
     def display(self):
-        self.at(ZX_VIEWPORT).show(self.__zx_scene_manager.elements)
-        self.at(BG_VIEWPORT).show(self.__bg_scene_manager.elements)
+        self.at(ZX_VIEWPORT).show(self.__zx_scene_manager.elements, resetcam = True)
+        self.at(BG_VIEWPORT).show(self.__bg_scene_manager.elements, resetcam = True)
         self.interactive().close()

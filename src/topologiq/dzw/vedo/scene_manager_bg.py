@@ -47,7 +47,8 @@ class BgSceneManager:
                 current_frame.append( extra_bg_pipe )
                 # Save extra cube & pipe to internal dictionary
                 self.__cubes[ current_extra ] = extra_bg_cube
-                self.__pipes[ previous_extra, current_extra ] = extra_bg_pipe
+                pipe = tuple(sorted( (previous_extra, current_extra) ))
+                self.__pipes[ pipe ] = extra_bg_pipe
 
                 previous_extra = current_extra
 
@@ -63,7 +64,8 @@ class BgSceneManager:
             # Add final pipe
             target_bg_pipe = BgPipe(source = previous_extra, target = target_cube, anx = self.__nx_graph)
             current_frame.append( target_bg_pipe )
-            self.__pipes[ previous_extra, target_cube ] = target_bg_pipe
+            pipe = tuple(sorted((previous_extra, target_cube)))
+            self.__pipes[ pipe ] = target_bg_pipe
 
             current_frame_final = current_frame_start + len(current_frame)
 
@@ -95,10 +97,12 @@ class BgSceneManager:
         self.__cubes[ cube ].hide_highlight()
 
     def show_pipe_highlight(self, source: CubeId, target: CubeId):
-        self.__pipes[ source, target ].show_highlight()
+        pipe = tuple(sorted((source, target)))
+        self.__pipes[ pipe ].show_highlight()
 
     def hide_pipe_highlight(self, source: CubeId, target: CubeId):
-        self.__pipes[ source, target ].hide_highlight()
+        pipe = tuple(sorted((source, target)))
+        self.__pipes[ pipe ].hide_highlight()
 
     def on_key_press(self, event):
         if   event.keypress == "Left":
