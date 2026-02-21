@@ -24,7 +24,7 @@ if __name__ == '__main__':
     circuit.add_gate("CNOT", 1, 0)
     circuit.add_gate("CNOT", 1, 0)
     zx_input = circuit.to_graph()
-    zx.draw(zx_input, labels = True)
+    # zx.draw(zx_input, labels = True)
 
     name = "three-cnots"
     anx: AugmentedNxGraph = ang_read(label = name)

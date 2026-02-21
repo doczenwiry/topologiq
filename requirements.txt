@@ -166,3 +166,4 @@ wcwidth==0.2.13
     # via prompt-toolkit
 widgetsnbextension==4.0.14
     # via ipywidgets
+vedo==2026.6.1

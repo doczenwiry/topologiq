@@ -1,9 +1,10 @@
 from topologiq.dzw.utils.augmented_nx_graph import AugmentedNxGraph
 
-from vedo import settings, Plotter, Text2D
+from vedo import settings, Plotter
 
 from topologiq.dzw.utils.components_zx import EdgeType
-from topologiq.dzw.visualisation.components_vedo import BgCube, BgPipe
+from topologiq.dzw.visualisation.components_vedo_zx import ZxNode, ZxEdge
+from topologiq.dzw.visualisation.components_vedo_bg import BgCube, BgPipe
 
 import logging
 console = logging.getLogger(__name__)
@@ -35,6 +36,7 @@ class AugmentedNxGraphViewer(Plotter):
         bg_camera.SetViewUp(0, 0, 1)
 
         self.add_callback("key press", self.__on_key_pressed)
+        self.at(ZX_VIEWPORT).add_callback("mouse left click", self.__on_zx_left_clicked)
         self.at(BG_VIEWPORT).add_callback("mouse left click", self.__on_bg_left_clicked)
 
         # Store the original AugmentedNxGraph
@@ -42,7 +44,25 @@ class AugmentedNxGraphViewer(Plotter):
 
         # Prepare all the components for the ZX viewport (i.e. nodes and edges)
         self.__zx_scene = []
-        self.__zx_scene.append(Text2D("[ZX-graph comes here]", pos=(0.5,0.3), s=3, c='dg', font='Kanopus', justify='center'),)
+        for node in self.__nx_graph.get_nodes():
+            qubit = self.__nx_graph.get_qubit(node)
+            layer = self.__nx_graph.get_node_layer(node)
+            node_type = self.__nx_graph.get_node_type(node)
+            self.__zx_scene.append( ZxNode(node, qubit, layer, node_type) )
+
+        for source, target in self.__nx_graph.get_edges():
+            source_layer = self.__nx_graph.get_node_layer(source)
+            source_qubit = self.__nx_graph.get_qubit(source)
+            target_layer = self.__nx_graph.get_node_layer(target)
+            target_qubit = self.__nx_graph.get_qubit(target)
+            edge_type = self.__nx_graph.get_edge_type(source, target)
+            self.__zx_scene.append(
+                ZxEdge(
+                    source, source_qubit, source_layer,
+                    target, target_qubit, target_layer,
+                    edge_type
+                ).z(-0.1)
+            )
 
         # Prepare all the components for the BG viewport (i.e. cubes and pipes)
         self.__bg_scene = []
@@ -58,7 +78,7 @@ class AugmentedNxGraphViewer(Plotter):
             root_cube = self.__nx_graph.get_cube(root)
             current_frame = [
                 BgCube(
-                    node = root, cube = root_cube,
+                    cube = root_cube,
                     kind = self.__nx_graph.get_cube_kind(root_cube),
                     position = self.__nx_graph.get_cube_position(root_cube)
                 )
@@ -117,7 +137,7 @@ class AugmentedNxGraphViewer(Plotter):
             if target not in realised_nodes:
                 current_frame.append(
                     BgCube(
-                        node = target, cube = target_cube,
+                        cube = target_cube,
                         kind = self.__nx_graph.get_cube_kind(target_cube),
                         position = self.__nx_graph.get_cube_position(target_cube)
                     )
@@ -164,9 +184,19 @@ class AugmentedNxGraphViewer(Plotter):
 
         self.at(BG_VIEWPORT).show(self.__bg_scene)
 
+    def __on_zx_left_clicked(self, event):
+        if isinstance(event.object, ZxNode):
+            bg_cube = self.__nx_graph.get_cube(event.object.zx_node)
+            extra = f"[C{bg_cube}]" if bg_cube is not None else ""
+            console.debug(f"Clicked on Node #{event.object.zx_node} {extra}")
+
+        if isinstance(event.object, ZxEdge):
+            console.debug(f"Clicked on Edge  {event.object.zx_source}-{event.object.zx_target}")
+
     def __on_bg_left_clicked(self, event):
         if isinstance(event.object, BgCube):
-            extra = f"[N{event.object.zx_node}]" if event.object.zx_node is not None else ""
+            zx_node = self.__nx_graph.get_node(event.object.bg_cube)
+            extra = f"[N{zx_node}]" if zx_node is not None else ""
             console.debug(f"Clicked on Cube #{event.object.bg_cube} {extra}")
 
         if isinstance(event.object, BgPipe):

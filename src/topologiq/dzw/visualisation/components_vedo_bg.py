@@ -17,10 +17,9 @@ class BgCube(Cube):
     LARGE = 1.00
     SMALL = 0.75
 
-    def __init__(self, cube: CubeId, kind: CubeKind, position: Coordinates, node: NodeId | None = None):
+    def __init__(self, cube: CubeId, kind: CubeKind, position: Coordinates):
         super().__init__(position.as_tuple(), side = BgCube.LARGE if kind != CubeKind.OOO else BgCube.SMALL)
 
-        self.zx_node: NodeId = node
         self.bg_cube: CubeId = cube
 
         # Assigning colors to faces

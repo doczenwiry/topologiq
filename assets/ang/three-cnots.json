@@ -17,6 +17,8 @@
             }
           ]
         },
+        "zx_node_qubit": 0,
+        "zx_node_layer": 0,
         "zx_edges_realised": 1,
         "zx_bg_cube": 11
       },
@@ -24,6 +26,8 @@
         "zx_node_type": {
           "py/id": 5
         },
+        "zx_node_qubit": 1,
+        "zx_node_layer": 0,
         "zx_edges_realised": 1,
         "zx_bg_cube": 14
       },
@@ -40,6 +44,8 @@
             }
           ]
         },
+        "zx_node_qubit": 1,
+        "zx_node_layer": 1,
         "zx_edges_realised": 3,
         "zx_bg_cube": 12
       },
@@ -56,6 +62,8 @@
             }
           ]
         },
+        "zx_node_qubit": 0,
+        "zx_node_layer": 1,
         "zx_edges_realised": 3,
         "zx_bg_cube": 10
       },
@@ -63,6 +71,8 @@
         "zx_node_type": {
           "py/id": 8
         },
+        "zx_node_qubit": 0,
+        "zx_node_layer": 2,
         "zx_edges_realised": 3,
         "zx_bg_cube": 13
       },
@@ -70,6 +80,8 @@
         "zx_node_type": {
           "py/id": 10
         },
+        "zx_node_qubit": 1,
+        "zx_node_layer": 2,
         "zx_edges_realised": 3,
         "zx_bg_cube": 15
       },
@@ -77,6 +89,8 @@
         "zx_node_type": {
           "py/id": 8
         },
+        "zx_node_qubit": 0,
+        "zx_node_layer": 3,
         "zx_edges_realised": 3,
         "zx_bg_cube": 20
       },
@@ -84,6 +98,8 @@
         "zx_node_type": {
           "py/id": 10
         },
+        "zx_node_qubit": 1,
+        "zx_node_layer": 3,
         "zx_edges_realised": 3,
         "zx_bg_cube": 21
       },
@@ -91,6 +107,8 @@
         "zx_node_type": {
           "py/id": 5
         },
+        "zx_node_qubit": 0,
+        "zx_node_layer": 4,
         "zx_edges_realised": 1,
         "zx_bg_cube": 26
       },
@@ -98,6 +116,8 @@
         "zx_node_type": {
           "py/id": 5
         },
+        "zx_node_qubit": 1,
+        "zx_node_layer": 4,
         "zx_edges_realised": 1,
         "zx_bg_cube": 27
       }
@@ -734,6 +754,52 @@
           "py/id": 59
         }
       }
+    }
+  },
+  "_AugmentedNxGraph__zx_qubits": {
+    "py/object": "collections.defaultdict",
+    "json://0": [
+      0,
+      3,
+      4,
+      6,
+      8
+    ],
+    "json://1": [
+      1,
+      2,
+      5,
+      7,
+      9
+    ],
+    "default_factory": {
+      "py/type": "builtins.list"
+    }
+  },
+  "_AugmentedNxGraph__zx_layers": {
+    "py/object": "collections.defaultdict",
+    "json://0": [
+      0,
+      1
+    ],
+    "json://1": [
+      2,
+      3
+    ],
+    "json://2": [
+      4,
+      5
+    ],
+    "json://3": [
+      6,
+      7
+    ],
+    "json://4": [
+      8,
+      9
+    ],
+    "default_factory": {
+      "py/type": "builtins.list"
     }
   },
   "_AugmentedNxGraph__zx_node_realisation_order": [
