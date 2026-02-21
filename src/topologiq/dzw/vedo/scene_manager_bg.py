@@ -1,6 +1,7 @@
 from logging import getLogger
 console = getLogger(__name__)
 
+from topologiq.dzw.utils.components_bg import CubeId
 from topologiq.dzw.utils.augmented_nx_graph import AugmentedNxGraph
 from topologiq.dzw.vedo.shapes_bg import BgCube, BgPipe
 
@@ -8,6 +9,9 @@ from topologiq.dzw.vedo.shapes_bg import BgCube, BgPipe
 class BgSceneManager:
     def __init__(self, nx_graph: AugmentedNxGraph):
         self.__nx_graph = nx_graph
+
+        self.__cubes = dict()
+        self.__pipes = dict()
 
         # Prepare all the components for the BG viewport (i.e. cubes and pipes)
         self.elements = []
@@ -21,14 +25,13 @@ class BgSceneManager:
         if len(node_realisation_order) > 0:
             root = node_realisation_order[0]
             root_cube = self.__nx_graph.get_cube(root)
-            current_frame = [
-                BgCube(cube = root_cube, anx = self.__nx_graph)
-            ]
+            bg_cube = BgCube(cube = root_cube, anx = self.__nx_graph)
+            self.__cubes[ root_cube ] = bg_cube
             realised_nodes.add(root)
 
             current_frame_final += 1
 
-            self.elements.extend(current_frame)
+            self.elements.append( bg_cube )
             self.__frames.append(range(0, 1))
 
         for source, target in nx_graph.get_edge_realisation_order():
@@ -37,29 +40,30 @@ class BgSceneManager:
             # Add extra cubes to the current_frame
             previous_extra = self.__nx_graph.get_cube(source)
             for current_extra in self.__nx_graph.get_edge_realisation(source, target):
-                current_frame.append(
-                    BgCube(cube = current_extra, anx = self.__nx_graph)
-                )
-
-                # Add extra pipe
-                current_frame.append(
-                    BgPipe(source = previous_extra, target = current_extra, anx = self.__nx_graph)
-                )
+                extra_bg_cube = BgCube(cube = current_extra, anx = self.__nx_graph)
+                extra_bg_pipe = BgPipe(source = previous_extra, target = current_extra, anx=self.__nx_graph)
+                # Add extra cube & pipe to current frame
+                current_frame.append( extra_bg_cube )
+                current_frame.append( extra_bg_pipe )
+                # Save extra cube & pipe to internal dictionary
+                self.__cubes[ current_extra ] = extra_bg_cube
+                self.__pipes[ previous_extra, current_extra ] = extra_bg_pipe
 
                 previous_extra = current_extra
 
-            # Add final pipe
             target_cube = self.__nx_graph.get_cube(target)
-            current_frame.append(
-                BgPipe(source = previous_extra, target = target_cube, anx = self.__nx_graph)
-            )
 
-            # Add target if not already placed in earlier frame
+            # Add target cube if not already placed in earlier frame
             if target not in realised_nodes:
-                current_frame.append(
-                    BgCube(cube = target_cube, anx = self.__nx_graph)
-                )
+                target_bg_cube = BgCube(cube = target_cube, anx = self.__nx_graph)
+                current_frame.append( target_bg_cube )
+                self.__cubes[ target_cube ] = target_bg_cube
                 realised_nodes.add(target)
+
+            # Add final pipe
+            target_bg_pipe = BgPipe(source = previous_extra, target = target_cube, anx = self.__nx_graph)
+            current_frame.append( target_bg_pipe )
+            self.__pipes[ previous_extra, target_cube ] = target_bg_pipe
 
             current_frame_final = current_frame_start + len(current_frame)
 
@@ -84,6 +88,18 @@ class BgSceneManager:
                 self.elements[index].hide()
         self.__frame_index -= frame_count
 
+    def show_cube_highlight(self, cube: CubeId):
+        self.__cubes[ cube ].show_highlight()
+
+    def hide_cube_highlight(self, cube: CubeId):
+        self.__cubes[ cube ].hide_highlight()
+
+    def show_pipe_highlight(self, source: CubeId, target: CubeId):
+        self.__pipes[ source, target ].show_highlight()
+
+    def hide_pipe_highlight(self, source: CubeId, target: CubeId):
+        self.__pipes[ source, target ].hide_highlight()
+
     def on_key_press(self, event):
         if   event.keypress == "Left":
             self.__move_frame_backward()
@@ -97,13 +113,13 @@ class BgSceneManager:
         console.debug(f"> Frame {self.__frame_index + 1}/{len(self.__frames)}")
         console.debug(f">> Range={self.__frames[self.__frame_index]}")
 
-    def on_left_click(self, event):
-        if isinstance(event.object, BgCube):
-            zx_node = self.__nx_graph.get_node(event.object.bg_cube)
-            extra = f"[N{zx_node}]" if zx_node is not None else ""
-            console.debug(f"Clicked on Cube #{event.object.bg_cube} {extra}")
-            event.object.toggle_highlight()
-
-        if isinstance(event.object, BgPipe):
-            console.debug(f"Clicked on Pipe  {event.object.bg_source}-{event.object.bg_target}")
-            event.object.toggle_highlight()
+    # def on_left_click(self, event):
+    #     if isinstance(event.object, BgCube):
+    #         zx_node = self.__nx_graph.get_node(event.object.bg_cube)
+    #         extra = f"[N{zx_node}]" if zx_node is not None else ""
+    #         console.debug(f"Clicked on Cube #{event.object.bg_cube} {extra}")
+    #         event.object.toggle_highlight()
+    #
+    #     if isinstance(event.object, BgPipe):
+    #         console.debug(f"Clicked on Pipe  {event.object.bg_source}-{event.object.bg_target}")
+    #         event.object.toggle_highlight()

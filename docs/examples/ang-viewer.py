@@ -7,7 +7,7 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger('utils').setLevel(logging.INFO)
 logging.getLogger('helpers').setLevel(logging.CRITICAL)
-logging.getLogger('visualisation').setLevel(logging.DEBUG)
+logging.getLogger('vedo').setLevel(logging.INFO)
 
 from jsonpickle import encode, decode
 ANG_PATH = "../../assets/ang/"

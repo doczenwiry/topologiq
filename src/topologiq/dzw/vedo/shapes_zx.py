@@ -38,12 +38,13 @@ class ZxNode(Assembly):
         else:
             self.__disc_highlight.alpha(0.0)
 
-    def show_label(self):
-        self.__text.alpha(1.0)
+    def show_highlight(self): self.__disc_highlight.alpha(1.0)
+    def hide_highlight(self): self.__disc_highlight.alpha(0.0)
 
-    def hide_label(self):
-        self.__text.alpha(0.0)
+    def show_label(self): self.__text.alpha(1.0)
+    def hide_label(self): self.__text.alpha(0.0)
 
+# Replace line with a Box
 class ZxEdge(Line):
     def __init__(self, source: NodeId, target: NodeId, anx: AugmentedNxGraph):
 

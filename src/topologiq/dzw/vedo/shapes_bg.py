@@ -60,14 +60,13 @@ class BgCube(Assembly):
 
         super().__init__(self.__cube, self.__texts)
 
-    def toggle_highlight(self):
-        self.__highlighted = not self.__highlighted
-        if self.__highlighted:
-            self.__cube.linecolor('k5')
-            self.__cube.linewidth(6)
-        else:
-            self.__cube.linecolor('k')
-            self.__cube.linewidth(3)
+    def show_highlight(self):
+        self.__cube.linecolor('k5')
+        self.__cube.linewidth(6)
+
+    def hide_highlight(self):
+        self.__cube.linecolor('k')
+        self.__cube.linewidth(3)
 
     def toggle_visible(self):
         self.__visible = not self.__visible
@@ -89,7 +88,10 @@ class BgPipe(Box):
         distances = target_position - source_position
         position = GLOBAL_SPACING_FACTOR * (source_position + distances.div(2.0))
         # Compute the measurements of this pipe (i.e. length, width, height) according to its direction
-        measures = [GLOBAL_SPACING_FACTOR * BgPipe.LENGTH if d != 0 else GLOBAL_SPACING_FACTOR * BgPipe.DIAMETER for d in distances]
+        measures = [
+            GLOBAL_SPACING_FACTOR * (BgPipe.LENGTH if d != 0 else BgPipe.DIAMETER)
+            for d in distances
+        ]
 
         super().__init__(position, size = measures)
 
@@ -123,6 +125,14 @@ class BgPipe(Box):
         self.__visible = True
         self.__highlighted = False
 
+    def show_highlight(self):
+        self.linecolor('k5')
+        self.linewidth(6)
+
+    def hide_highlight(self):
+        self.linecolor('k')
+        self.linewidth(3)
+
     def show(self):
         self.alpha(1.0)
         self.__visible = True
@@ -130,12 +140,3 @@ class BgPipe(Box):
     def hide(self):
         self.alpha(0.0)
         self.__visible = False
-
-    def toggle_highlight(self):
-        self.__highlighted = not self.__highlighted
-        if self.__highlighted:
-            self.linecolor('k5')
-            self.linewidth(6)
-        else:
-            self.linecolor('k')
-            self.linewidth(3)
