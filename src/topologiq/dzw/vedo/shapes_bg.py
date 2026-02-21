@@ -5,15 +5,7 @@ from topologiq.dzw.utils.augmented_nx_graph import AugmentedNxGraph
 from topologiq.dzw.utils.components_bg import CubeId, CubeKind
 from topologiq.dzw.utils.components_zx import NodeId, EdgeType
 from topologiq.dzw.utils.coordinates import Coordinates
-from topologiq.dzw.vedo.color_scheme import COLOR_RGBS, COLOR_NAMES
-
-BG_COLORS = {
-    'U': [128, 128, 128],
-    'O': [ 96,  96,  96],
-    'X': [245,  39,  39],
-    'Y': [ 49, 245,  39],
-    'Z': [ 39,  87, 245],
-}
+from topologiq.dzw.vedo.color_scheme import COLOR_RGBS
 
 SCALING_FACTOR = 3.0
 
@@ -23,8 +15,7 @@ class BgCube(Assembly):
 
     def __init__(self, anx: AugmentedNxGraph, cube: CubeId):
         kind = anx.get_cube_kind(cube)
-        position = anx.get_cube_position(cube)
-        position = (SCALING_FACTOR * position.x, SCALING_FACTOR * position.y, SCALING_FACTOR * position.z)
+        position = SCALING_FACTOR * anx.get_cube_position(cube)
 
         # Initialise the cube
         self.__cube = Cube(pos = position, side = BgCube.LARGE if kind != CubeKind.OOO else BgCube.SMALL)
@@ -62,8 +53,7 @@ class BgPipe(Box):
         source_position = anx.get_cube_position(source)
         target_position = anx.get_cube_position(target)
         distance = target_position - source_position
-        position = source_position + distance.div(2.0)
-        position = (SCALING_FACTOR * position.x, SCALING_FACTOR * position.y, SCALING_FACTOR * position.z)
+        position = SCALING_FACTOR * (source_position + distance.div(2.0))
         # Compute the measurements of this pipe (i.e. length, width, height) according to its direction
         measures = [ SCALING_FACTOR * BgPipe.LENGTH if d != 0 else SCALING_FACTOR * BgPipe.DIAMETER for d in distance ]
 
