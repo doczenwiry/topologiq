@@ -1,5 +1,6 @@
 import pyzx as zx
 
+from topologiq.dzw.utils.augmented_nx_graph import AugmentedNxGraph
 from topologiq.dzw.zx_graph_walker import ZxGraphWalker
 from topologiq.dzw.utils.components_bg import CubeKind
 from topologiq.dzw.utils.components_zx import NodeType
@@ -13,6 +14,15 @@ logging.getLogger('topologiq.dzw.ZxGraphWalker').setLevel(logging.DEBUG)
 logging.getLogger('topologiq.dzw.utils').setLevel(logging.DEBUG)
 logging.getLogger('topologiq.dzw.helpers').setLevel(logging.CRITICAL)
 logging.getLogger('topologiq.dzw.visualisation').setLevel(logging.CRITICAL)
+
+from jsonpickle import encode, decode
+ANG_PATH = "../../assets/ang/"
+def ang_write(ang: AugmentedNxGraph, label: str):
+    with open(ANG_PATH + label + ".json", "w") as f:
+        f.write(encode(ang, indent=2, keys = True, unpicklable=True))
+
+def ang_read(label: str):
+    return decode(open(ANG_PATH + label + ".json").read(), keys = True)
 
 if __name__ == '__main__':
     c = zx.Circuit(2)
@@ -56,8 +66,10 @@ if __name__ == '__main__':
     formatter.print_report(append_cube_report = True)
     formatter.write_report()
 
-    TikzWriter.STYLE = 'zx'
-    TikzWriter.ROTATION_X = 60
-    TikzWriter.ROTATION_Z = 118
-    tikz_writer = TikzWriter(walker.nx_graph, label ="3cnots")
-    tikz_writer.write_file()
+    ang_write(walker.nx_graph, "3cnots")
+
+    # TikzWriter.STYLE = 'zx'
+    # TikzWriter.ROTATION_X = 60
+    # TikzWriter.ROTATION_Z = 118
+    # tikz_writer = TikzWriter(walker.nx_graph, label ="3cnots")
+    # tikz_writer.write_file()
