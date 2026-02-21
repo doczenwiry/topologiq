@@ -1,7 +1,7 @@
 import pyzx as zx
 
 from topologiq.dzw.utils.augmented_nx_graph import AugmentedNxGraph
-from topologiq.dzw.visualisation.ang_viewer import AugmentedNxGraphViewer
+from topologiq.dzw.vedo.ang_viewer import AugmentedNxGraphViewer
 
 import logging
 logging.basicConfig(level=logging.DEBUG)

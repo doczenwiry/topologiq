@@ -2,8 +2,8 @@ from topologiq.dzw.utils.augmented_nx_graph import AugmentedNxGraph
 
 from vedo import settings, Plotter
 
-from topologiq.dzw.visualisation.components_vedo_zx import ZxNode, ZxEdge
-from topologiq.dzw.visualisation.components_vedo_bg import BgCube, BgPipe
+from topologiq.dzw.vedo.shapes_zx import ZxNode, ZxEdge
+from topologiq.dzw.vedo.shapes_bg import BgCube, BgPipe
 
 import logging
 console = logging.getLogger(__name__)
