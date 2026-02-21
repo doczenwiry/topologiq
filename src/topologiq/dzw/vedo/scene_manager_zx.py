@@ -26,7 +26,7 @@ class ZxSceneManager:
             bg_cube = self.__nx_graph.get_cube(event.object.zx_node)
             extra = f"[C{bg_cube}]" if bg_cube is not None else ""
             console.debug(f"Clicked on Node #{event.object.zx_node} {extra}")
-            event.object.hide_label()
+            event.object.toggle_highlight()
 
         if isinstance(event.object, ZxEdge):
             console.debug(f"Clicked on Edge  {event.object.zx_source}-{event.object.zx_target}")

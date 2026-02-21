@@ -17,14 +17,26 @@ class ZxNode(Assembly):
         qubit = anx.get_qubit(node)
         layer = anx.get_node_layer(node)
 
-        position = (LAYER_SPACING * layer, QUBIT_SPACING * qubit, 0)
+        disc_position = (LAYER_SPACING * layer, QUBIT_SPACING * qubit, 0)
+        text_position = (LAYER_SPACING * layer, QUBIT_SPACING * qubit, 0.05)
         radius = 1.0 if node_type != NodeType.O else 0.75
         color = COLOR_NAMES[ node_type.name ]
 
-        self.__disc = Disc(pos = position, r1 = 0.0, r2 = radius, c = color)
-        self.__text = Text3D(str(node), pos = position, font = 'Calco', justify = 'centered', c = 'white')
+        self.__disc = Disc(pos = disc_position, r1 = 0.0, r2 = radius, c = color)
+        self.__disc_highlight = Disc(pos = text_position, r1 = 0.8, r2 = radius - 0.05, c = COLOR_NAMES[ 'highlighted' ])
+        self.__text = Text3D(str(node), pos = text_position, font = 'Calco', justify = 'centered', c = 'white')
 
-        super().__init__( [ self.__disc, self.__text ] )
+        super().__init__( [ self.__disc, self.__disc_highlight, self.__text ] )
+
+        self.__highlighted = False
+        self.__disc_highlight.alpha(0.0)
+
+    def toggle_highlight(self):
+        self.__highlighted = not self.__highlighted
+        if self.__highlighted:
+            self.__disc_highlight.alpha(1.0)
+        else:
+            self.__disc_highlight.alpha(0.0)
 
     def show_label(self):
         self.__text.alpha(1.0)

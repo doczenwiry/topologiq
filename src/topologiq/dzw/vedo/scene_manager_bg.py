@@ -68,40 +68,42 @@ class BgSceneManager:
             self.__frames.append(range(current_frame_start, current_frame_final))
 
             # Keeps track of the number of frames that are accumulated into the currently displayed scene
-            self.__frame_count = len(self.__frames) - 1
+            self.__frame_index = len(self.__frames) - 1
 
-    def add_frames(self, count: int = 1):
-        frame_count = min(count, len(self.__frames) - self.__frame_count - 1)
-        for _ in range(frame_count):
-            self.__frame_count += 1
-            for index in self.__frames[self.__frame_count]:
+    def __move_frame_forward(self, count: int = 1):
+        frame_count = min(count, len(self.__frames) - self.__frame_index - 1)
+        for frame in range(frame_count):
+            for index in self.__frames[self.__frame_index + frame + 1]:
                 self.elements[index].show()
+        self.__frame_index += frame_count
 
-    def cut_frames(self, count: int = 1):
-        frame_count = min(count, self.__frame_count)
-        for _ in range(frame_count):
-            for index in self.__frames[self.__frame_count]:
+    def __move_frame_backward(self, count: int = 1):
+        frame_count = min(count, self.__frame_index)
+        for frame in range(frame_count):
+            for index in self.__frames[self.__frame_index - frame]:
                 self.elements[index].hide()
-            self.__frame_count -= 1
+        self.__frame_index -= frame_count
 
     def on_key_press(self, event):
         if   event.keypress == "Left":
-            self.cut_frames()
+            self.__move_frame_backward()
         elif event.keypress == "Home":
-            self.cut_frames(count = self.__frame_count)
+            self.__move_frame_backward(count = self.__frame_index)
         elif event.keypress == "Right":
-            self.add_frames()
+            self.__move_frame_forward()
         elif event.keypress == "End":
-            self.add_frames(count =len(self.__frames) - self.__frame_count - 1)
+            self.__move_frame_forward(count =len(self.__frames) - self.__frame_index - 1)
 
-        console.debug(f"> Frame {self.__frame_count + 1}/{len(self.__frames)}")
-        console.debug(f">> Range={self.__frames[self.__frame_count]}")
+        console.debug(f"> Frame {self.__frame_index + 1}/{len(self.__frames)}")
+        console.debug(f">> Range={self.__frames[self.__frame_index]}")
 
     def on_left_click(self, event):
         if isinstance(event.object, BgCube):
             zx_node = self.__nx_graph.get_node(event.object.bg_cube)
             extra = f"[N{zx_node}]" if zx_node is not None else ""
             console.debug(f"Clicked on Cube #{event.object.bg_cube} {extra}")
+            event.object.toggle_highlight()
 
         if isinstance(event.object, BgPipe):
             console.debug(f"Clicked on Pipe  {event.object.bg_source}-{event.object.bg_target}")
+            event.object.toggle_highlight()

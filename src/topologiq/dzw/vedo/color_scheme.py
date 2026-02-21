@@ -1,6 +1,7 @@
 from vedo import get_color
 
 COLOR_NAMES = {
+    'highlighted' : 'k7',
     'U' : 'k5',
     'O' : 'k2',
     'X' : 'r5',
