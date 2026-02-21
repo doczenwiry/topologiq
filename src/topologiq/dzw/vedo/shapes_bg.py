@@ -5,6 +5,7 @@ from topologiq.dzw.utils.augmented_nx_graph import AugmentedNxGraph
 from topologiq.dzw.utils.components_bg import CubeId, CubeKind
 from topologiq.dzw.utils.components_zx import NodeId, EdgeType
 from topologiq.dzw.utils.coordinates import Coordinates
+from topologiq.dzw.vedo.color_scheme import COLOR_RGBS, COLOR_NAMES
 
 BG_COLORS = {
     'U': [128, 128, 128],
@@ -28,7 +29,7 @@ class BgCube(Assembly):
         # Initialise the cube
         self.__cube = Cube(pos = position, side = BgCube.LARGE if kind != CubeKind.OOO else BgCube.SMALL)
         # Assign colors to the six faces of the cube (i.e. +X,-X,+Y,-Y,+Z,-Z)
-        self.__cube.cellcolors = array([ BG_COLORS[ kind.name[f // 2] ] for f in range(6) ])
+        self.__cube.cellcolors = array([ COLOR_RGBS[ kind.name[f // 2] ] for f in range(6) ])
         self.__cube.linecolor('k')
         self.__cube.linewidth(3)
 
@@ -88,8 +89,8 @@ class BgPipe(Box):
                     color = 'U'
             else:
                 color = 'O'
-            colors.append(BG_COLORS[color])
-            colors.append(BG_COLORS[color])
+            colors.append(COLOR_RGBS[color])
+            colors.append(COLOR_RGBS[color])
 
         self.cellcolors = colors
 

@@ -3,12 +3,7 @@ from vedo import Assembly, Disc, Line, Text3D
 from topologiq.dzw.utils.augmented_nx_graph import AugmentedNxGraph
 from topologiq.dzw.utils.components_zx import NodeId, NodeType, EdgeType
 
-ZX_COLORS = {
-    NodeType.X : 'r4',
-    NodeType.Y : 'g4',
-    NodeType.Z : 'b4',
-    NodeType.O : 'k2'
-}
+from topologiq.dzw.vedo.color_scheme import COLOR_NAMES
 
 QUBIT_SPACING = 4.0
 LAYER_SPACING = 6.0
@@ -24,7 +19,7 @@ class ZxNode(Assembly):
 
         position = (LAYER_SPACING * layer, QUBIT_SPACING * qubit, 0)
         radius = 1.0 if node_type != NodeType.O else 0.75
-        color = ZX_COLORS[node_type]
+        color = COLOR_NAMES[ node_type.name ]
 
         self.__disc = Disc(pos = position, r1 = 0.0, r2 = radius, c = color)
         self.__text = Text3D(str(node), pos = position, font = 'Calco', justify = 'centered', c = 'white')
