@@ -39,7 +39,7 @@ class BgSceneManager:
             current_frame_start = len(self.elements)
             # Add extra cubes to the current_frame
             previous_extra = self.__nx_graph.get_cube(source)
-            for current_extra in self.__nx_graph.get_edge_realisation(source, target):
+            for current_extra in self.__nx_graph.get_edge_realisation(source, target).get_extra_cubes():
                 extra_bg_cube = BgCube(cube = current_extra, anx = self.__nx_graph)
                 extra_bg_pipe = BgPipe(source = previous_extra, target = current_extra, anx=self.__nx_graph)
                 # Add extra cube & pipe to current frame

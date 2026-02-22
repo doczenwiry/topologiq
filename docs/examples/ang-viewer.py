@@ -19,14 +19,14 @@ def ang_read(label: str):
     return decode(open(ANG_PATH + label + ".json").read(), keys = True)
 
 if __name__ == '__main__':
-    circuit = zx.Circuit(2)
-    circuit.add_gate("CNOT", 0, 1)
-    circuit.add_gate("CNOT", 1, 0)
-    circuit.add_gate("CNOT", 1, 0)
-    zx_input = circuit.to_graph()
+    # circuit = zx.Circuit(2)
+    # circuit.add_gate("CNOT", 0, 1)
+    # circuit.add_gate("CNOT", 1, 0)
+    # circuit.add_gate("CNOT", 1, 0)
+    # zx_input = circuit.to_graph()
     # zx.draw(zx_input, labels = True)
 
-    name = "three-cnots"
+    name = "ghz8"
     anx: AugmentedNxGraph = ang_read(label = name)
 
     viewer = AugmentedNxGraphViewer(anx, label = name)

@@ -83,7 +83,7 @@ class AugmentedNxGraphViewer(Plotter):
             bg_source_cube = self.__nx_graph.get_cube(zx_source)
             self.__bg_scene_manager.show_cube_highlight(bg_source_cube)
             previous_cube = bg_source_cube
-            for extra_cube in self.__nx_graph.get_edge_realisation(zx_source, zx_target):
+            for extra_cube in self.__nx_graph.get_edge_realisation(zx_source, zx_target).get_extra_cubes():
                 self.__bg_scene_manager.show_cube_highlight(extra_cube)
                 self.__bg_scene_manager.show_pipe_highlight(previous_cube, extra_cube)
                 previous_cube = extra_cube
@@ -120,7 +120,7 @@ class AugmentedNxGraphViewer(Plotter):
             bg_source_cube = self.__nx_graph.get_cube(zx_source)
             self.__bg_scene_manager.hide_cube_highlight(bg_source_cube)
             previous_cube = bg_source_cube
-            for extra_cube in self.__nx_graph.get_edge_realisation(zx_source, zx_target):
+            for extra_cube in self.__nx_graph.get_edge_realisation(zx_source, zx_target).get_extra_cubes():
                 self.__bg_scene_manager.hide_cube_highlight(extra_cube)
                 self.__bg_scene_manager.hide_pipe_highlight(previous_cube, extra_cube)
                 previous_cube = extra_cube
