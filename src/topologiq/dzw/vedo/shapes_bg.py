@@ -17,9 +17,18 @@ class BgCube(Assembly):
     SMALL_CUBE = LARGE_CUBE * FACTOR_SMALLER
     SMALL_TEXT = LARGE_TEXT * FACTOR_SMALLER
 
-    def __init__(self, anx: AugmentedNxGraph, cube: CubeId):
+    def __init__(self, anx: AugmentedNxGraph, cube: CubeId, hexadecimal_labels: bool = False):
+        super().__init__()
+
+        # Parameters for the cube
         kind = anx.get_cube_kind(cube)
         position = GLOBAL_SPACING_FACTOR * anx.get_cube_position(cube)
+
+        # Parameters for the label
+        node = anx.get_node(cube)
+        label = str(node) if node is not None else ""
+        text_size = BgCube.LARGE_TEXT if kind != CubeKind.OOO else BgCube.SMALL_TEXT
+        step_scale = 0.55 if kind != CubeKind.OOO else 0.55 * BgCube.FACTOR_SMALLER
 
         # Initialise the cube
         self.__cube = Cube(pos = position, side = BgCube.LARGE_CUBE if kind != CubeKind.OOO else BgCube.SMALL_CUBE)
@@ -27,13 +36,11 @@ class BgCube(Assembly):
         self.__cube.cellcolors = array([ COLOR_RGBS[ kind.name[f // 2] ] for f in range(6) ])
         self.__cube.linecolor('k')
         self.__cube.linewidth(3)
+        self.__cube.lighting('off')
 
-        # Initialise the label
-        node = anx.get_node(cube)
-        label = str(node) if node is not None else ""
-        text_size = BgCube.LARGE_TEXT if kind != CubeKind.OOO else BgCube.SMALL_TEXT
-        step_scale = 0.55 if kind != CubeKind.OOO else 0.55 * BgCube.FACTOR_SMALLER
+        self.add(self.__cube)
 
+        # Initialise the labels (i.e. numbers on the cube if it corresponds to a ZX-node)
         self.__texts = []
         for direction in Spacetime.STEPS:
             face_center = (position + step_scale * direction).as_tuple()
@@ -41,7 +48,7 @@ class BgCube(Assembly):
             # Rotate the text to line it up with its face
             rotation_axis = Spacetime.ZP.cross(direction).as_tuple()
             text.rotate(angle = 90.0, axis = rotation_axis, point = face_center)
-            # Rotate the text to
+            # Rotate the text to line it up with the top (resp. bottom) in the plus (resp. minus) direction
             if   direction == Spacetime.XP: rotation_angle =  90.0
             elif direction == Spacetime.XM: rotation_angle = -90.0
             elif direction == Spacetime.YP: rotation_angle = 180.0
@@ -50,12 +57,11 @@ class BgCube(Assembly):
 
             text.rotate(angle = rotation_angle, axis = direction.as_tuple(), point = face_center)
             self.__texts.append(text)
+            self.add(text)
 
         self.__highlighted = False
         self.__visible = True
         self.bg_cube: CubeId = cube
-
-        super().__init__(self.__cube, self.__texts)
 
     def show_highlight(self):
         self.__cube.linecolor('k5')
@@ -65,18 +71,23 @@ class BgCube(Assembly):
         self.__cube.linecolor('k')
         self.__cube.linewidth(3)
 
-    def toggle_visible(self):
-        self.__visible = not self.__visible
-        if self.__visible:
-            self.alpha(1.0)
-        else:
-            self.alpha(0.0)
-
-class BgPipe(Box):
+class BgPipe(Assembly):
     LENGTH = GLOBAL_SPACING_FACTOR * 0.205
     DIAMETER = 0.25
 
+    def __compute_pipe_colors(self):
+        if self.pipe_type == EdgeType.IDENTITY:
+            pass
+        else:
+            pass
+
     def __init__(self, source: CubeId, target: CubeId, anx : AugmentedNxGraph):
+        super().__init__()
+
+        self.bg_source: CubeId = source
+        self.bg_target: CubeId = target
+        self.pipe_type: EdgeType = anx.get_pipe_type(source, target)
+
         # Determine the position where this pipe will be placed
         source_kind = anx.get_cube_kind(source)
         source_position = anx.get_cube_position(source)
@@ -90,10 +101,9 @@ class BgPipe(Box):
             for d in distances
         ]
 
-        super().__init__(position, size = measures)
-
-        self.bg_source: CubeId = source
-        self.bg_target: CubeId = target
+        self.__pipe = Box(position, size = measures)
+        self.__pipe.lighting('off')
+        self.add(self.__pipe)
 
         colors = []
         distances = distances.as_tuple()
@@ -114,21 +124,21 @@ class BgPipe(Box):
             colors.append(COLOR_RGBS[color])
             colors.append(COLOR_RGBS[color])
 
-        self.cellcolors = colors
+        self.__pipe.cellcolors = colors
 
-        self.linecolor('k')
-        self.linewidth(3)
+        self.__pipe.linecolor('k')
+        self.__pipe.linewidth(3)
 
         self.__visible = True
         self.__highlighted = False
 
     def show_highlight(self):
-        self.linecolor('k5')
-        self.linewidth(6)
+        self.__pipe.linecolor('k5')
+        self.__pipe.linewidth(6)
 
     def hide_highlight(self):
-        self.linecolor('k')
-        self.linewidth(3)
+        self.__pipe.linecolor('k')
+        self.__pipe.linewidth(3)
 
     def show(self):
         self.alpha(1.0)

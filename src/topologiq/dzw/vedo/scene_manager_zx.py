@@ -16,7 +16,7 @@ class ZxSceneManager:
         # Prepare all the elements for the ZX scene (i.e. nodes and edges)
         self.elements = []
         for node in self.__nx_graph.get_nodes():
-            zx_node = ZxNode(node, self.__nx_graph)
+            zx_node = ZxNode(node, self.__nx_graph).z(+0.1)
             self.elements.append( zx_node )
             self.__nodes[ node ] = zx_node
 

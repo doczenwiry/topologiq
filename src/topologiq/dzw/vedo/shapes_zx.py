@@ -6,6 +6,9 @@ from topologiq.dzw.utils.coordinates import Coordinates
 
 from topologiq.dzw.vedo.color_scheme import COLOR_NAMES
 
+from logging import getLogger
+console = getLogger(__name__)
+
 QUBIT_SPACING = 6.0
 LAYER_SPACING = 6.0
 
@@ -23,10 +26,11 @@ class ZxNode(Assembly):
         color = COLOR_NAMES[ node_type.name ]
 
         self.__disc = Disc(pos = disc_position, r1 = 0.0, r2 = radius, c = color)
+        self.__background = Disc(pos = disc_position, r1 = 0.0, r2 = 1.15 * radius, c = 'white')
         self.__disc_highlight = Disc(pos = text_position, r1 = 0.8 * radius, r2 = radius - 0.05, c = COLOR_NAMES[ 'highlighted' ])
         self.__text = Text3D(str(node), pos = text_position, font = 'Calco', justify = 'centered', c = 'white')
 
-        super().__init__( [ self.__disc, self.__disc_highlight, self.__text ] )
+        super().__init__( [ self.__background, self.__disc, self.__disc_highlight, self.__text ] )
 
         self.__highlighted = False
         self.__disc_highlight.alpha(0.0)
@@ -45,7 +49,7 @@ class ZxNode(Assembly):
     def hide_label(self): self.__text.alpha(0.0)
 
 # Replace line with a Box
-class ZxEdge(Box):
+class ZxEdge(Assembly):
     LENGTH = 3.00
     DIAMETER = 0.50
 
@@ -53,6 +57,7 @@ class ZxEdge(Box):
 
         self.zx_source: NodeId = source
         self.zx_target: NodeId = target
+        self.edge_type = anx.get_edge_type(source, target)
 
         source_qubit = anx.get_qubit(source)
         source_layer = anx.get_node_layer(source)
@@ -62,20 +67,31 @@ class ZxEdge(Box):
 
         color = 'k' if edge_type == EdgeType.IDENTITY else 'y4'
 
-        source_position = Coordinates(LAYER_SPACING * source_layer, QUBIT_SPACING * source_qubit, 0)
-        target_position = Coordinates(LAYER_SPACING * target_layer, QUBIT_SPACING * target_qubit, 0)
+        source_position = Coordinates(LAYER_SPACING * source_layer, QUBIT_SPACING * source_qubit,  0.05)
+        target_position = Coordinates(LAYER_SPACING * target_layer, QUBIT_SPACING * target_qubit, -0.05)
 
         distances = target_position - source_position
         position = source_position + distances / 2.0
         # Compute the measurements of this pipe (i.e. length, width, height) according to its direction
-        measures = [ ZxEdge.LENGTH if d != 0 else ZxEdge.DIAMETER for d in distances ]
+        measures = [ abs(d) if d != 0 else ZxEdge.DIAMETER for d in distances ]
+        self.__edge = Box(pos = position.as_tuple(), size = measures, c = color)
 
-        super().__init__(pos = position.as_tuple(), size = measures, c = color)
+        console.debug(f"ZxEdge {source}L{source_layer}@{source_position} - {target}L{target_layer}@{target_position} : {measures} / {distances}")
+
+        measures = [ abs(d) if d != 0 else 1.25 * ZxEdge.DIAMETER for d in distances ]
+        self.__background = Box(pos = position.as_tuple(), size = measures, c = 'white')
+
+        self.hide_highlight()
+
+        super().__init__( self.__background, self.__edge )
 
     def show_highlight(self):
-        self.linecolor('k5')
-        self.linewidth(6)
+        self.__edge.linecolor('k5')
+        self.__edge.linewidth(6)
 
     def hide_highlight(self):
-        self.linecolor('k')
-        self.linewidth(3)
+        if self.edge_type == EdgeType.IDENTITY:
+            self.__edge.linecolor('k')
+        else:
+            self.__edge.linecolor('y4')
+        self.__edge.linewidth(3)
