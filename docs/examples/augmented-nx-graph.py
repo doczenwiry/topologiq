@@ -9,6 +9,7 @@ from topologiq.dzw.visualisation.tikz_writer import TikzWriter
 
 import logging
 logging.basicConfig(level=logging.DEBUG)
+logging.getLogger('matplotlib').setLevel(logging.INFO)
 logging.getLogger('topologiq.dzw').setLevel(logging.INFO)
 logging.getLogger('topologiq.dzw.ZxGraphWalker').setLevel(logging.DEBUG)
 logging.getLogger('topologiq.dzw.utils').setLevel(logging.DEBUG)
@@ -25,12 +26,16 @@ def ang_read(label: str):
     return decode(open(ANG_PATH + label + ".json").read(), keys = True)
 
 if __name__ == '__main__':
-    c = zx.Circuit(2)
-    # c.add_gate("H", 0)
-    c.add_gate("CNOT", 0, 1)
-    c.add_gate("CNOT", 1, 0)
-    c.add_gate("CNOT", 1, 0)
-    zx_input = c.to_graph()
+    circuit = zx.Circuit(8, name = "ghz8")
+    circuit.add_gate("H", 0)
+    circuit.add_gate("CNOT", 0, 4)
+    circuit.add_gate("CNOT", 0, 2)
+    circuit.add_gate("CNOT", 4, 6)
+    circuit.add_gate("CNOT", 0, 1)
+    circuit.add_gate("CNOT", 2, 3)
+    circuit.add_gate("CNOT", 4, 5)
+    circuit.add_gate("CNOT", 6, 7)
+    zx_input = circuit.to_graph()
     zx.draw(zx_input, labels = True)
 
     walker = ZxGraphWalker(zx_input)
@@ -62,14 +67,14 @@ if __name__ == '__main__':
 
     walker.construct( root_choice = (root,kind) )
 
-    formatter = ReportFormatter(walker.nx_graph, label = "3cnots")
-    formatter.print_report(append_cube_report = True)
-    formatter.write_report()
+    # formatter = ReportFormatter(walker.nx_graph, label = circuit.name)
+    # formatter.print_report(append_cube_report = True)
+    # formatter.write_report()
 
-    ang_write(walker.nx_graph, "3cnots")
+    ang_write(walker.nx_graph, label = circuit.name)
 
-    # TikzWriter.STYLE = 'zx'
-    # TikzWriter.ROTATION_X = 60
-    # TikzWriter.ROTATION_Z = 118
-    # tikz_writer = TikzWriter(walker.nx_graph, label ="3cnots")
-    # tikz_writer.write_file()
+    TikzWriter.STYLE = 'zx'
+    TikzWriter.ROTATION_X = 60
+    TikzWriter.ROTATION_Z = 118
+    tikz_writer = TikzWriter(walker.nx_graph, label = circuit.name)
+    tikz_writer.write_file()

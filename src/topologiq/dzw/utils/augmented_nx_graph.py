@@ -324,7 +324,7 @@ class AugmentedNxGraph:
         self.connect_pipe(previous_cube, target_cube, final_pipe_type)
 
         # Associate the path as a realisation of the edge
-        self.__zx_graph.get_edge_data(source, target)[AugmentedNxGraph.KEY_ZX_BG_PATH] = extras
+        self.__zx_graph.get_edge_data(source, target)[AugmentedNxGraph.KEY_ZX_BG_PATH] = proposed_path
 
         # One more edge has been realised
         self.__zx_graph.nodes[source][AugmentedNxGraph.KEY_ZX_EDGES_REALISED] += 1
