@@ -12,6 +12,8 @@ import matplotlib
 import networkx as nx
 
 from topologiq.core.graph_manager.beams import check_path_to_beam_clashes, check_tgt_beam_clashes
+from topologiq.core.graph_manager.beams_sympy import check_beams_critical_interruptions, Coordinates, \
+    check_beams_critical_intersections, compute_beams
 from topologiq.core.graph_manager.callers import call_debug_vis, call_pathfinder
 from topologiq.core.graph_manager.utils import get_node_degree, prune_beams, update_edge_paths
 from topologiq.core.pathfinder.spatial import get_taken_coords
@@ -122,16 +124,20 @@ def handle_std_edge(
             # Extract key path information
             tgt_coords, tgt_kind = clean_path[-1]
             coords_in_path = get_taken_coords(clean_path)
+            path_coordinates = [ Coordinates(c[0], c[1], c[2]) for c in coords_in_path ]
 
             # Check if exits are unobstructed
             tgt_unobstr_exit_n, tgt_beams, tgt_beams_short = check_exits(
                 tgt_coords, tgt_kind, taken_coords_c, coords_in_path
             )
 
+            _, tgt_sympy_beams = compute_beams(tgt_coords, tgt_kind, taken_coords_c, coords_in_path)
+
             # Check path doesn't obstruct an absolutely necessary exit for a pre-existing cube
             # Reset # of unobstructed exits and node beams if target is a boundary
             if nxt_neigh_zx_type == "O":
                 tgt_unobstr_exit_n, tgt_beams = (6, [])
+                tgt_sympy_beams = []
 
             if tgt_unobstr_exit_n >= tgt_degree - 1:
                 # Check if path breaks more beams than tolerable
@@ -142,6 +148,11 @@ def handle_std_edge(
                     coords_in_path,
                     twin_mode=twin_mode,
                     ids_to_twin=ids_to_twin,
+                )
+
+                # TODO: check consistency w.r.t. previous implementation
+                critical_interruptions, beams_interrupted_by_path, _ = check_beams_critical_interruptions(
+                    nx_g, src_id, tgt_id, path_coordinates, tgt_sympy_beams, twin_mode=twin_mode, ids_to_twin=ids_to_twin
                 )
 
                 # Check if there are more beam-to-beam clashes than tolerable
@@ -155,6 +166,16 @@ def handle_std_edge(
                     beams_broken_by_path,
                     **kwargs,
                 )
+
+                # TODO: check consistency w.r.t. previous implementation
+                cubes_with_critical_intersections = check_beams_critical_intersections(nx_g, src_id, tgt_id, tgt_sympy_beams)
+                critical_intersections = cubes_with_critical_intersections > 0
+
+                if critical_interruptions != path_to_beam_clashes:
+                    raise Exception("INCONSISTENCY between SymPy beams and previous implementation on INTERRUPTIONS")
+
+                if critical_intersections != tgt_beam_clashes:
+                    raise Exception("INCONSISTENCY between SymPy beams and previous implementation on INTERSECTIONS")
 
                 # Append path to viable paths if path clears all checks
                 if not path_to_beam_clashes and not tgt_beam_clashes:
@@ -171,6 +192,7 @@ def handle_std_edge(
                         "tgt_kind": tgt_kind,
                         "tgt_beams": tgt_beams,
                         "tgt_beams_short": tgt_beams_short,
+                        "tgt_sympy_beams": tgt_sympy_beams,
                         "coords_in_path": coords_in_path,
                         "all_nodes_in_path": all_nodes_in_path,
                         "beams_broken_by_path": beams_broken_by_path,
@@ -437,6 +459,7 @@ def add_twin(
             coords=None,
             beams=None,
             beams_short=None,
+            beams_sympy=None,
             completed=0,
         )
 

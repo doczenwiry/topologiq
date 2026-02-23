@@ -12,6 +12,7 @@ from pathlib import Path
 
 import networkx as nx
 
+from topologiq.core.graph_manager.beams_sympy import NX_GRAPH_CUBE_BEAMS
 from topologiq.core.pathfinder.spatial import get_taken_coords
 from topologiq.input.simple_graphs import check_zx_types, get_zx_type_fam
 from topologiq.utils.classes import (
@@ -19,7 +20,7 @@ from topologiq.utils.classes import (
     PathBetweenNodes,
     SimpleDictGraph,
     StandardBlock,
-    StandardCoord,
+    StandardCoord, Coordinates,
 )
 
 
@@ -92,6 +93,7 @@ def prep_3d_g(simple_graph: SimpleDictGraph) -> nx.Graph:
             coords=None,
             beams=None,
             beams_short=None,
+            beams_sympy=None,
             completed=0,
         )
 
@@ -149,6 +151,7 @@ def enforce_max_four_legs_per_spider(nx_g: nx.Graph) -> nx.Graph:
                 kind=None,
                 coords=None,
                 beams=None,
+                beams_sympy=None,
                 completed=0,
             )
             nx_g.add_edge(node_to_sanitise, twin_node_id, type="SIMPLE")
@@ -303,6 +306,11 @@ def update_edge_paths(
             if nx_g.nodes[tgt_id]["completed"] >= get_node_degree(nx_g, tgt_id)
             else winner_path_standard_pass.tgt_beams_short
         )
+        nx_g.nodes[tgt_id][NX_GRAPH_CUBE_BEAMS] = (
+            []
+            if nx_g.nodes[tgt_id]["completed"] >= get_node_degree(nx_g, tgt_id)
+            else winner_path_standard_pass.tgt_sympy_beams
+        )
 
         # Add path to position to list of graphs' occupied coordinates
         all_coords_in_path = get_taken_coords(winner_path_standard_pass.all_nodes_in_path)
@@ -334,6 +342,11 @@ def update_edge_paths(
             []
             if nx_g.nodes[tgt_id]["completed"] >= get_node_degree(nx_g, tgt_id)
             else nx_g.nodes[tgt_id]["beams_short"]
+        )
+        nx_g.nodes[tgt_id][NX_GRAPH_CUBE_BEAMS] = (
+            []
+            if nx_g.nodes[tgt_id]["completed"] >= get_node_degree(nx_g, tgt_id)
+            else winner_path_standard_pass.tgt_sympy_beams
         )
 
         # Add path to position to list of taken coordinates
@@ -370,14 +383,17 @@ def prune_beams(nx_g: nx.Graph, taken: list[StandardCoord]) -> nx.Graph:
         for n_id in nx_g.nodes():
             new_beams = []
             new_beams_short = []
+            new_beams_sympy = []
             if nx_g.nodes[n_id]["completed"] == []:
                 pass
             elif nx_g.nodes[n_id]["completed"] >= get_node_degree(nx_g, n_id):
                 nx_g.nodes[n_id]["beams"] = []
                 nx_g.nodes[n_id]["beams_short"] = []
+                nx_g.nodes[n_id][NX_GRAPH_CUBE_BEAMS] = []
             else:
                 old_beams = nx_g.nodes[n_id]["beams"]
                 old_beams_short = nx_g.nodes[n_id]["beams_short"]
+                old_sympy_beams = nx_g.nodes[n_id][NX_GRAPH_CUBE_BEAMS]
 
                 if old_beams:
                     for single_beam in old_beams:
@@ -390,6 +406,12 @@ def prune_beams(nx_g: nx.Graph, taken: list[StandardCoord]) -> nx.Graph:
                         if not any([single_beam_short.contains(coord) for coord in taken]):
                             new_beams_short += [single_beam_short]
                     nx_g.nodes[n_id]["beams_short"] = new_beams_short
+
+                if old_sympy_beams:
+                    for sympy_beam in old_sympy_beams:
+                        if not any([sympy_beam.contains(Coordinates(coord[0], coord[1], coord[2])) for coord in taken]):
+                            new_beams_sympy += [sympy_beam]
+                    nx_g.nodes[n_id][NX_GRAPH_CUBE_BEAMS] = new_beams_sympy
 
     except (IndexError, ValueError, LookupError, KeyError):
         pass

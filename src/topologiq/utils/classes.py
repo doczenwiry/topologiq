@@ -9,6 +9,15 @@ from dataclasses import dataclass
 from typing import TypedDict
 
 import numpy as np
+from sympy.geometry import Point3D, Ray3D
+
+# SymPy type definitions
+Coordinates = Point3D
+SympyBeam = Ray3D
+SympyBeams = list[SympyBeam]
+
+CubeId = int
+CubeList = list[CubeId]
 
 # Types & class for input ZX graph
 GraphNode = tuple[int, str]
@@ -198,6 +207,7 @@ class PathBetweenNodes:
     tgt_kind: str
     tgt_beams: CubeBeams
     tgt_beams_short: CubeBeams
+    tgt_sympy_beams: SympyBeams
     coords_in_path: list[StandardCoord]
     all_nodes_in_path: list[StandardBlock]
     beams_broken_by_path: int
