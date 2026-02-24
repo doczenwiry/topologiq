@@ -9,7 +9,8 @@ import random
 
 import networkx as nx
 
-from topologiq.core.graph_manager.beams_sympy import NX_GRAPH_CUBE_BEAMS, compute_beams
+from topologiq.core.graph_manager.beams_sympy import NX_GRAPH_CUBE_BEAMS, compute_beams, validate_beams, \
+    validate_all_beams
 from topologiq.core.pathfinder.symbolic import check_exits
 from topologiq.utils.classes import StandardBlock, StandardCoord
 
@@ -167,12 +168,16 @@ def place_first_cube(
     _, src_beams, src_beams_short = check_exits((0, 0, 0), first_kind, taken, [(0, 0, 0)])
     _, sympy_beams = compute_beams( (0,0,0), first_kind, taken, [(0, 0, 0)])
 
+    validate_beams(0, src_beams, sympy_beams, label = "root")
+
     # Write info to nx_g
     nx_g.nodes[first_id]["coords"] = (0, 0, 0)
     nx_g.nodes[first_id]["kind"] = first_kind
     nx_g.nodes[first_id]["beams"] = src_beams
     nx_g.nodes[first_id]["beams_short"] = src_beams_short
     nx_g.nodes[first_id][NX_GRAPH_CUBE_BEAMS] = sympy_beams
+
+    validate_all_beams(nx_g, label = "post-root")
 
     if log_stats_id or debug > 0:
         print(f"First cube ID: {first_id} ({first_kind}).")

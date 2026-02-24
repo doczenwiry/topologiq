@@ -150,7 +150,7 @@ def check_tgt_beam_clashes(
         for cube_id in nx_g.nodes():
             # Reset trackers on every cube irrespectively
             tgt_clash_tracker = np.array([False for _ in tgt_beams_short])
-            clash = False
+            # clash = False
             cube_clash_count = 0
 
             # Count clashes for cubes with beams

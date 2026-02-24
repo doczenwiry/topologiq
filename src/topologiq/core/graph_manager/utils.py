@@ -12,7 +12,7 @@ from pathlib import Path
 
 import networkx as nx
 
-from topologiq.core.graph_manager.beams_sympy import NX_GRAPH_CUBE_BEAMS
+from topologiq.core.graph_manager.beams_sympy import NX_GRAPH_CUBE_BEAMS, validate_beams, validate_all_beams
 from topologiq.core.pathfinder.spatial import get_taken_coords
 from topologiq.input.simple_graphs import check_zx_types, get_zx_type_fam
 from topologiq.utils.classes import (
@@ -379,6 +379,8 @@ def prune_beams(nx_g: nx.Graph, taken: list[StandardCoord]) -> nx.Graph:
 
     """
 
+    validate_all_beams(nx_g, label = "pre-pruning")
+
     try:
         for n_id in nx_g.nodes():
             new_beams = []
@@ -415,6 +417,8 @@ def prune_beams(nx_g: nx.Graph, taken: list[StandardCoord]) -> nx.Graph:
 
     except (IndexError, ValueError, LookupError, KeyError):
         pass
+
+    validate_all_beams(nx_g, label = "post-pruning")
 
     return nx_g
 

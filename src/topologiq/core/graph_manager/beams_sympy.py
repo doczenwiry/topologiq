@@ -1,8 +1,7 @@
 import networkx as nx
-from sympy.geometry import Point3D, Ray3D
 
 from topologiq.core.pathfinder.symbolic import check_is_exit, check_unobstructed
-from topologiq.utils.classes import StandardCoord, Coordinates, CubeId, CubeList, SympyBeam, SympyBeams
+from topologiq.utils.classes import StandardCoord, Coordinates, CubeId, CubeList, SympyBeam, SympyBeams, CubeBeams
 
 NX_GRAPH_CUBE_BEAMS = "beams_sympy"
 
@@ -11,19 +10,19 @@ def check_beams_critical_interruptions(
     source: CubeId,
     target: CubeId,
     path_coordinates: list[Coordinates],
-    target_beams: SympyBeams = None,
     priority_cubes: CubeList | None = None,
     twin_mode: bool = False, # Twin creation should be taken care of outside this function
     ids_to_twin: list[CubeId] | None = None, # What does the order of those represent ?
 ) -> tuple[bool, int, CubeList]:
     if priority_cubes is None: priority_cubes = []
     if ids_to_twin is None: ids_to_twin = []
-    if target_beams is None: target_beams = []
 
     beams_interrupted_by_path = 0
 
     for cube in nx_g.nodes(): # CubeId
-        if target_beams is None:
+        cube_beams: SympyBeams = nx_g.nodes[cube][NX_GRAPH_CUBE_BEAMS]
+
+        if cube_beams is None:
             continue
 
         # What is the testing of source_index against cube_index about ?
@@ -32,13 +31,13 @@ def check_beams_critical_interruptions(
         if source_index < cube_index:
             continue
 
-        if twin_mode and not (cube in ids_to_twin and source_index < cube_index):
+        if twin_mode and ids_to_twin and nx_g.neighbors(cube):
             cube_degree = sum(
                 1 for c in nx_g.neighbors(cube)
                 if c not in ids_to_twin or (source_index < ids_to_twin.index(c))
             )
         else:
-            cube_degree = nx_g.degree[cube] # get_node_degree(nx_g, cube_id)
+            cube_degree = nx_g.degree[cube]
         cube_unrealised_edges = cube_degree - nx_g.nodes[cube]["completed"]
 
         if twin_mode and cube in ids_to_twin:
@@ -46,7 +45,7 @@ def check_beams_critical_interruptions(
                 cube_unrealised_edges = 0
 
         beams_interrupted = sum(
-            1 for beam in target_beams
+            1 for beam in cube_beams
             if any(beam.contains(position) for position in path_coordinates)
         )
 
@@ -55,7 +54,7 @@ def check_beams_critical_interruptions(
         # Append to priority IDs for all cubes with problems
         # Flip check if even ONE cube has problems
         src_tgt_adjust = 1 if (cube in (source, target) and source != target) else 0
-        if len(target_beams) - beams_interrupted + src_tgt_adjust < min(cube_unrealised_edges, 1):
+        if len(cube_beams) - beams_interrupted + src_tgt_adjust < min(cube_unrealised_edges, 1):
             priority_cubes.append(cube)
 
     critical_interruptions = len(priority_cubes) > 0
@@ -137,8 +136,36 @@ def compute_beams(
         if check_is_exit(source, source_kind, tgt_c):
             is_unobstr, single_beam, single_beam_short = check_unobstructed(source, tgt_c, taken)
             if is_unobstr and not any([single_beam.contains(coord) for coord in coords_in_path]):
-                source_position = Coordinates(source[0], source[1], source[2])
-                beam_direction = Coordinates(tgt_c[0], tgt_c[1], tgt_c[2])
-                cube_beams.append(Ray3D(source_position, beam_direction))
+                cube_beams.append(make_beam(source, d))
 
     return len(cube_beams), cube_beams
+
+
+def make_beam(source: StandardCoord, direction: StandardCoord):
+    source_position = Coordinates(source[0], source[1], source[2])
+    beam_direction = Coordinates(direction[0], direction[1], direction[2])
+    start_position = source_position + beam_direction
+    return SympyBeam(start_position, start_position + beam_direction)
+
+def validate_all_beams(nx_g: nx.Graph, label: str = ""):
+    for cube in nx_g.nodes():
+        old_beams: CubeBeams = nx_g.nodes[cube]["beams"]
+        new_beams: SympyBeams = nx_g.nodes[cube][NX_GRAPH_CUBE_BEAMS]
+        validate_beams(cube, old_beams, new_beams, label = label)
+
+def validate_beams(cube: CubeId, old_beams: CubeBeams, new_beams: SympyBeams, label: str = ""):
+    if old_beams is None: old_beams = []
+    if new_beams is None: new_beams = []
+
+    conv_beams = []
+    for obeam in old_beams:
+        two_points = obeam.to_array(3)
+        source = Coordinates(two_points[1][0], two_points[1][1], two_points[1][2])
+        direction = Coordinates(two_points[2][0], two_points[2][1], two_points[2][2])
+        conv_beams.append(SympyBeam(source, direction))
+    if conv_beams != new_beams:
+        new_string = str(new_beams)
+        old_string = ""
+        for obeam in old_beams:
+            old_string += str(obeam.to_array(3))
+        raise Exception(f"[{label}] Beam representation mismatch for cube #{cube}:\n>> {new_string}\n>> {old_string}")

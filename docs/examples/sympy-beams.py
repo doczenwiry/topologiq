@@ -7,6 +7,8 @@ source1 = Coordinates(0, 0, 0)
 direction1 = Coordinates(1, 0, 0)
 r1 = Beam(source1, source1 + direction1)
 
+print(r1.contains(Coordinates(0, 0, 0)))
+
 source2 = Coordinates(1, 0, -1)
 direction2 = Coordinates(0, 0, 1)
 r2 = Beam(source2, source2 + direction2)
