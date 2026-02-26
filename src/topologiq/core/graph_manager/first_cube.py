@@ -166,16 +166,16 @@ def place_first_cube(
     # Get beams
     first_id, first_kind = first_cube
     _, src_beams, src_beams_short = check_exits((0, 0, 0), first_kind, taken, [(0, 0, 0)])
-    _, sympy_beams = compute_beams( (0,0,0), first_kind, taken, [(0, 0, 0)])
+    ray_beams = compute_beams( (0,0,0), first_kind, taken, [(0, 0, 0)])
 
-    validate_beams(0, src_beams, sympy_beams, label = "root")
+    validate_beams(0, src_beams, ray_beams, label = "root")
 
     # Write info to nx_g
     nx_g.nodes[first_id]["coords"] = (0, 0, 0)
     nx_g.nodes[first_id]["kind"] = first_kind
     nx_g.nodes[first_id]["beams"] = src_beams
     nx_g.nodes[first_id]["beams_short"] = src_beams_short
-    nx_g.nodes[first_id][NX_GRAPH_CUBE_BEAMS] = sympy_beams
+    nx_g.nodes[first_id][NX_GRAPH_CUBE_BEAMS] = ray_beams
 
     validate_all_beams(nx_g, label = "post-root")
 

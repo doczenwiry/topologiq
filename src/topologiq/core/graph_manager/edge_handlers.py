@@ -131,7 +131,7 @@ def handle_std_edge(
                 tgt_coords, tgt_kind, taken_coords_c, coords_in_path
             )
 
-            _, tgt_sympy_beams = compute_beams(tgt_coords, tgt_kind, taken_coords_c, coords_in_path)
+            tgt_sympy_beams = compute_beams(tgt_coords, tgt_kind, taken_coords_c, coords_in_path)
 
             validate_all_beams(nx_g, label = "handle_std_edge")
             validate_beams(tgt_id, tgt_beams, tgt_sympy_beams, label = "handle_std_edge")
@@ -327,6 +327,7 @@ def handle_cross_edge(
                     v_zx_type,
                     3,
                     taken[:],
+                    nx_g = nx_g,
                     tgt_block_info=(v_coords, v_kind),
                     hdm=hdm,
                     critical_beams=critical_beams,

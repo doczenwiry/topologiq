@@ -5,9 +5,11 @@ Usage:
 
 """
 
+import networkx as nx
 #from topologiq.core.pathfinder.beams import check_critical_beams
 from topologiq.core.pathfinder.beams import check_critical_beams
-from topologiq.utils.classes import CubeBeams, StandardBlock, StandardCoord
+from topologiq.core.pathfinder.beams_sympy import check_beams_critical_intersections
+from topologiq.utils.classes import CubeBeams, StandardBlock, StandardCoord, Coordinates
 
 
 #######################
@@ -186,6 +188,7 @@ def check_skip_move(
     full_path_coords: list[StandardCoord],
     curr_kind: str,
     curr_path_coords: list[StandardCoord],
+    nx_g: nx.Graph,
     mid_coords: tuple[int, int, int] | None,
 ) -> bool:
     """Check if current move should be skipped to speed up pathfinding process.
@@ -226,6 +229,17 @@ def check_skip_move(
         return True
 
     if critical_beams and "o" not in curr_kind:
+        old_checks = check_critical_beams(
+            critical_beams, full_path_coords, nxt_coords, tgt_coords, src_tgt_ids
+        )
+        path_coordinates = [Coordinates(c[0], c[1], c[2]) for c in full_path_coords]
+        new_checks = check_beams_critical_intersections(
+            nx_g, src_tgt_ids[0], src_tgt_ids[1], path_coordinates, nxt_coords, tgt_coords
+        )
+
+        if new_checks != (not old_checks):
+            raise Exception("INCONSISTENCY between old checks and new checks.")
+
         if not check_critical_beams(
             critical_beams, full_path_coords, nxt_coords, tgt_coords, src_tgt_ids
         ):

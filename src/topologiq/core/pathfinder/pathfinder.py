@@ -20,6 +20,7 @@ Notes:
 
 """
 
+import networkx as nx
 from collections import deque
 
 from topologiq.core.pathfinder.spatial import (
@@ -53,6 +54,7 @@ def pathfinder(
     tent_coords: list[StandardCoord],
     tgt_zx_type: str,
     tgt_block_info: tuple[StandardCoord | None, str | None] = (None, None),
+    nx_g: nx.Graph = None,
     taken: list[StandardCoord] = [],
     hdm: bool = False,
     critical_beams: dict[StandardCoord, int, tuple[int, CubeBeams], tuple[int, CubeBeams]] = {},
@@ -109,6 +111,7 @@ def pathfinder(
         src_block_info,
         tent_coords,
         tent_tgt_kinds,
+        nx_g = nx_g,
         taken=taken_cc,
         hdm=hdm,
         critical_beams=critical_beams,
@@ -172,6 +175,7 @@ def core_pathfinder_bfs(
     hdm: bool = False,
     critical_beams: dict[StandardCoord, int, tuple[int, CubeBeams], tuple[int, CubeBeams]] = {},
     src_tgt_ids: tuple[int, int] | None = None,
+    nx_g: nx.Graph = None,
     **kwargs,
 ) -> tuple[
     dict[StandardBlock, list[StandardBlock]] | None,
@@ -256,6 +260,7 @@ def core_pathfinder_bfs(
                 full_path_coords,
                 curr_kind,
                 curr_path_coords,
+                nx_g,
                 mid_coords,
             ):
                 continue

@@ -93,9 +93,9 @@ def prep_3d_g(simple_graph: SimpleDictGraph) -> nx.Graph:
             coords=None,
             beams=None,
             beams_short=None,
-            beams_sympy=None,
             completed=0,
         )
+        nx_g.nodes[n_id][NX_GRAPH_CUBE_BEAMS] = None
 
     # Add the edges to the NX graph
     for (src_id, tgt_id), e_type in edges:
@@ -151,9 +151,9 @@ def enforce_max_four_legs_per_spider(nx_g: nx.Graph) -> nx.Graph:
                 kind=None,
                 coords=None,
                 beams=None,
-                beams_sympy=None,
                 completed=0,
             )
+            nx_g.nodes[twin_node_id][NX_GRAPH_CUBE_BEAMS] = None
             nx_g.add_edge(node_to_sanitise, twin_node_id, type="SIMPLE")
 
             # Distributed edges across twins
