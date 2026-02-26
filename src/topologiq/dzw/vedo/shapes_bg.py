@@ -17,16 +17,16 @@ class BgCube(Assembly):
     SMALL_CUBE = LARGE_CUBE * FACTOR_SMALLER
     SMALL_TEXT = LARGE_TEXT * FACTOR_SMALLER
 
-    def __init__(self, cube: CubeId, anx: AugmentedNxGraph, hexadecimal_labels: bool = False):
+    def __init__(self, kind: CubeKind, position: Coordinates, node: NodeId = -1, cube: CubeId = -1):
         super().__init__()
 
-        # Parameters for the cube
-        kind = anx.get_cube_kind(cube)
-        position = GLOBAL_SPACING_FACTOR * anx.get_cube_position(cube)
+        self.bg_cube: CubeId = cube
+
+        # Scaling the position
+        position = GLOBAL_SPACING_FACTOR * position
 
         # Parameters for the label
-        node = anx.get_node(cube)
-        label = str(node) if node is not None else ""
+        label = str(node) if node != -1 else ""
         text_size = BgCube.LARGE_TEXT if kind != CubeKind.OOO else BgCube.SMALL_TEXT
         step_scale = 0.55 if kind != CubeKind.OOO else 0.55 * BgCube.FACTOR_SMALLER
 
@@ -61,7 +61,6 @@ class BgCube(Assembly):
 
         self.__highlighted = False
         self.__visible = True
-        self.bg_cube: CubeId = cube
 
     def show_highlight(self):
         self.__cube.linecolor('k5')
@@ -70,6 +69,14 @@ class BgCube(Assembly):
     def hide_highlight(self):
         self.__cube.linecolor('k')
         self.__cube.linewidth(3)
+
+    def show(self):
+        self.alpha(1.0)
+        self.__visible = True
+
+    def hide(self):
+        self.alpha(0.0)
+        self.__visible = False
 
 class BgPipe(Assembly):
     LENGTH = GLOBAL_SPACING_FACTOR * 0.205
@@ -81,18 +88,19 @@ class BgPipe(Assembly):
         else:
             pass
 
-    def __init__(self, source: CubeId, target: CubeId, anx : AugmentedNxGraph):
+    def __init__(self,
+        source_kind: CubeKind, source_position: Coordinates,
+        target_kind: CubeKind, target_position: Coordinates,
+        pipe_type: EdgeType = EdgeType.IDENTITY,
+        source: CubeId = -1, target: CubeId = -1
+    ):
         super().__init__()
 
         self.bg_source: CubeId = source
         self.bg_target: CubeId = target
-        self.pipe_type: EdgeType = anx.get_pipe_type(source, target)
+        self.pipe_type: EdgeType = pipe_type
 
-        # Determine the position where this pipe will be placed
-        source_kind = anx.get_cube_kind(source)
-        source_position = anx.get_cube_position(source)
-        target_kind = anx.get_cube_kind(target)
-        target_position = anx.get_cube_position(target)
+        # Determine the position where the pipe will be placed
         distances = target_position - source_position
         position = GLOBAL_SPACING_FACTOR * (source_position + distances / 2.0)
         # Compute the measurements of this pipe (i.e. length, width, height) according to its direction
