@@ -17,7 +17,7 @@ class BgCube(Assembly):
     SMALL_CUBE = LARGE_CUBE * FACTOR_SMALLER
     SMALL_TEXT = LARGE_TEXT * FACTOR_SMALLER
 
-    def __init__(self, anx: AugmentedNxGraph, cube: CubeId, hexadecimal_labels: bool = False):
+    def __init__(self, cube: CubeId, anx: AugmentedNxGraph, hexadecimal_labels: bool = False):
         super().__init__()
 
         # Parameters for the cube

@@ -431,6 +431,10 @@
                 "py/id": 41
               }
             ],
+            "_Path__cube_ids": [
+              41,
+              45
+            ],
             "_Path__cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
               "_CubeBeams__cube_kind": {
@@ -480,7 +484,7 @@
             "_Path__source_cube": 43,
             "_Path__target_cube": 48,
             "_Path__edge_type": {
-              "py/id": 60
+              "py/id": 61
             },
             "_Path__target_kind": {
               "py/id": 43
@@ -497,7 +501,7 @@
                 "py/id": 43
               },
               "_CubeBeams__cube_position": {
-                "py/id": 62
+                "py/id": 63
               },
               "_CubeBeams__available_beams": [
                 {
@@ -549,15 +553,19 @@
                     "py/id": 43
                   },
                   {
-                    "py/id": 62
+                    "py/id": 63
                   }
                 ]
               }
             ],
             "_Path__pipes": [
               {
-                "py/id": 60
+                "py/id": 61
               }
+            ],
+            "_Path__cube_ids": [
+              43,
+              48
             ],
             "_Path__cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
@@ -565,7 +573,7 @@
                 "py/id": 43
               },
               "_CubeBeams__cube_position": {
-                "py/id": 62
+                "py/id": 63
               },
               "_CubeBeams__available_beams": [
                 {
@@ -578,7 +586,7 @@
                   "py/id": 49
                 },
                 {
-                  "py/id": 65
+                  "py/id": 66
                 },
                 {
                   "py/id": 51
@@ -592,14 +600,14 @@
       "json://2": {
         "json://11": {
           "zx_edge_type": {
-            "py/id": 60
+            "py/id": 61
           },
           "zx_bg_path": {
             "py/object": "topologiq.dzw.utils.path.Path",
             "_Path__source_cube": 35,
             "_Path__target_cube": 37,
             "_Path__edge_type": {
-              "py/id": 60
+              "py/id": 61
             },
             "_Path__target_kind": {
               "py/id": 43
@@ -616,7 +624,7 @@
                 "py/id": 43
               },
               "_CubeBeams__cube_position": {
-                "py/id": 75
+                "py/id": 77
               },
               "_CubeBeams__available_beams": [
                 {
@@ -629,7 +637,7 @@
                   "py/id": 49
                 },
                 {
-                  "py/id": 65
+                  "py/id": 66
                 },
                 {
                   "py/id": 51
@@ -665,15 +673,19 @@
                     "py/id": 43
                   },
                   {
-                    "py/id": 75
+                    "py/id": 77
                   }
                 ]
               }
             ],
             "_Path__pipes": [
               {
-                "py/id": 60
+                "py/id": 61
               }
+            ],
+            "_Path__cube_ids": [
+              35,
+              37
             ],
             "_Path__cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
@@ -681,7 +693,7 @@
                 "py/id": 43
               },
               "_CubeBeams__cube_position": {
-                "py/id": 75
+                "py/id": 77
               },
               "_CubeBeams__available_beams": [
                 {
@@ -694,7 +706,7 @@
                   "py/id": 49
                 },
                 {
-                  "py/id": 65
+                  "py/id": 66
                 },
                 {
                   "py/id": 51
@@ -708,17 +720,17 @@
       "json://3": {
         "json://17": {
           "zx_edge_type": {
-            "py/id": 60
+            "py/id": 61
           },
           "zx_bg_path": {
             "py/object": "topologiq.dzw.utils.path.Path",
             "_Path__source_cube": 31,
             "_Path__target_cube": 32,
             "_Path__edge_type": {
-              "py/id": 60
+              "py/id": 61
             },
             "_Path__target_kind": {
-              "py/id": 79
+              "py/id": 81
             },
             "_Path__target_position": {
               "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
@@ -729,10 +741,10 @@
             "_Path__proposed_cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
               "_CubeBeams__cube_kind": {
-                "py/id": 79
+                "py/id": 81
               },
               "_CubeBeams__cube_position": {
-                "py/id": 87
+                "py/id": 90
               },
               "_CubeBeams__available_beams": [
                 {
@@ -742,7 +754,7 @@
                   "py/id": 48
                 },
                 {
-                  "py/id": 65
+                  "py/id": 66
                 }
               ]
             },
@@ -763,26 +775,30 @@
               {
                 "py/tuple": [
                   {
-                    "py/id": 79
+                    "py/id": 81
                   },
                   {
-                    "py/id": 87
+                    "py/id": 90
                   }
                 ]
               }
             ],
             "_Path__pipes": [
               {
-                "py/id": 60
+                "py/id": 61
               }
+            ],
+            "_Path__cube_ids": [
+              31,
+              32
             ],
             "_Path__cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
               "_CubeBeams__cube_kind": {
-                "py/id": 79
+                "py/id": 81
               },
               "_CubeBeams__cube_position": {
-                "py/id": 87
+                "py/id": 90
               },
               "_CubeBeams__available_beams": [
                 {
@@ -792,7 +808,7 @@
                   "py/id": 48
                 },
                 {
-                  "py/id": 65
+                  "py/id": 66
                 }
               ]
             },
@@ -803,14 +819,14 @@
       "json://4": {
         "json://9": {
           "zx_edge_type": {
-            "py/id": 60
+            "py/id": 61
           },
           "zx_bg_path": {
             "py/object": "topologiq.dzw.utils.path.Path",
             "_Path__source_cube": 42,
             "_Path__target_cube": 46,
             "_Path__edge_type": {
-              "py/id": 60
+              "py/id": 61
             },
             "_Path__target_kind": {
               "py/id": 43
@@ -827,7 +843,7 @@
                 "py/id": 43
               },
               "_CubeBeams__cube_position": {
-                "py/id": 98
+                "py/id": 102
               },
               "_CubeBeams__available_beams": [
                 {
@@ -840,7 +856,7 @@
                   "py/id": 49
                 },
                 {
-                  "py/id": 65
+                  "py/id": 66
                 },
                 {
                   "py/id": 51
@@ -851,7 +867,7 @@
               {
                 "py/tuple": [
                   {
-                    "py/id": 67
+                    "py/id": 68
                   },
                   {
                     "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
@@ -867,15 +883,19 @@
                     "py/id": 43
                   },
                   {
-                    "py/id": 98
+                    "py/id": 102
                   }
                 ]
               }
             ],
             "_Path__pipes": [
               {
-                "py/id": 60
+                "py/id": 61
               }
+            ],
+            "_Path__cube_ids": [
+              42,
+              46
             ],
             "_Path__cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
@@ -883,7 +903,7 @@
                 "py/id": 43
               },
               "_CubeBeams__cube_position": {
-                "py/id": 98
+                "py/id": 102
               },
               "_CubeBeams__available_beams": [
                 {
@@ -896,7 +916,7 @@
                   "py/id": 49
                 },
                 {
-                  "py/id": 65
+                  "py/id": 66
                 },
                 {
                   "py/id": 51
@@ -910,14 +930,14 @@
       "json://5": {
         "json://19": {
           "zx_edge_type": {
-            "py/id": 60
+            "py/id": 61
           },
           "zx_bg_path": {
             "py/object": "topologiq.dzw.utils.path.Path",
             "_Path__source_cube": 54,
             "_Path__target_cube": 58,
             "_Path__edge_type": {
-              "py/id": 60
+              "py/id": 61
             },
             "_Path__target_kind": {
               "py/id": 43
@@ -934,7 +954,7 @@
                 "py/id": 43
               },
               "_CubeBeams__cube_position": {
-                "py/id": 109
+                "py/id": 114
               },
               "_CubeBeams__available_beams": [
                 {
@@ -980,15 +1000,19 @@
                     "py/id": 43
                   },
                   {
-                    "py/id": 109
+                    "py/id": 114
                   }
                 ]
               }
             ],
             "_Path__pipes": [
               {
-                "py/id": 60
+                "py/id": 61
               }
+            ],
+            "_Path__cube_ids": [
+              54,
+              58
             ],
             "_Path__cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
@@ -996,7 +1020,7 @@
                 "py/id": 43
               },
               "_CubeBeams__cube_position": {
-                "py/id": 109
+                "py/id": 114
               },
               "_CubeBeams__available_beams": [
                 {
@@ -1020,14 +1044,14 @@
       "json://6": {
         "json://13": {
           "zx_edge_type": {
-            "py/id": 60
+            "py/id": 61
           },
           "zx_bg_path": {
             "py/object": "topologiq.dzw.utils.path.Path",
             "_Path__source_cube": 50,
             "_Path__target_cube": 52,
             "_Path__edge_type": {
-              "py/id": 60
+              "py/id": 61
             },
             "_Path__target_kind": {
               "py/id": 43
@@ -1044,7 +1068,7 @@
                 "py/id": 43
               },
               "_CubeBeams__cube_position": {
-                "py/id": 121
+                "py/id": 127
               },
               "_CubeBeams__available_beams": [
                 {
@@ -1068,7 +1092,7 @@
               {
                 "py/tuple": [
                   {
-                    "py/id": 113
+                    "py/id": 118
                   },
                   {
                     "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
@@ -1084,15 +1108,19 @@
                     "py/id": 43
                   },
                   {
-                    "py/id": 121
+                    "py/id": 127
                   }
                 ]
               }
             ],
             "_Path__pipes": [
               {
-                "py/id": 60
+                "py/id": 61
               }
+            ],
+            "_Path__cube_ids": [
+              50,
+              52
             ],
             "_Path__cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
@@ -1100,7 +1128,7 @@
                 "py/id": 43
               },
               "_CubeBeams__cube_position": {
-                "py/id": 121
+                "py/id": 127
               },
               "_CubeBeams__available_beams": [
                 {
@@ -1127,14 +1155,14 @@
       "json://7": {
         "json://21": {
           "zx_edge_type": {
-            "py/id": 60
+            "py/id": 61
           },
           "zx_bg_path": {
             "py/object": "topologiq.dzw.utils.path.Path",
             "_Path__source_cube": 56,
             "_Path__target_cube": 60,
             "_Path__edge_type": {
-              "py/id": 60
+              "py/id": 61
             },
             "_Path__target_kind": {
               "py/id": 43
@@ -1151,7 +1179,7 @@
                 "py/id": 43
               },
               "_CubeBeams__cube_position": {
-                "py/id": 132
+                "py/id": 139
               },
               "_CubeBeams__available_beams": [
                 {
@@ -1172,7 +1200,7 @@
               {
                 "py/tuple": [
                   {
-                    "py/id": 113
+                    "py/id": 118
                   },
                   {
                     "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
@@ -1188,15 +1216,19 @@
                     "py/id": 43
                   },
                   {
-                    "py/id": 132
+                    "py/id": 139
                   }
                 ]
               }
             ],
             "_Path__pipes": [
               {
-                "py/id": 60
+                "py/id": 61
               }
+            ],
+            "_Path__cube_ids": [
+              56,
+              60
             ],
             "_Path__cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
@@ -1204,7 +1236,7 @@
                 "py/id": 43
               },
               "_CubeBeams__cube_position": {
-                "py/id": 132
+                "py/id": 139
               },
               "_CubeBeams__available_beams": [
                 {
@@ -1231,14 +1263,14 @@
         },
         "json://10": {
           "zx_edge_type": {
-            "py/id": 60
+            "py/id": 61
           },
           "zx_bg_path": {
             "py/object": "topologiq.dzw.utils.path.Path",
             "_Path__source_cube": 39,
             "_Path__target_cube": 41,
             "_Path__edge_type": {
-              "py/id": 60
+              "py/id": 61
             },
             "_Path__target_kind": {
               "py/id": 53
@@ -1293,8 +1325,12 @@
             ],
             "_Path__pipes": [
               {
-                "py/id": 60
+                "py/id": 61
               }
+            ],
+            "_Path__cube_ids": [
+              39,
+              41
             ],
             "_Path__cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
@@ -1322,32 +1358,32 @@
       },
       "json://9": {
         "json://4": {
-          "py/id": 96
+          "py/id": 100
         },
         "json://10": {
           "zx_edge_type": {
-            "py/id": 60
+            "py/id": 61
           },
           "zx_bg_path": {
             "py/object": "topologiq.dzw.utils.path.Path",
             "_Path__source_cube": 39,
             "_Path__target_cube": 42,
             "_Path__edge_type": {
-              "py/id": 60
+              "py/id": 61
             },
             "_Path__target_kind": {
-              "py/id": 67
+              "py/id": 68
             },
             "_Path__target_position": {
-              "py/id": 102
+              "py/id": 106
             },
             "_Path__proposed_cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
               "_CubeBeams__cube_kind": {
-                "py/id": 67
+                "py/id": 68
               },
               "_CubeBeams__cube_position": {
-                "py/id": 102
+                "py/id": 106
               },
               "_CubeBeams__available_beams": [
                 {
@@ -1368,33 +1404,37 @@
                     "py/id": 53
                   },
                   {
-                    "py/id": 146
+                    "py/id": 154
                   }
                 ]
               },
               {
                 "py/tuple": [
                   {
-                    "py/id": 67
+                    "py/id": 68
                   },
                   {
-                    "py/id": 102
+                    "py/id": 106
                   }
                 ]
               }
             ],
             "_Path__pipes": [
               {
-                "py/id": 60
+                "py/id": 61
               }
+            ],
+            "_Path__cube_ids": [
+              39,
+              42
             ],
             "_Path__cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
               "_CubeBeams__cube_kind": {
-                "py/id": 67
+                "py/id": 68
               },
               "_CubeBeams__cube_position": {
-                "py/id": 102
+                "py/id": 106
               },
               "_CubeBeams__available_beams": [
                 {
@@ -1413,14 +1453,14 @@
         },
         "json://14": {
           "zx_edge_type": {
-            "py/id": 60
+            "py/id": 61
           },
           "zx_bg_path": {
             "py/object": "topologiq.dzw.utils.path.Path",
             "_Path__source_cube": 42,
             "_Path__target_cube": 47,
             "_Path__edge_type": {
-              "py/id": 60
+              "py/id": 61
             },
             "_Path__target_kind": {
               "py/reduce": [
@@ -1443,10 +1483,10 @@
             "_Path__proposed_cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
               "_CubeBeams__cube_kind": {
-                "py/id": 161
+                "py/id": 171
               },
               "_CubeBeams__cube_position": {
-                "py/id": 162
+                "py/id": 172
               },
               "_CubeBeams__available_beams": [
                 {
@@ -1456,7 +1496,7 @@
                   "py/id": 50
                 },
                 {
-                  "py/id": 65
+                  "py/id": 66
                 }
               ]
             },
@@ -1464,36 +1504,40 @@
               {
                 "py/tuple": [
                   {
-                    "py/id": 67
+                    "py/id": 68
                   },
                   {
-                    "py/id": 102
+                    "py/id": 106
                   }
                 ]
               },
               {
                 "py/tuple": [
                   {
-                    "py/id": 161
+                    "py/id": 171
                   },
                   {
-                    "py/id": 162
+                    "py/id": 172
                   }
                 ]
               }
             ],
             "_Path__pipes": [
               {
-                "py/id": 60
+                "py/id": 61
               }
+            ],
+            "_Path__cube_ids": [
+              42,
+              47
             ],
             "_Path__cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
               "_CubeBeams__cube_kind": {
-                "py/id": 161
+                "py/id": 171
               },
               "_CubeBeams__cube_position": {
-                "py/id": 162
+                "py/id": 172
               },
               "_CubeBeams__available_beams": [
                 {
@@ -1503,7 +1547,7 @@
                   "py/id": 50
                 },
                 {
-                  "py/id": 65
+                  "py/id": 66
                 }
               ]
             },
@@ -1513,27 +1557,27 @@
       },
       "json://10": {
         "json://8": {
-          "py/id": 141
+          "py/id": 149
         },
         "json://9": {
-          "py/id": 151
+          "py/id": 160
         },
         "json://12": {
           "zx_edge_type": {
-            "py/id": 60
+            "py/id": 61
           },
           "zx_bg_path": {
             "py/object": "topologiq.dzw.utils.path.Path",
             "_Path__source_cube": 38,
             "_Path__target_cube": 39,
             "_Path__edge_type": {
-              "py/id": 60
+              "py/id": 61
             },
             "_Path__target_kind": {
               "py/id": 53
             },
             "_Path__target_position": {
-              "py/id": 146
+              "py/id": 154
             },
             "_Path__proposed_cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
@@ -1541,7 +1585,7 @@
                 "py/id": 53
               },
               "_CubeBeams__cube_position": {
-                "py/id": 146
+                "py/id": 154
               },
               "_CubeBeams__available_beams": [
                 {
@@ -1575,15 +1619,19 @@
                     "py/id": 53
                   },
                   {
-                    "py/id": 146
+                    "py/id": 154
                   }
                 ]
               }
             ],
             "_Path__pipes": [
               {
-                "py/id": 60
+                "py/id": 61
               }
+            ],
+            "_Path__cube_ids": [
+              38,
+              39
             ],
             "_Path__cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
@@ -1591,7 +1639,7 @@
                 "py/id": 53
               },
               "_CubeBeams__cube_position": {
-                "py/id": 146
+                "py/id": 154
               },
               "_CubeBeams__available_beams": [
                 {
@@ -1611,24 +1659,24 @@
       },
       "json://11": {
         "json://2": {
-          "py/id": 73
+          "py/id": 75
         },
         "json://12": {
           "zx_edge_type": {
-            "py/id": 60
+            "py/id": 61
           },
           "zx_bg_path": {
             "py/object": "topologiq.dzw.utils.path.Path",
             "_Path__source_cube": 35,
             "_Path__target_cube": 38,
             "_Path__edge_type": {
-              "py/id": 60
+              "py/id": 61
             },
             "_Path__target_kind": {
               "py/id": 53
             },
             "_Path__target_position": {
-              "py/id": 175
+              "py/id": 186
             },
             "_Path__proposed_cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
@@ -1636,7 +1684,7 @@
                 "py/id": 53
               },
               "_CubeBeams__cube_position": {
-                "py/id": 175
+                "py/id": 186
               },
               "_CubeBeams__available_beams": [
                 {
@@ -1654,10 +1702,10 @@
               {
                 "py/tuple": [
                   {
-                    "py/id": 79
+                    "py/id": 81
                   },
                   {
-                    "py/id": 80
+                    "py/id": 82
                   }
                 ]
               },
@@ -1667,15 +1715,19 @@
                     "py/id": 53
                   },
                   {
-                    "py/id": 175
+                    "py/id": 186
                   }
                 ]
               }
             ],
             "_Path__pipes": [
               {
-                "py/id": 60
+                "py/id": 61
               }
+            ],
+            "_Path__cube_ids": [
+              35,
+              38
             ],
             "_Path__cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
@@ -1683,7 +1735,7 @@
                 "py/id": 53
               },
               "_CubeBeams__cube_position": {
-                "py/id": 175
+                "py/id": 186
               },
               "_CubeBeams__available_beams": [
                 {
@@ -1702,28 +1754,28 @@
         },
         "json://18": {
           "zx_edge_type": {
-            "py/id": 60
+            "py/id": 61
           },
           "zx_bg_path": {
             "py/object": "topologiq.dzw.utils.path.Path",
             "_Path__source_cube": 33,
             "_Path__target_cube": 35,
             "_Path__edge_type": {
-              "py/id": 60
+              "py/id": 61
             },
             "_Path__target_kind": {
-              "py/id": 79
+              "py/id": 81
             },
             "_Path__target_position": {
-              "py/id": 80
+              "py/id": 82
             },
             "_Path__proposed_cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
               "_CubeBeams__cube_kind": {
-                "py/id": 79
+                "py/id": 81
               },
               "_CubeBeams__cube_position": {
-                "py/id": 80
+                "py/id": 82
               },
               "_CubeBeams__available_beams": [
                 {
@@ -1733,7 +1785,7 @@
                   "py/id": 48
                 },
                 {
-                  "py/id": 65
+                  "py/id": 66
                 }
               ]
             },
@@ -1763,26 +1815,30 @@
               {
                 "py/tuple": [
                   {
-                    "py/id": 79
+                    "py/id": 81
                   },
                   {
-                    "py/id": 80
+                    "py/id": 82
                   }
                 ]
               }
             ],
             "_Path__pipes": [
               {
-                "py/id": 60
+                "py/id": 61
               }
+            ],
+            "_Path__cube_ids": [
+              33,
+              35
             ],
             "_Path__cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
               "_CubeBeams__cube_kind": {
-                "py/id": 79
+                "py/id": 81
               },
               "_CubeBeams__cube_position": {
-                "py/id": 80
+                "py/id": 82
               },
               "_CubeBeams__available_beams": [
                 {
@@ -1792,7 +1848,7 @@
                   "py/id": 48
                 },
                 {
-                  "py/id": 65
+                  "py/id": 66
                 }
               ]
             },
@@ -1802,21 +1858,21 @@
       },
       "json://12": {
         "json://10": {
-          "py/id": 170
+          "py/id": 181
         },
         "json://11": {
-          "py/id": 180
+          "py/id": 192
         },
         "json://16": {
           "zx_edge_type": {
-            "py/id": 60
+            "py/id": 61
           },
           "zx_bg_path": {
             "py/object": "topologiq.dzw.utils.path.Path",
             "_Path__source_cube": 38,
             "_Path__target_cube": 40,
             "_Path__edge_type": {
-              "py/id": 60
+              "py/id": 61
             },
             "_Path__target_kind": {
               "py/id": 53
@@ -1833,7 +1889,7 @@
                 "py/id": 53
               },
               "_CubeBeams__cube_position": {
-                "py/id": 201
+                "py/id": 215
               },
               "_CubeBeams__available_beams": [
                 {
@@ -1843,7 +1899,7 @@
                   "py/id": 49
                 },
                 {
-                  "py/id": 65
+                  "py/id": 66
                 }
               ]
             },
@@ -1854,7 +1910,7 @@
                     "py/id": 53
                   },
                   {
-                    "py/id": 175
+                    "py/id": 186
                   }
                 ]
               },
@@ -1864,15 +1920,19 @@
                     "py/id": 53
                   },
                   {
-                    "py/id": 201
+                    "py/id": 215
                   }
                 ]
               }
             ],
             "_Path__pipes": [
               {
-                "py/id": 60
+                "py/id": 61
               }
+            ],
+            "_Path__cube_ids": [
+              38,
+              40
             ],
             "_Path__cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
@@ -1880,7 +1940,7 @@
                 "py/id": 53
               },
               "_CubeBeams__cube_position": {
-                "py/id": 201
+                "py/id": 215
               },
               "_CubeBeams__available_beams": [
                 {
@@ -1890,7 +1950,7 @@
                   "py/id": 49
                 },
                 {
-                  "py/id": 65
+                  "py/id": 66
                 }
               ]
             },
@@ -1900,32 +1960,32 @@
       },
       "json://13": {
         "json://6": {
-          "py/id": 119
+          "py/id": 125
         },
         "json://14": {
           "zx_edge_type": {
-            "py/id": 60
+            "py/id": 61
           },
           "zx_bg_path": {
             "py/object": "topologiq.dzw.utils.path.Path",
             "_Path__source_cube": 47,
             "_Path__target_cube": 50,
             "_Path__edge_type": {
-              "py/id": 60
+              "py/id": 61
             },
             "_Path__target_kind": {
-              "py/id": 113
+              "py/id": 118
             },
             "_Path__target_position": {
-              "py/id": 125
+              "py/id": 131
             },
             "_Path__proposed_cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
               "_CubeBeams__cube_kind": {
-                "py/id": 113
+                "py/id": 118
               },
               "_CubeBeams__cube_position": {
-                "py/id": 125
+                "py/id": 131
               },
               "_CubeBeams__available_beams": [
                 {
@@ -1943,36 +2003,40 @@
               {
                 "py/tuple": [
                   {
-                    "py/id": 161
+                    "py/id": 171
                   },
                   {
-                    "py/id": 162
+                    "py/id": 172
                   }
                 ]
               },
               {
                 "py/tuple": [
                   {
-                    "py/id": 113
+                    "py/id": 118
                   },
                   {
-                    "py/id": 125
+                    "py/id": 131
                   }
                 ]
               }
             ],
             "_Path__pipes": [
               {
-                "py/id": 60
+                "py/id": 61
               }
+            ],
+            "_Path__cube_ids": [
+              47,
+              50
             ],
             "_Path__cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
               "_CubeBeams__cube_kind": {
-                "py/id": 113
+                "py/id": 118
               },
               "_CubeBeams__cube_position": {
-                "py/id": 125
+                "py/id": 131
               },
               "_CubeBeams__available_beams": [
                 {
@@ -1991,17 +2055,17 @@
         },
         "json://22": {
           "zx_edge_type": {
-            "py/id": 60
+            "py/id": 61
           },
           "zx_bg_path": {
             "py/object": "topologiq.dzw.utils.path.Path",
             "_Path__source_cube": 50,
             "_Path__target_cube": 53,
             "_Path__edge_type": {
-              "py/id": 60
+              "py/id": 61
             },
             "_Path__target_kind": {
-              "py/id": 193
+              "py/id": 206
             },
             "_Path__target_position": {
               "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
@@ -2012,10 +2076,10 @@
             "_Path__proposed_cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
               "_CubeBeams__cube_kind": {
-                "py/id": 193
+                "py/id": 206
               },
               "_CubeBeams__cube_position": {
-                "py/id": 219
+                "py/id": 235
               },
               "_CubeBeams__available_beams": [
                 {
@@ -2030,36 +2094,40 @@
               {
                 "py/tuple": [
                   {
-                    "py/id": 113
+                    "py/id": 118
                   },
                   {
-                    "py/id": 125
+                    "py/id": 131
                   }
                 ]
               },
               {
                 "py/tuple": [
                   {
-                    "py/id": 193
+                    "py/id": 206
                   },
                   {
-                    "py/id": 219
+                    "py/id": 235
                   }
                 ]
               }
             ],
             "_Path__pipes": [
               {
-                "py/id": 60
+                "py/id": 61
               }
+            ],
+            "_Path__cube_ids": [
+              50,
+              53
             ],
             "_Path__cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
               "_CubeBeams__cube_kind": {
-                "py/id": 193
+                "py/id": 206
               },
               "_CubeBeams__cube_position": {
-                "py/id": 219
+                "py/id": 235
               },
               "_CubeBeams__available_beams": [
                 {
@@ -2076,24 +2144,24 @@
       },
       "json://14": {
         "json://9": {
-          "py/id": 159
+          "py/id": 169
         },
         "json://13": {
-          "py/id": 209
+          "py/id": 224
         },
         "json://20": {
           "zx_edge_type": {
-            "py/id": 60
+            "py/id": 61
           },
           "zx_bg_path": {
             "py/object": "topologiq.dzw.utils.path.Path",
             "_Path__source_cube": 47,
             "_Path__target_cube": 51,
             "_Path__edge_type": {
-              "py/id": 60
+              "py/id": 61
             },
             "_Path__target_kind": {
-              "py/id": 161
+              "py/id": 171
             },
             "_Path__target_position": {
               "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
@@ -2104,10 +2172,10 @@
             "_Path__proposed_cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
               "_CubeBeams__cube_kind": {
-                "py/id": 161
+                "py/id": 171
               },
               "_CubeBeams__cube_position": {
-                "py/id": 229
+                "py/id": 246
               },
               "_CubeBeams__available_beams": [
                 {
@@ -2117,7 +2185,7 @@
                   "py/id": 50
                 },
                 {
-                  "py/id": 65
+                  "py/id": 66
                 }
               ]
             },
@@ -2125,36 +2193,40 @@
               {
                 "py/tuple": [
                   {
-                    "py/id": 161
+                    "py/id": 171
                   },
                   {
-                    "py/id": 162
+                    "py/id": 172
                   }
                 ]
               },
               {
                 "py/tuple": [
                   {
-                    "py/id": 161
+                    "py/id": 171
                   },
                   {
-                    "py/id": 229
+                    "py/id": 246
                   }
                 ]
               }
             ],
             "_Path__pipes": [
               {
-                "py/id": 60
+                "py/id": 61
               }
+            ],
+            "_Path__cube_ids": [
+              47,
+              51
             ],
             "_Path__cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
               "_CubeBeams__cube_kind": {
-                "py/id": 161
+                "py/id": 171
               },
               "_CubeBeams__cube_position": {
-                "py/id": 229
+                "py/id": 246
               },
               "_CubeBeams__available_beams": [
                 {
@@ -2164,7 +2236,7 @@
                   "py/id": 50
                 },
                 {
-                  "py/id": 65
+                  "py/id": 66
                 }
               ]
             },
@@ -2174,32 +2246,32 @@
       },
       "json://15": {
         "json://1": {
-          "py/id": 59
+          "py/id": 60
         },
         "json://16": {
           "zx_edge_type": {
-            "py/id": 60
+            "py/id": 61
           },
           "zx_bg_path": {
             "py/object": "topologiq.dzw.utils.path.Path",
             "_Path__source_cube": 40,
             "_Path__target_cube": 43,
             "_Path__edge_type": {
-              "py/id": 60
+              "py/id": 61
             },
             "_Path__target_kind": {
-              "py/id": 67
+              "py/id": 68
             },
             "_Path__target_position": {
-              "py/id": 68
+              "py/id": 69
             },
             "_Path__proposed_cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
               "_CubeBeams__cube_kind": {
-                "py/id": 67
+                "py/id": 68
               },
               "_CubeBeams__cube_position": {
-                "py/id": 68
+                "py/id": 69
               },
               "_CubeBeams__available_beams": [
                 {
@@ -2220,33 +2292,37 @@
                     "py/id": 53
                   },
                   {
-                    "py/id": 201
+                    "py/id": 215
                   }
                 ]
               },
               {
                 "py/tuple": [
                   {
-                    "py/id": 67
+                    "py/id": 68
                   },
                   {
-                    "py/id": 68
+                    "py/id": 69
                   }
                 ]
               }
             ],
             "_Path__pipes": [
               {
-                "py/id": 60
+                "py/id": 61
               }
+            ],
+            "_Path__cube_ids": [
+              40,
+              43
             ],
             "_Path__cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
               "_CubeBeams__cube_kind": {
-                "py/id": 67
+                "py/id": 68
               },
               "_CubeBeams__cube_position": {
-                "py/id": 68
+                "py/id": 69
               },
               "_CubeBeams__available_beams": [
                 {
@@ -2265,14 +2341,14 @@
         },
         "json://24": {
           "zx_edge_type": {
-            "py/id": 60
+            "py/id": 61
           },
           "zx_bg_path": {
             "py/object": "topologiq.dzw.utils.path.Path",
             "_Path__source_cube": 43,
             "_Path__target_cube": 49,
             "_Path__edge_type": {
-              "py/id": 60
+              "py/id": 61
             },
             "_Path__target_kind": {
               "py/id": 43
@@ -2289,7 +2365,7 @@
                 "py/id": 43
               },
               "_CubeBeams__cube_position": {
-                "py/id": 247
+                "py/id": 266
               },
               "_CubeBeams__available_beams": [
                 {
@@ -2305,7 +2381,7 @@
                   "py/id": 50
                 },
                 {
-                  "py/id": 65
+                  "py/id": 66
                 }
               ]
             },
@@ -2313,10 +2389,10 @@
               {
                 "py/tuple": [
                   {
-                    "py/id": 67
+                    "py/id": 68
                   },
                   {
-                    "py/id": 68
+                    "py/id": 69
                   }
                 ]
               },
@@ -2326,15 +2402,19 @@
                     "py/id": 43
                   },
                   {
-                    "py/id": 247
+                    "py/id": 266
                   }
                 ]
               }
             ],
             "_Path__pipes": [
               {
-                "py/id": 60
+                "py/id": 61
               }
+            ],
+            "_Path__cube_ids": [
+              43,
+              49
             ],
             "_Path__cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
@@ -2342,7 +2422,7 @@
                 "py/id": 43
               },
               "_CubeBeams__cube_position": {
-                "py/id": 247
+                "py/id": 266
               },
               "_CubeBeams__available_beams": [
                 {
@@ -2358,7 +2438,7 @@
                   "py/id": 50
                 },
                 {
-                  "py/id": 65
+                  "py/id": 66
                 }
               ]
             },
@@ -2368,21 +2448,21 @@
       },
       "json://16": {
         "json://12": {
-          "py/id": 199
+          "py/id": 213
         },
         "json://15": {
-          "py/id": 237
+          "py/id": 255
         },
         "json://23": {
           "zx_edge_type": {
-            "py/id": 60
+            "py/id": 61
           },
           "zx_bg_path": {
             "py/object": "topologiq.dzw.utils.path.Path",
             "_Path__source_cube": 40,
             "_Path__target_cube": 44,
             "_Path__edge_type": {
-              "py/id": 60
+              "py/id": 61
             },
             "_Path__target_kind": {
               "py/id": 43
@@ -2399,7 +2479,7 @@
                 "py/id": 43
               },
               "_CubeBeams__cube_position": {
-                "py/id": 257
+                "py/id": 277
               },
               "_CubeBeams__available_beams": [
                 {
@@ -2409,7 +2489,7 @@
                   "py/id": 49
                 },
                 {
-                  "py/id": 65
+                  "py/id": 66
                 }
               ]
             },
@@ -2420,7 +2500,7 @@
                     "py/id": 53
                   },
                   {
-                    "py/id": 201
+                    "py/id": 215
                   }
                 ]
               },
@@ -2430,15 +2510,19 @@
                     "py/id": 43
                   },
                   {
-                    "py/id": 257
+                    "py/id": 277
                   }
                 ]
               }
             ],
             "_Path__pipes": [
               {
-                "py/id": 60
+                "py/id": 61
               }
+            ],
+            "_Path__cube_ids": [
+              40,
+              44
             ],
             "_Path__cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
@@ -2446,7 +2530,7 @@
                 "py/id": 43
               },
               "_CubeBeams__cube_position": {
-                "py/id": 257
+                "py/id": 277
               },
               "_CubeBeams__available_beams": [
                 {
@@ -2456,7 +2540,7 @@
                   "py/id": 49
                 },
                 {
-                  "py/id": 65
+                  "py/id": 66
                 }
               ]
             },
@@ -2466,32 +2550,32 @@
       },
       "json://17": {
         "json://3": {
-          "py/id": 85
+          "py/id": 88
         },
         "json://18": {
           "zx_edge_type": {
-            "py/id": 60
+            "py/id": 61
           },
           "zx_bg_path": {
             "py/object": "topologiq.dzw.utils.path.Path",
             "_Path__source_cube": 32,
             "_Path__target_cube": 33,
             "_Path__edge_type": {
-              "py/id": 60
+              "py/id": 61
             },
             "_Path__target_kind": {
-              "py/id": 193
+              "py/id": 206
             },
             "_Path__target_position": {
-              "py/id": 194
+              "py/id": 207
             },
             "_Path__proposed_cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
               "_CubeBeams__cube_kind": {
-                "py/id": 193
+                "py/id": 206
               },
               "_CubeBeams__cube_position": {
-                "py/id": 194
+                "py/id": 207
               },
               "_CubeBeams__available_beams": [
                 {
@@ -2509,36 +2593,40 @@
               {
                 "py/tuple": [
                   {
-                    "py/id": 79
+                    "py/id": 81
                   },
                   {
-                    "py/id": 87
+                    "py/id": 90
                   }
                 ]
               },
               {
                 "py/tuple": [
                   {
-                    "py/id": 193
+                    "py/id": 206
                   },
                   {
-                    "py/id": 194
+                    "py/id": 207
                   }
                 ]
               }
             ],
             "_Path__pipes": [
               {
-                "py/id": 60
+                "py/id": 61
               }
+            ],
+            "_Path__cube_ids": [
+              32,
+              33
             ],
             "_Path__cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
               "_CubeBeams__cube_kind": {
-                "py/id": 193
+                "py/id": 206
               },
               "_CubeBeams__cube_position": {
-                "py/id": 194
+                "py/id": 207
               },
               "_CubeBeams__available_beams": [
                 {
@@ -2557,14 +2645,14 @@
         },
         "json://26": {
           "zx_edge_type": {
-            "py/id": 60
+            "py/id": 61
           },
           "zx_bg_path": {
             "py/object": "topologiq.dzw.utils.path.Path",
             "_Path__source_cube": 32,
             "_Path__target_cube": 34,
             "_Path__edge_type": {
-              "py/id": 60
+              "py/id": 61
             },
             "_Path__target_kind": {
               "py/id": 43
@@ -2581,7 +2669,7 @@
                 "py/id": 43
               },
               "_CubeBeams__cube_position": {
-                "py/id": 275
+                "py/id": 297
               },
               "_CubeBeams__available_beams": [
                 {
@@ -2605,10 +2693,10 @@
               {
                 "py/tuple": [
                   {
-                    "py/id": 79
+                    "py/id": 81
                   },
                   {
-                    "py/id": 87
+                    "py/id": 90
                   }
                 ]
               },
@@ -2618,15 +2706,19 @@
                     "py/id": 43
                   },
                   {
-                    "py/id": 275
+                    "py/id": 297
                   }
                 ]
               }
             ],
             "_Path__pipes": [
               {
-                "py/id": 60
+                "py/id": 61
               }
+            ],
+            "_Path__cube_ids": [
+              32,
+              34
             ],
             "_Path__cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
@@ -2634,7 +2726,7 @@
                 "py/id": 43
               },
               "_CubeBeams__cube_position": {
-                "py/id": 275
+                "py/id": 297
               },
               "_CubeBeams__available_beams": [
                 {
@@ -2660,21 +2752,21 @@
       },
       "json://18": {
         "json://11": {
-          "py/id": 188
+          "py/id": 201
         },
         "json://17": {
-          "py/id": 265
+          "py/id": 286
         },
         "json://25": {
           "zx_edge_type": {
-            "py/id": 60
+            "py/id": 61
           },
           "zx_bg_path": {
             "py/object": "topologiq.dzw.utils.path.Path",
             "_Path__source_cube": 33,
             "_Path__target_cube": 36,
             "_Path__edge_type": {
-              "py/id": 60
+              "py/id": 61
             },
             "_Path__target_kind": {
               "py/id": 43
@@ -2691,7 +2783,7 @@
                 "py/id": 43
               },
               "_CubeBeams__cube_position": {
-                "py/id": 285
+                "py/id": 308
               },
               "_CubeBeams__available_beams": [
                 {
@@ -2707,7 +2799,7 @@
                   "py/id": 50
                 },
                 {
-                  "py/id": 65
+                  "py/id": 66
                 }
               ]
             },
@@ -2715,10 +2807,10 @@
               {
                 "py/tuple": [
                   {
-                    "py/id": 193
+                    "py/id": 206
                   },
                   {
-                    "py/id": 194
+                    "py/id": 207
                   }
                 ]
               },
@@ -2728,15 +2820,19 @@
                     "py/id": 43
                   },
                   {
-                    "py/id": 285
+                    "py/id": 308
                   }
                 ]
               }
             ],
             "_Path__pipes": [
               {
-                "py/id": 60
+                "py/id": 61
               }
+            ],
+            "_Path__cube_ids": [
+              33,
+              36
             ],
             "_Path__cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
@@ -2744,7 +2840,7 @@
                 "py/id": 43
               },
               "_CubeBeams__cube_position": {
-                "py/id": 285
+                "py/id": 308
               },
               "_CubeBeams__available_beams": [
                 {
@@ -2760,7 +2856,7 @@
                   "py/id": 50
                 },
                 {
-                  "py/id": 65
+                  "py/id": 66
                 }
               ]
             },
@@ -2770,32 +2866,32 @@
       },
       "json://19": {
         "json://5": {
-          "py/id": 107
+          "py/id": 112
         },
         "json://20": {
           "zx_edge_type": {
-            "py/id": 60
+            "py/id": 61
           },
           "zx_bg_path": {
             "py/object": "topologiq.dzw.utils.path.Path",
             "_Path__source_cube": 51,
             "_Path__target_cube": 54,
             "_Path__edge_type": {
-              "py/id": 60
+              "py/id": 61
             },
             "_Path__target_kind": {
-              "py/id": 113
+              "py/id": 118
             },
             "_Path__target_position": {
-              "py/id": 114
+              "py/id": 119
             },
             "_Path__proposed_cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
               "_CubeBeams__cube_kind": {
-                "py/id": 113
+                "py/id": 118
               },
               "_CubeBeams__cube_position": {
-                "py/id": 114
+                "py/id": 119
               },
               "_CubeBeams__available_beams": [
                 {
@@ -2813,36 +2909,40 @@
               {
                 "py/tuple": [
                   {
-                    "py/id": 161
+                    "py/id": 171
                   },
                   {
-                    "py/id": 229
+                    "py/id": 246
                   }
                 ]
               },
               {
                 "py/tuple": [
                   {
-                    "py/id": 113
+                    "py/id": 118
                   },
                   {
-                    "py/id": 114
+                    "py/id": 119
                   }
                 ]
               }
             ],
             "_Path__pipes": [
               {
-                "py/id": 60
+                "py/id": 61
               }
+            ],
+            "_Path__cube_ids": [
+              51,
+              54
             ],
             "_Path__cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
               "_CubeBeams__cube_kind": {
-                "py/id": 113
+                "py/id": 118
               },
               "_CubeBeams__cube_position": {
-                "py/id": 114
+                "py/id": 119
               },
               "_CubeBeams__available_beams": [
                 {
@@ -2861,14 +2961,14 @@
         },
         "json://28": {
           "zx_edge_type": {
-            "py/id": 60
+            "py/id": 61
           },
           "zx_bg_path": {
             "py/object": "topologiq.dzw.utils.path.Path",
             "_Path__source_cube": 54,
             "_Path__target_cube": 59,
             "_Path__edge_type": {
-              "py/id": 60
+              "py/id": 61
             },
             "_Path__target_kind": {
               "py/id": 43
@@ -2885,7 +2985,7 @@
                 "py/id": 43
               },
               "_CubeBeams__cube_position": {
-                "py/id": 303
+                "py/id": 328
               },
               "_CubeBeams__available_beams": [
                 {
@@ -2898,7 +2998,7 @@
                   "py/id": 50
                 },
                 {
-                  "py/id": 65
+                  "py/id": 66
                 },
                 {
                   "py/id": 51
@@ -2909,10 +3009,10 @@
               {
                 "py/tuple": [
                   {
-                    "py/id": 113
+                    "py/id": 118
                   },
                   {
-                    "py/id": 114
+                    "py/id": 119
                   }
                 ]
               },
@@ -2922,15 +3022,19 @@
                     "py/id": 43
                   },
                   {
-                    "py/id": 303
+                    "py/id": 328
                   }
                 ]
               }
             ],
             "_Path__pipes": [
               {
-                "py/id": 60
+                "py/id": 61
               }
+            ],
+            "_Path__cube_ids": [
+              54,
+              59
             ],
             "_Path__cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
@@ -2938,7 +3042,7 @@
                 "py/id": 43
               },
               "_CubeBeams__cube_position": {
-                "py/id": 303
+                "py/id": 328
               },
               "_CubeBeams__available_beams": [
                 {
@@ -2951,7 +3055,7 @@
                   "py/id": 50
                 },
                 {
-                  "py/id": 65
+                  "py/id": 66
                 },
                 {
                   "py/id": 51
@@ -2964,21 +3068,21 @@
       },
       "json://20": {
         "json://14": {
-          "py/id": 227
+          "py/id": 244
         },
         "json://19": {
-          "py/id": 293
+          "py/id": 317
         },
         "json://27": {
           "zx_edge_type": {
-            "py/id": 60
+            "py/id": 61
           },
           "zx_bg_path": {
             "py/object": "topologiq.dzw.utils.path.Path",
             "_Path__source_cube": 51,
             "_Path__target_cube": 55,
             "_Path__edge_type": {
-              "py/id": 60
+              "py/id": 61
             },
             "_Path__target_kind": {
               "py/id": 43
@@ -2995,7 +3099,7 @@
                 "py/id": 43
               },
               "_CubeBeams__cube_position": {
-                "py/id": 313
+                "py/id": 339
               },
               "_CubeBeams__available_beams": [
                 {
@@ -3008,7 +3112,7 @@
                   "py/id": 50
                 },
                 {
-                  "py/id": 65
+                  "py/id": 66
                 },
                 {
                   "py/id": 51
@@ -3019,10 +3123,10 @@
               {
                 "py/tuple": [
                   {
-                    "py/id": 161
+                    "py/id": 171
                   },
                   {
-                    "py/id": 229
+                    "py/id": 246
                   }
                 ]
               },
@@ -3032,15 +3136,19 @@
                     "py/id": 43
                   },
                   {
-                    "py/id": 313
+                    "py/id": 339
                   }
                 ]
               }
             ],
             "_Path__pipes": [
               {
-                "py/id": 60
+                "py/id": 61
               }
+            ],
+            "_Path__cube_ids": [
+              51,
+              55
             ],
             "_Path__cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
@@ -3048,7 +3156,7 @@
                 "py/id": 43
               },
               "_CubeBeams__cube_position": {
-                "py/id": 313
+                "py/id": 339
               },
               "_CubeBeams__available_beams": [
                 {
@@ -3061,7 +3169,7 @@
                   "py/id": 50
                 },
                 {
-                  "py/id": 65
+                  "py/id": 66
                 },
                 {
                   "py/id": 51
@@ -3074,32 +3182,32 @@
       },
       "json://21": {
         "json://7": {
-          "py/id": 130
+          "py/id": 137
         },
         "json://22": {
           "zx_edge_type": {
-            "py/id": 60
+            "py/id": 61
           },
           "zx_bg_path": {
             "py/object": "topologiq.dzw.utils.path.Path",
             "_Path__source_cube": 53,
             "_Path__target_cube": 56,
             "_Path__edge_type": {
-              "py/id": 60
+              "py/id": 61
             },
             "_Path__target_kind": {
-              "py/id": 113
+              "py/id": 118
             },
             "_Path__target_position": {
-              "py/id": 136
+              "py/id": 143
             },
             "_Path__proposed_cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
               "_CubeBeams__cube_kind": {
-                "py/id": 113
+                "py/id": 118
               },
               "_CubeBeams__cube_position": {
-                "py/id": 136
+                "py/id": 143
               },
               "_CubeBeams__available_beams": [
                 {
@@ -3114,36 +3222,40 @@
               {
                 "py/tuple": [
                   {
-                    "py/id": 193
+                    "py/id": 206
                   },
                   {
-                    "py/id": 219
+                    "py/id": 235
                   }
                 ]
               },
               {
                 "py/tuple": [
                   {
-                    "py/id": 113
+                    "py/id": 118
                   },
                   {
-                    "py/id": 136
+                    "py/id": 143
                   }
                 ]
               }
             ],
             "_Path__pipes": [
               {
-                "py/id": 60
+                "py/id": 61
               }
+            ],
+            "_Path__cube_ids": [
+              53,
+              56
             ],
             "_Path__cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
               "_CubeBeams__cube_kind": {
-                "py/id": 113
+                "py/id": 118
               },
               "_CubeBeams__cube_position": {
-                "py/id": 136
+                "py/id": 143
               },
               "_CubeBeams__available_beams": [
                 {
@@ -3159,14 +3271,14 @@
         },
         "json://30": {
           "zx_edge_type": {
-            "py/id": 60
+            "py/id": 61
           },
           "zx_bg_path": {
             "py/object": "topologiq.dzw.utils.path.Path",
             "_Path__source_cube": 56,
             "_Path__target_cube": 61,
             "_Path__edge_type": {
-              "py/id": 60
+              "py/id": 61
             },
             "_Path__target_kind": {
               "py/id": 43
@@ -3183,7 +3295,7 @@
                 "py/id": 43
               },
               "_CubeBeams__cube_position": {
-                "py/id": 331
+                "py/id": 359
               },
               "_CubeBeams__available_beams": [
                 {
@@ -3199,7 +3311,7 @@
                   "py/id": 50
                 },
                 {
-                  "py/id": 65
+                  "py/id": 66
                 }
               ]
             },
@@ -3207,10 +3319,10 @@
               {
                 "py/tuple": [
                   {
-                    "py/id": 113
+                    "py/id": 118
                   },
                   {
-                    "py/id": 136
+                    "py/id": 143
                   }
                 ]
               },
@@ -3220,15 +3332,19 @@
                     "py/id": 43
                   },
                   {
-                    "py/id": 331
+                    "py/id": 359
                   }
                 ]
               }
             ],
             "_Path__pipes": [
               {
-                "py/id": 60
+                "py/id": 61
               }
+            ],
+            "_Path__cube_ids": [
+              56,
+              61
             ],
             "_Path__cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
@@ -3236,7 +3352,7 @@
                 "py/id": 43
               },
               "_CubeBeams__cube_position": {
-                "py/id": 331
+                "py/id": 359
               },
               "_CubeBeams__available_beams": [
                 {
@@ -3252,7 +3368,7 @@
                   "py/id": 50
                 },
                 {
-                  "py/id": 65
+                  "py/id": 66
                 }
               ]
             },
@@ -3262,21 +3378,21 @@
       },
       "json://22": {
         "json://13": {
-          "py/id": 217
+          "py/id": 233
         },
         "json://21": {
-          "py/id": 321
+          "py/id": 348
         },
         "json://29": {
           "zx_edge_type": {
-            "py/id": 60
+            "py/id": 61
           },
           "zx_bg_path": {
             "py/object": "topologiq.dzw.utils.path.Path",
             "_Path__source_cube": 53,
             "_Path__target_cube": 57,
             "_Path__edge_type": {
-              "py/id": 60
+              "py/id": 61
             },
             "_Path__target_kind": {
               "py/id": 43
@@ -3293,7 +3409,7 @@
                 "py/id": 43
               },
               "_CubeBeams__cube_position": {
-                "py/id": 341
+                "py/id": 370
               },
               "_CubeBeams__available_beams": [
                 {
@@ -3311,10 +3427,10 @@
               {
                 "py/tuple": [
                   {
-                    "py/id": 193
+                    "py/id": 206
                   },
                   {
-                    "py/id": 219
+                    "py/id": 235
                   }
                 ]
               },
@@ -3324,15 +3440,19 @@
                     "py/id": 43
                   },
                   {
-                    "py/id": 341
+                    "py/id": 370
                   }
                 ]
               }
             ],
             "_Path__pipes": [
               {
-                "py/id": 60
+                "py/id": 61
               }
+            ],
+            "_Path__cube_ids": [
+              53,
+              57
             ],
             "_Path__cube_beams": {
               "py/object": "topologiq.dzw.utils.cube_beams.CubeBeams",
@@ -3340,7 +3460,7 @@
                 "py/id": 43
               },
               "_CubeBeams__cube_position": {
-                "py/id": 341
+                "py/id": 370
               },
               "_CubeBeams__available_beams": [
                 {
@@ -3360,42 +3480,42 @@
       },
       "json://23": {
         "json://16": {
-          "py/id": 255
+          "py/id": 275
         }
       },
       "json://24": {
         "json://15": {
-          "py/id": 245
+          "py/id": 264
         }
       },
       "json://25": {
         "json://18": {
-          "py/id": 283
+          "py/id": 306
         }
       },
       "json://26": {
         "json://17": {
-          "py/id": 273
+          "py/id": 295
         }
       },
       "json://27": {
         "json://20": {
-          "py/id": 311
+          "py/id": 337
         }
       },
       "json://28": {
         "json://19": {
-          "py/id": 301
+          "py/id": 326
         }
       },
       "json://29": {
         "json://22": {
-          "py/id": 339
+          "py/id": 368
         }
       },
       "json://30": {
         "json://21": {
-          "py/id": 329
+          "py/id": 357
         }
       }
     },
@@ -3435,25 +3555,25 @@
           "py/id": 43
         },
         "bg_cube_position": {
-          "py/id": 91
+          "py/id": 94
         }
       },
       "json://32": {
         "bg_zx_node": 17,
         "bg_cube_kind": {
-          "py/id": 79
+          "py/id": 81
         },
         "bg_cube_position": {
-          "py/id": 87
+          "py/id": 90
         }
       },
       "json://33": {
         "bg_zx_node": 18,
         "bg_cube_kind": {
-          "py/id": 193
+          "py/id": 206
         },
         "bg_cube_position": {
-          "py/id": 194
+          "py/id": 207
         }
       },
       "json://34": {
@@ -3462,16 +3582,16 @@
           "py/id": 43
         },
         "bg_cube_position": {
-          "py/id": 275
+          "py/id": 297
         }
       },
       "json://35": {
         "bg_zx_node": 11,
         "bg_cube_kind": {
-          "py/id": 79
+          "py/id": 81
         },
         "bg_cube_position": {
-          "py/id": 80
+          "py/id": 82
         }
       },
       "json://36": {
@@ -3480,7 +3600,7 @@
           "py/id": 43
         },
         "bg_cube_position": {
-          "py/id": 285
+          "py/id": 308
         }
       },
       "json://37": {
@@ -3489,7 +3609,7 @@
           "py/id": 43
         },
         "bg_cube_position": {
-          "py/id": 75
+          "py/id": 77
         }
       },
       "json://38": {
@@ -3498,7 +3618,7 @@
           "py/id": 53
         },
         "bg_cube_position": {
-          "py/id": 175
+          "py/id": 186
         }
       },
       "json://39": {
@@ -3507,7 +3627,7 @@
           "py/id": 53
         },
         "bg_cube_position": {
-          "py/id": 146
+          "py/id": 154
         }
       },
       "json://40": {
@@ -3516,7 +3636,7 @@
           "py/id": 53
         },
         "bg_cube_position": {
-          "py/id": 201
+          "py/id": 215
         }
       },
       "json://41": {
@@ -3531,19 +3651,19 @@
       "json://42": {
         "bg_zx_node": 9,
         "bg_cube_kind": {
-          "py/id": 67
+          "py/id": 68
         },
         "bg_cube_position": {
-          "py/id": 102
+          "py/id": 106
         }
       },
       "json://43": {
         "bg_zx_node": 15,
         "bg_cube_kind": {
-          "py/id": 67
+          "py/id": 68
         },
         "bg_cube_position": {
-          "py/id": 68
+          "py/id": 69
         }
       },
       "json://44": {
@@ -3552,7 +3672,7 @@
           "py/id": 43
         },
         "bg_cube_position": {
-          "py/id": 257
+          "py/id": 277
         }
       },
       "json://45": {
@@ -3570,16 +3690,16 @@
           "py/id": 43
         },
         "bg_cube_position": {
-          "py/id": 98
+          "py/id": 102
         }
       },
       "json://47": {
         "bg_zx_node": 14,
         "bg_cube_kind": {
-          "py/id": 161
+          "py/id": 171
         },
         "bg_cube_position": {
-          "py/id": 162
+          "py/id": 172
         }
       },
       "json://48": {
@@ -3588,7 +3708,7 @@
           "py/id": 43
         },
         "bg_cube_position": {
-          "py/id": 62
+          "py/id": 63
         }
       },
       "json://49": {
@@ -3597,25 +3717,25 @@
           "py/id": 43
         },
         "bg_cube_position": {
-          "py/id": 247
+          "py/id": 266
         }
       },
       "json://50": {
         "bg_zx_node": 13,
         "bg_cube_kind": {
-          "py/id": 113
+          "py/id": 118
         },
         "bg_cube_position": {
-          "py/id": 125
+          "py/id": 131
         }
       },
       "json://51": {
         "bg_zx_node": 20,
         "bg_cube_kind": {
-          "py/id": 161
+          "py/id": 171
         },
         "bg_cube_position": {
-          "py/id": 229
+          "py/id": 246
         }
       },
       "json://52": {
@@ -3624,25 +3744,25 @@
           "py/id": 43
         },
         "bg_cube_position": {
-          "py/id": 121
+          "py/id": 127
         }
       },
       "json://53": {
         "bg_zx_node": 22,
         "bg_cube_kind": {
-          "py/id": 193
+          "py/id": 206
         },
         "bg_cube_position": {
-          "py/id": 219
+          "py/id": 235
         }
       },
       "json://54": {
         "bg_zx_node": 19,
         "bg_cube_kind": {
-          "py/id": 113
+          "py/id": 118
         },
         "bg_cube_position": {
-          "py/id": 114
+          "py/id": 119
         }
       },
       "json://55": {
@@ -3651,16 +3771,16 @@
           "py/id": 43
         },
         "bg_cube_position": {
-          "py/id": 313
+          "py/id": 339
         }
       },
       "json://56": {
         "bg_zx_node": 21,
         "bg_cube_kind": {
-          "py/id": 113
+          "py/id": 118
         },
         "bg_cube_position": {
-          "py/id": 136
+          "py/id": 143
         }
       },
       "json://57": {
@@ -3669,7 +3789,7 @@
           "py/id": 43
         },
         "bg_cube_position": {
-          "py/id": 341
+          "py/id": 370
         }
       },
       "json://58": {
@@ -3678,7 +3798,7 @@
           "py/id": 43
         },
         "bg_cube_position": {
-          "py/id": 109
+          "py/id": 114
         }
       },
       "json://59": {
@@ -3687,7 +3807,7 @@
           "py/id": 43
         },
         "bg_cube_position": {
-          "py/id": 303
+          "py/id": 328
         }
       },
       "json://60": {
@@ -3696,7 +3816,7 @@
           "py/id": 43
         },
         "bg_cube_position": {
-          "py/id": 132
+          "py/id": 139
         }
       },
       "json://61": {
@@ -3705,7 +3825,7 @@
           "py/id": 43
         },
         "bg_cube_position": {
-          "py/id": 331
+          "py/id": 359
         }
       }
     },
@@ -3713,118 +3833,118 @@
       "json://31": {
         "json://32": {
           "bg_pipe_type": {
-            "py/id": 60
+            "py/id": 61
           }
         }
       },
       "json://32": {
         "json://31": {
-          "py/id": 396
+          "py/id": 426
         },
         "json://33": {
           "bg_pipe_type": {
-            "py/id": 60
+            "py/id": 61
           }
         },
         "json://34": {
           "bg_pipe_type": {
-            "py/id": 60
+            "py/id": 61
           }
         }
       },
       "json://33": {
         "json://32": {
-          "py/id": 398
+          "py/id": 428
         },
         "json://35": {
           "bg_pipe_type": {
-            "py/id": 60
+            "py/id": 61
           }
         },
         "json://36": {
           "bg_pipe_type": {
-            "py/id": 60
+            "py/id": 61
           }
         }
       },
       "json://34": {
         "json://32": {
-          "py/id": 399
+          "py/id": 429
         }
       },
       "json://35": {
         "json://33": {
-          "py/id": 401
+          "py/id": 431
         },
         "json://37": {
           "bg_pipe_type": {
-            "py/id": 60
+            "py/id": 61
           }
         },
         "json://38": {
           "bg_pipe_type": {
-            "py/id": 60
+            "py/id": 61
           }
         }
       },
       "json://36": {
         "json://33": {
-          "py/id": 402
+          "py/id": 432
         }
       },
       "json://37": {
         "json://35": {
-          "py/id": 405
+          "py/id": 435
         }
       },
       "json://38": {
         "json://35": {
-          "py/id": 406
+          "py/id": 436
         },
         "json://39": {
           "bg_pipe_type": {
-            "py/id": 60
+            "py/id": 61
           }
         },
         "json://40": {
           "bg_pipe_type": {
-            "py/id": 60
+            "py/id": 61
           }
         }
       },
       "json://39": {
         "json://38": {
-          "py/id": 410
+          "py/id": 440
         },
         "json://41": {
           "bg_pipe_type": {
-            "py/id": 60
+            "py/id": 61
           }
         },
         "json://42": {
           "bg_pipe_type": {
-            "py/id": 60
+            "py/id": 61
           }
         }
       },
       "json://40": {
         "json://38": {
-          "py/id": 411
+          "py/id": 441
         },
         "json://43": {
           "bg_pipe_type": {
-            "py/id": 60
+            "py/id": 61
           }
         },
         "json://44": {
           "bg_pipe_type": {
-            "py/id": 60
+            "py/id": 61
           }
         }
       },
       "json://41": {
         "json://39": {
-          "py/id": 413
+          "py/id": 443
         },
         "json://45": {
           "bg_pipe_type": {
@@ -3834,182 +3954,182 @@
       },
       "json://42": {
         "json://39": {
-          "py/id": 414
+          "py/id": 444
         },
         "json://46": {
           "bg_pipe_type": {
-            "py/id": 60
+            "py/id": 61
           }
         },
         "json://47": {
           "bg_pipe_type": {
-            "py/id": 60
+            "py/id": 61
           }
         }
       },
       "json://43": {
         "json://40": {
-          "py/id": 416
+          "py/id": 446
         },
         "json://48": {
           "bg_pipe_type": {
-            "py/id": 60
+            "py/id": 61
           }
         },
         "json://49": {
           "bg_pipe_type": {
-            "py/id": 60
+            "py/id": 61
           }
         }
       },
       "json://44": {
         "json://40": {
-          "py/id": 417
+          "py/id": 447
         }
       },
       "json://45": {
         "json://41": {
-          "py/id": 419
+          "py/id": 449
         }
       },
       "json://46": {
         "json://42": {
-          "py/id": 421
+          "py/id": 451
         }
       },
       "json://47": {
         "json://42": {
-          "py/id": 422
+          "py/id": 452
         },
         "json://50": {
           "bg_pipe_type": {
-            "py/id": 60
+            "py/id": 61
           }
         },
         "json://51": {
           "bg_pipe_type": {
-            "py/id": 60
+            "py/id": 61
           }
         }
       },
       "json://48": {
         "json://43": {
-          "py/id": 424
+          "py/id": 454
         }
       },
       "json://49": {
         "json://43": {
-          "py/id": 425
+          "py/id": 455
         }
       },
       "json://50": {
         "json://47": {
-          "py/id": 430
+          "py/id": 460
         },
         "json://52": {
           "bg_pipe_type": {
-            "py/id": 60
+            "py/id": 61
           }
         },
         "json://53": {
           "bg_pipe_type": {
-            "py/id": 60
+            "py/id": 61
           }
         }
       },
       "json://51": {
         "json://47": {
-          "py/id": 431
+          "py/id": 461
         },
         "json://54": {
           "bg_pipe_type": {
-            "py/id": 60
+            "py/id": 61
           }
         },
         "json://55": {
           "bg_pipe_type": {
-            "py/id": 60
+            "py/id": 61
           }
         }
       },
       "json://52": {
         "json://50": {
-          "py/id": 435
+          "py/id": 465
         }
       },
       "json://53": {
         "json://50": {
-          "py/id": 436
+          "py/id": 466
         },
         "json://56": {
           "bg_pipe_type": {
-            "py/id": 60
+            "py/id": 61
           }
         },
         "json://57": {
           "bg_pipe_type": {
-            "py/id": 60
+            "py/id": 61
           }
         }
       },
       "json://54": {
         "json://51": {
-          "py/id": 438
+          "py/id": 468
         },
         "json://58": {
           "bg_pipe_type": {
-            "py/id": 60
+            "py/id": 61
           }
         },
         "json://59": {
           "bg_pipe_type": {
-            "py/id": 60
+            "py/id": 61
           }
         }
       },
       "json://55": {
         "json://51": {
-          "py/id": 439
+          "py/id": 469
         }
       },
       "json://56": {
         "json://53": {
-          "py/id": 442
+          "py/id": 472
         },
         "json://60": {
           "bg_pipe_type": {
-            "py/id": 60
+            "py/id": 61
           }
         },
         "json://61": {
           "bg_pipe_type": {
-            "py/id": 60
+            "py/id": 61
           }
         }
       },
       "json://57": {
         "json://53": {
-          "py/id": 443
+          "py/id": 473
         }
       },
       "json://58": {
         "json://54": {
-          "py/id": 445
+          "py/id": 475
         }
       },
       "json://59": {
         "json://54": {
-          "py/id": 446
+          "py/id": 476
         }
       },
       "json://60": {
         "json://56": {
-          "py/id": 449
+          "py/id": 479
         }
       },
       "json://61": {
         "json://56": {
-          "py/id": 450
+          "py/id": 480
         }
       }
     },
@@ -4018,7 +4138,7 @@
       "py/object": "networkx.classes.reportviews.NodeView",
       "py/state": {
         "_nodes": {
-          "py/id": 362
+          "py/id": 392
         }
       }
     }
@@ -4343,97 +4463,97 @@
   "occupied": {
     "py/set": [
       {
-        "py/id": 98
-      },
-      {
         "py/id": 102
       },
       {
-        "py/id": 68
+        "py/id": 106
       },
       {
-        "py/id": 341
+        "py/id": 69
       },
       {
-        "py/id": 62
+        "py/id": 370
       },
       {
-        "py/id": 313
+        "py/id": 63
       },
       {
-        "py/id": 219
+        "py/id": 339
       },
       {
-        "py/id": 275
+        "py/id": 235
       },
       {
-        "py/id": 80
+        "py/id": 297
       },
       {
-        "py/id": 75
+        "py/id": 82
       },
       {
-        "py/id": 285
+        "py/id": 77
       },
       {
-        "py/id": 162
+        "py/id": 308
       },
       {
-        "py/id": 229
+        "py/id": 172
       },
       {
-        "py/id": 201
+        "py/id": 246
       },
       {
-        "py/id": 146
+        "py/id": 215
       },
       {
-        "py/id": 109
-      },
-      {
-        "py/id": 44
-      },
-      {
-        "py/id": 121
-      },
-      {
-        "py/id": 91
-      },
-      {
-        "py/id": 331
-      },
-      {
-        "py/id": 132
-      },
-      {
-        "py/id": 87
-      },
-      {
-        "py/id": 194
-      },
-      {
-        "py/id": 247
-      },
-      {
-        "py/id": 175
+        "py/id": 154
       },
       {
         "py/id": 114
       },
       {
-        "py/id": 303
+        "py/id": 44
+      },
+      {
+        "py/id": 127
+      },
+      {
+        "py/id": 94
+      },
+      {
+        "py/id": 359
+      },
+      {
+        "py/id": 139
+      },
+      {
+        "py/id": 90
+      },
+      {
+        "py/id": 207
+      },
+      {
+        "py/id": 266
+      },
+      {
+        "py/id": 186
+      },
+      {
+        "py/id": 119
+      },
+      {
+        "py/id": 328
       },
       {
         "py/id": 54
       },
       {
-        "py/id": 125
+        "py/id": 131
       },
       {
-        "py/id": 136
+        "py/id": 143
       },
       {
-        "py/id": 257
+        "py/id": 277
       }
     ]
   },
