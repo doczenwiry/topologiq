@@ -19,9 +19,16 @@ class CumulativeFrameManager:
         console.debug(f"Cumulative Frame Manager report")
         for f in range(len(self.__frames)):
             frame = self.__frames[f][0]
-            console.debug(f"> Frame {f+1}/{len(self.__frames)} : {len(frame)}")
+            listing = ":"
             for mesh in frame:
-                console.debug(f">> Mesh {mesh}")
+                listing += f" {mesh}"
+            console.debug(f"> Frame {f}/{len(self.__frames)} [{len(frame)}] {listing}")
+            for sf in range(1, len(self.__frames[f])):
+                subframe = self.__frames[f][sf]
+                sublisting = ":"
+                for mesh in subframe:
+                    sublisting += f" {mesh}"
+                console.debug(f">> Subframe {sf} [{len(subframe)}] {sublisting}")
 
     def get_frame_count(self):
         return self.__frame_count
@@ -47,7 +54,7 @@ class CumulativeFrameManager:
         console.debug(f"Setting current frame to #{frame_index}")
         self.__plotter.clear()
         for f in range(frame_index + 1):
-            self.__plotter.show(self.__frames[f][0])
+            self.__plotter.add(self.__frames[f][0])
         self.__frame_index = frame_index
 
     def move_frame(self, count: int = 0):
@@ -70,34 +77,26 @@ class CumulativeFrameManager:
         frame_count = min(count, self.__frame_index)
         console.debug(f"> Backward frame : {frame_count}")
         for frame in range(frame_count):
-            for mesh in self.__frames[self.__frame_index - frame][0]:
-                self.__plotter.remove( mesh )
+            self.__plotter.remove(self.__frames[self.__frame_index - frame][0])
         self.__frame_index -= frame_count
 
-    # def __reset_subframe(self):
-    #     current_subframe = self.__frames[self.__frame_index][self.__subframe_index]
-    #     for mesh in current_subframe[self.__subframe_index]:
-    #         mesh.hide()
-    #     self.__subframe_index = 0
-    #     for mesh in current_subframe[self.__subframe_index]:
-    #         mesh.show()
-    #
-    # def __move_subframe_forward(self):
-    #     current_subframes = self.__subframes[self.__frame_index]
-    #     console.debug(f"Forward subframe: {self.__subframe_index + 1} [{len(current_subframes)}]")
-    #     if self.__subframe_index < len(current_subframes) - 1:
-    #         for mesh in current_subframes[self.__subframe_index]:
-    #             mesh.hide()
-    #         self.__subframe_index += 1
-    #         for mesh in current_subframes[self.__subframe_index]:
-    #             mesh.show()
-    #
-    # def __move_subframe_backward(self):
-    #     current_subframes = self.__subframes[self.__frame_index]
-    #     console.debug(f"Backward subframe: {self.__subframe_index - 1} [{len(current_subframes)}]")
-    #     if self.__subframe_index > 0:
-    #         for mesh in current_subframes[self.__subframe_index]:
-    #             mesh.hide()
-    #         self.__subframe_index -= 1
-    #         for mesh in current_subframes[self.__subframe_index]:
-    #             mesh.show()
+    def __reset_subframe(self):
+        self.__plotter.remove(self.__frames[self.__frame_index][self.__subframe_index])
+        self.__subframe_index = 0
+        self.__plotter.add(self.__frames[self.__frame_index][self.__subframe_index])
+
+    def move_subframe_forward(self):
+        current_subframes = self.__frames[self.__frame_index]
+        if self.__subframe_index < len(current_subframes) - 1:
+            console.debug(f"Forward subframe: {self.__subframe_index + 1}/{len(current_subframes)}")
+            self.__plotter.remove(current_subframes[self.__subframe_index])
+            self.__subframe_index += 1
+            self.__plotter.add(current_subframes[self.__subframe_index])
+
+    def move_subframe_backward(self):
+        current_subframes = self.__frames[self.__frame_index]
+        if self.__subframe_index > 0:
+            console.debug(f"Backward subframe: {self.__subframe_index - 1}/{len(current_subframes)}")
+            self.__plotter.remove(current_subframes[self.__subframe_index])
+            self.__subframe_index -= 1
+            self.__plotter.add(current_subframes[self.__subframe_index])

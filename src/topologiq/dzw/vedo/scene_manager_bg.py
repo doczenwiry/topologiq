@@ -71,6 +71,18 @@ class BgSceneManager:
 
                     previous_cube = current_cube
 
+                # Add alternative paths to subsequent subframes
+                for alternative in self.__nx_graph.get_edge_alternatives(source, target):
+                    current_subframe = self.__frame_manager.create_next_subframe(current_frame)
+                    previous_kind, previous_position = alternative.get_cubes()[0]
+                    for alternative_kind, alternative_position in alternative.get_cubes()[1:]:
+                        alternative_bg_cube = BgCube(alternative_kind, alternative_position)
+                        alternative_pipe = BgPipe(previous_kind, previous_position, alternative_kind, alternative_position, EdgeType.IDENTITY)
+                        self.__frame_manager.add_to_frame(current_frame, alternative_pipe, subframe_index = current_subframe)
+                        self.__frame_manager.add_to_frame(current_frame, alternative_bg_cube, subframe_index = current_subframe)
+                        previous_kind = alternative_kind
+                        previous_position = alternative_position
+
         # Prepare the first frame
         starting_frame = self.__frame_manager.get_frame_count() - 1
         self.__frame_manager.set_current_frame( starting_frame )
@@ -103,8 +115,11 @@ class BgSceneManager:
             self.__frame_manager.move_frame(count = -self.__frame_manager.get_frame_count())
         elif event.keypress == "End":
             self.__frame_manager.move_frame(count = +self.__frame_manager.get_frame_count())
-        actors = f"[{len(self.__plotter.actors)}]"
-        console.debug(f"> Managed elements : {actors}")
+        elif event.keypress == "Up":
+            self.__frame_manager.move_subframe_forward()
+        elif event.keypress == "Down":
+            self.__frame_manager.move_subframe_backward()
+
         self.__plotter.render(resetcam = False)
 
     # def on_left_click(self, event):

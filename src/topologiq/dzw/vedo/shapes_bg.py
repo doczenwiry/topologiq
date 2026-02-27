@@ -74,7 +74,11 @@ class BgCube(Assembly):
         return str(self)
 
     def __str__(self):
-        return f"#{self.bg_cube}:{self.__kind}@{self.__position}"
+        stringed = ""
+        if self.bg_cube != -1:
+            stringed += f"#{self.bg_cube}:"
+        stringed += f"{self.__kind}@{self.__position}"
+        return stringed
 
 class BgPipe(Assembly):
     LENGTH = GLOBAL_SPACING_FACTOR * 0.205
@@ -147,4 +151,10 @@ class BgPipe(Assembly):
         return str(self)
 
     def __str__(self):
-        return f"{self.bg_source}-{self.bg_target}"
+        stringed = ""
+        if self.bg_source != -1:
+            stringed += f"{self.bg_source}"
+        stringed += "-"
+        if self.bg_target != -1:
+            stringed += f"{self.bg_target}"
+        return stringed

@@ -24,8 +24,8 @@ class ZxSceneManager:
             zx_edge = ZxEdge(source, target, self.__nx_graph).z(-0.1)
             self.__edges[ source , target ] = zx_edge
 
-        self.__plotter.show(list(self.__nodes.values()))
-        self.__plotter.show(list(self.__edges.values()))
+        self.__plotter.add(list(self.__nodes.values()))
+        self.__plotter.add(list(self.__edges.values()))
 
         self.__selected_object = None
 
