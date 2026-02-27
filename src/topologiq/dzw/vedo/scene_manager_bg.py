@@ -1,4 +1,3 @@
-from vedo import Mesh
 from vedo.plotter.runtime import Plotter
 
 from topologiq.dzw.utils.components_zx import EdgeType
@@ -40,8 +39,8 @@ class BgSceneManager:
             bg_pipe = BgPipe(source_kind, source_position, target_kind, target_position, pipe_type, source, target)
             self.__pipes[pipe] = bg_pipe
 
-        node_realisation_order = [] #self.__nx_graph.get_node_realisation_order()
-        edge_realisation_order = [] #self.__nx_graph.get_edge_realisation_order()
+        node_realisation_order = self.__nx_graph.get_node_realisation_order()
+        edge_realisation_order = self.__nx_graph.get_edge_realisation_order()
 
         if len(node_realisation_order) == 0 and len(edge_realisation_order) == 0:
             current_frame = self.__frame_manager.create_next_frame()
@@ -88,30 +87,6 @@ class BgSceneManager:
         self.__plotter.camera.SetFocalPoint(0, 0, 0)
         self.__plotter.camera.SetViewUp(0, 0, 1)
 
-    # def __make_subframes(self, source: CubeId, target: CubeId):
-    #     subframes = []
-    #     alternatives = self.__nx_graph.get_edge_alternatives(source, target)
-    #     console.debug(f"Alternatives: {len(alternatives)}")
-    #     if alternatives:
-    #         for alternative in alternatives:
-    #             previous_kind, previous_position = alternative.get_cubes()[0]
-    #             current_subframe = []
-    #             for current_kind, current_position in alternative.get_cubes()[1:]:
-    #                 extra_cube = BgCube(current_kind, current_position)
-    #                 extra_pipe = BgPipe(previous_kind, previous_position, current_kind, current_position, EdgeType.IDENTITY)
-    #                 current_subframe.append(extra_cube)
-    #                 current_subframe.append(extra_pipe)
-    #
-    #                 extra_cube.hide()
-    #                 extra_pipe.hide()
-    #                 self.elements.append(extra_cube)
-    #                 self.elements.append(extra_pipe)
-    #
-    #                 previous_kind = current_kind
-    #                 previous_position = current_position
-    #             subframes.append(current_subframe)
-    #     return subframes
-
     def alter_cube_appearance(self, cube: CubeId, highlight: bool = False):
         self.__cubes[cube].alter_appearance(highlight = highlight)
 
@@ -125,11 +100,12 @@ class BgSceneManager:
         elif event.keypress == "Right":
             self.__frame_manager.move_frame(count = +1)
         elif event.keypress == "Home":
-            self.__frame_manager.set_current_frame(0)
+            self.__frame_manager.move_frame(count = -self.__frame_manager.get_frame_count())
         elif event.keypress == "End":
-            self.__frame_manager.set_current_frame(self.__frame_manager.get_frame_count() - 1)
+            self.__frame_manager.move_frame(count = +self.__frame_manager.get_frame_count())
         actors = f"[{len(self.__plotter.actors)}]"
         console.debug(f"> Managed elements : {actors}")
+        self.__plotter.render(resetcam = False)
 
     # def on_left_click(self, event):
     #     if isinstance(event.object, BgCube):

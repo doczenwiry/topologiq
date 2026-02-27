@@ -12,22 +12,25 @@ class CumulativeFrameManager:
         self.__plotter = plotter
         self.__frames: list[list[list[Mesh]]] = []
         self.__frame_index = 0
-        self.__frame_total = 0
+        self.__frame_count = 0
         self.__subframe_index = 0
 
     def log_frame_report(self):
         console.debug(f"Cumulative Frame Manager report")
         for f in range(len(self.__frames)):
-            console.debug(f"> Frame {f+1}/{len(self.__frames)} : {len(self.__frames[f][0])}")
+            frame = self.__frames[f][0]
+            console.debug(f"> Frame {f+1}/{len(self.__frames)} : {len(frame)}")
+            for mesh in frame:
+                console.debug(f">> Mesh {mesh}")
 
     def get_frame_count(self):
-        return len(self.__frames)
+        return self.__frame_count
 
     def create_next_frame(self) -> FrameIndex:
         self.__frames.append( [] )
-        frame_index = self.__frame_total
+        frame_index = self.__frame_count
         self.__frames[frame_index].append([])
-        self.__frame_total += 1
+        self.__frame_count += 1
         return frame_index
 
     def add_to_frame(self, frame_index, mesh: Mesh, subframe_index: int = 0):
@@ -57,10 +60,10 @@ class CumulativeFrameManager:
         console.debug(f"> Frame {self.__frame_index + 1}/{len(self.__frames)} {subframe_notice}")
 
     def __move_frame_forward(self, count: int = 1):
-        frame_count = min(count, self.__frame_total - self.__frame_index - 1)
+        frame_count = min(count, self.__frame_count - self.__frame_index - 1)
         console.debug(f"> Forward frame : {frame_count}")
-        for frame in range(frame_count):
-            self.__plotter.show(self.__frames[self.__frame_index + frame - 1][0])
+        for frame in range(1, frame_count + 1):
+            self.__plotter.show(self.__frames[self.__frame_index + frame][0])
         self.__frame_index += frame_count
 
     def __move_frame_backward(self, count: int = 1):

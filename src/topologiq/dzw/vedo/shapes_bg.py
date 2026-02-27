@@ -2,7 +2,6 @@ from numpy import array
 from vedo import Assembly, Cube, Box, Text3D
 
 from topologiq.dzw.helpers.spacetime import Spacetime
-from topologiq.dzw.utils.augmented_nx_graph import AugmentedNxGraph
 from topologiq.dzw.utils.components_bg import CubeId, CubeKind
 from topologiq.dzw.utils.components_zx import NodeId, EdgeType
 from topologiq.dzw.utils.coordinates import Coordinates
@@ -135,8 +134,6 @@ class BgPipe(Assembly):
 
         self.__pipe.linecolor('k')
         self.__pipe.linewidth(3)
-
-        self.__highlighted = False
 
     def alter_appearance(self, highlight: bool = False):
         if highlight:
