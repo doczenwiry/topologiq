@@ -41,12 +41,10 @@ class AugmentedNxGraphViewer(Plotter):
         self.add_callback("mouse move", self.__on_mouse_move)
 
         # Prepare the scene manager for the ZX-graph
-        self.__zx_scene_manager = ZxSceneManager(self.__nx_graph)
-        # self.at(ZX_VIEWPORT).add_callback("mouse left click", self.__zx_scene_manager.on_left_click)
+        self.__zx_scene_manager = ZxSceneManager(self.__nx_graph, self.at(ZX_VIEWPORT))
 
         # Prepare the scene manager for the BG-graph
-        self.__bg_scene_manager = BgSceneManager(self.__nx_graph)
-        # self.at(BG_VIEWPORT).add_callback("mouse left click", self.__bg_scene_manager.on_left_click)
+        self.__bg_scene_manager = BgSceneManager(self.__nx_graph, self.at(BG_VIEWPORT))
 
         self.__selected_object = None
 
@@ -64,7 +62,7 @@ class AugmentedNxGraphViewer(Plotter):
             self.__reset_camera()
 
         # Refresh the BG viewport
-        self.at(BG_VIEWPORT).show(self.__bg_scene_manager.elements)
+        self.at(BG_VIEWPORT).render()
 
     def __show_highlight(self, selected_object):
         if isinstance(selected_object, ZxNode):
@@ -154,10 +152,10 @@ class AugmentedNxGraphViewer(Plotter):
             self.__selected_object = event.object
             self.__show_highlight(self.__selected_object)
 
-        self.at(ZX_VIEWPORT).render() # show(self.__zx_scene_manager.elements, resetcam = False)
-        self.at(BG_VIEWPORT).render() # show(self.__bg_scene_manager.elements, resetcam = False)
+        self.at(ZX_VIEWPORT).render()
+        self.at(BG_VIEWPORT).render()
 
     def display(self):
-        self.at(ZX_VIEWPORT).show(self.__zx_scene_manager.elements, resetcam = True)
-        self.at(BG_VIEWPORT).show(self.__bg_scene_manager.elements, resetcam = True)
+        self.at(ZX_VIEWPORT).show(resetcam = True)
+        self.at(BG_VIEWPORT).show(resetcam = True)
         self.interactive().close()

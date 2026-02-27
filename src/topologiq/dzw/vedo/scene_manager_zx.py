@@ -1,29 +1,32 @@
-from logging import getLogger
-console = getLogger(__name__)
+from vedo.plotter.runtime import Plotter
 
 from topologiq.dzw.utils.augmented_nx_graph import AugmentedNxGraph
 from topologiq.dzw.utils.components_zx import NodeId
 from topologiq.dzw.vedo.shapes_zx import ZxNode, ZxEdge
 
+from logging import getLogger
+console = getLogger(__name__)
 
 class ZxSceneManager:
-    def __init__(self, nx_graph: AugmentedNxGraph):
+    def __init__(self, nx_graph: AugmentedNxGraph, plotter: Plotter):
         self.__nx_graph = nx_graph
+        self.__plotter = plotter
 
         self.__nodes = dict()
         self.__edges = dict()
 
         # Prepare all the elements for the ZX scene (i.e. nodes and edges)
-        self.elements = []
+        # self.elements = []
         for node in self.__nx_graph.get_nodes():
             zx_node = ZxNode(node, self.__nx_graph).z(+0.1)
-            self.elements.append( zx_node )
             self.__nodes[ node ] = zx_node
 
         for source, target in self.__nx_graph.get_edges():
             zx_edge = ZxEdge(source, target, self.__nx_graph).z(-0.1)
-            self.elements.append( zx_edge )
             self.__edges[ source , target ] = zx_edge
+
+        self.__plotter.show(list(self.__nodes.values()))
+        self.__plotter.show(list(self.__edges.values()))
 
         self.__selected_object = None
 

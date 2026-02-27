@@ -19,7 +19,7 @@ def ang_read(label: str):
     return decode(open(ANG_PATH + label + ".json").read(), keys = True)
 
 if __name__ == '__main__':
-    name = "vw-experimental"
+    name = "ghz8"
     anx: AugmentedNxGraph = ang_read(label = name)
 
     viewer = AugmentedNxGraphViewer(anx, label = name)

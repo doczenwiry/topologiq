@@ -21,6 +21,8 @@ class BgCube(Assembly):
         super().__init__()
 
         self.bg_cube: CubeId = cube
+        self.__kind = kind
+        self.__position = position
 
         # Scaling the position
         position = GLOBAL_SPACING_FACTOR * position
@@ -60,7 +62,6 @@ class BgCube(Assembly):
             self.add(text)
 
         self.__highlighted = False
-        self.__visible = True
 
     def show_highlight(self):
         self.__cube.linecolor('k5')
@@ -70,13 +71,11 @@ class BgCube(Assembly):
         self.__cube.linecolor('k')
         self.__cube.linewidth(3)
 
-    def show(self):
-        self.alpha(1.0)
-        self.__visible = True
+    def __repr__(self):
+        return str(self)
 
-    def hide(self):
-        self.alpha(0.0)
-        self.__visible = False
+    def __str__(self):
+        return f"#{self.bg_cube}:{self.__kind}@{self.__position}"
 
 class BgPipe(Assembly):
     LENGTH = GLOBAL_SPACING_FACTOR * 0.205
@@ -137,7 +136,6 @@ class BgPipe(Assembly):
         self.__pipe.linecolor('k')
         self.__pipe.linewidth(3)
 
-        self.__visible = True
         self.__highlighted = False
 
     def show_highlight(self):
@@ -148,10 +146,8 @@ class BgPipe(Assembly):
         self.__pipe.linecolor('k')
         self.__pipe.linewidth(3)
 
-    def show(self):
-        self.alpha(1.0)
-        self.__visible = True
+    def __repr__(self):
+        return str(self)
 
-    def hide(self):
-        self.alpha(0.0)
-        self.__visible = False
+    def __str__(self):
+        return f"{self.bg_source}-{self.bg_target}"
