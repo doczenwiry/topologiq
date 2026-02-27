@@ -271,8 +271,8 @@
               "_Path__target_position": {
                 "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
                 "x": 0,
-                "y": 1,
-                "z": 1
+                "y": 2,
+                "z": 0
               },
               "_Path__proposed_cube_beams": null,
               "_Path__cubes": [
@@ -289,7 +289,16 @@
                 {
                   "py/tuple": [
                     {
-                      "py/id": 17
+                      "py/reduce": [
+                        {
+                          "py/type": "topologiq.dzw.utils.components_bg.CubeKind"
+                        },
+                        {
+                          "py/tuple": [
+                            6
+                          ]
+                        }
+                      ]
                     },
                     {
                       "py/id": 18
@@ -332,8 +341,8 @@
               "_Path__target_position": {
                 "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
                 "x": 0,
-                "y": 2,
-                "z": 0
+                "y": 1,
+                "z": 1
               },
               "_Path__proposed_cube_beams": null,
               "_Path__cubes": [
@@ -350,16 +359,7 @@
                 {
                   "py/tuple": [
                     {
-                      "py/reduce": [
-                        {
-                          "py/type": "topologiq.dzw.utils.components_bg.CubeKind"
-                        },
-                        {
-                          "py/tuple": [
-                            6
-                          ]
-                        }
-                      ]
+                      "py/id": 17
                     },
                     {
                       "py/id": 18
@@ -372,7 +372,7 @@
                       "py/id": 17
                     },
                     {
-                      "py/id": 37
+                      "py/id": 38
                     }
                   ]
                 }
@@ -668,8 +668,8 @@
               "_Path__target_position": {
                 "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
                 "x": 0,
-                "y": 2,
-                "z": 1
+                "y": 3,
+                "z": 0
               },
               "_Path__proposed_cube_beams": null,
               "_Path__cubes": [
@@ -696,7 +696,7 @@
                 {
                   "py/tuple": [
                     {
-                      "py/id": 17
+                      "py/id": 35
                     },
                     {
                       "py/id": 29
@@ -742,8 +742,8 @@
               "_Path__target_position": {
                 "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
                 "x": 0,
-                "y": 3,
-                "z": 0
+                "y": 2,
+                "z": 1
               },
               "_Path__proposed_cube_beams": null,
               "_Path__cubes": [
@@ -770,7 +770,7 @@
                 {
                   "py/tuple": [
                     {
-                      "py/id": 39
+                      "py/id": 17
                     },
                     {
                       "py/id": 29
@@ -890,8 +890,8 @@
               "_Path__target_position": {
                 "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
                 "x": 0,
-                "y": 1,
-                "z": 2
+                "y": 2,
+                "z": 1
               },
               "_Path__proposed_cube_beams": null,
               "_Path__cubes": [
@@ -964,8 +964,8 @@
               "_Path__target_position": {
                 "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
                 "x": 0,
-                "y": 1,
-                "z": 0
+                "y": 2,
+                "z": 1
               },
               "_Path__proposed_cube_beams": null,
               "_Path__cubes": [
@@ -992,7 +992,7 @@
                 {
                   "py/tuple": [
                     {
-                      "py/id": 17
+                      "py/id": 35
                     },
                     {
                       "py/id": 42
@@ -1059,17 +1059,17 @@
                       "py/id": 17
                     },
                     {
-                      "py/id": 18
+                      "py/id": 25
                     }
                   ]
                 },
                 {
                   "py/tuple": [
                     {
-                      "py/id": 52
+                      "py/id": 17
                     },
                     {
-                      "py/id": 33
+                      "py/id": 42
                     }
                   ]
                 },
@@ -1111,9 +1111,9 @@
               },
               "_Path__target_position": {
                 "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 1,
-                "y": 2,
-                "z": 0
+                "x": 0,
+                "y": 1,
+                "z": 2
               },
               "_Path__proposed_cube_beams": null,
               "_Path__cubes": [
@@ -1130,7 +1130,7 @@
                 {
                   "py/tuple": [
                     {
-                      "py/id": 39
+                      "py/id": 17
                     },
                     {
                       "py/id": 18
@@ -1140,13 +1140,10 @@
                 {
                   "py/tuple": [
                     {
-                      "py/id": 39
+                      "py/id": 52
                     },
                     {
-                      "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                      "x": 1,
-                      "y": 1,
-                      "z": 0
+                      "py/id": 38
                     }
                   ]
                 },
@@ -1188,83 +1185,9 @@
               },
               "_Path__target_position": {
                 "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 1,
-                "y": 0,
-                "z": 0
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 39
-                    },
-                    {
-                      "py/id": 18
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 39
-                    },
-                    {
-                      "py/id": 85
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 88
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
                 "x": 0,
-                "y": 2,
-                "z": 1
+                "y": 1,
+                "z": 2
               },
               "_Path__proposed_cube_beams": null,
               "_Path__cubes": [
@@ -1304,7 +1227,7 @@
                       "py/id": 17
                     },
                     {
-                      "py/id": 92
+                      "py/id": 87
                     }
                   ]
                 }
@@ -1368,7 +1291,7 @@
                       "py/id": 17
                     },
                     {
-                      "py/id": 42
+                      "py/id": 46
                     }
                   ]
                 },
@@ -1378,7 +1301,7 @@
                       "py/id": 17
                     },
                     {
-                      "py/id": 96
+                      "py/id": 91
                     }
                   ]
                 }
@@ -1410,8 +1333,8 @@
               },
               "_Path__target_position": {
                 "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 0,
-                "y": 1,
+                "x": 1,
+                "y": 2,
                 "z": 0
               },
               "_Path__proposed_cube_beams": null,
@@ -1429,10 +1352,23 @@
                 {
                   "py/tuple": [
                     {
-                      "py/id": 17
+                      "py/id": 35
                     },
                     {
-                      "py/id": 25
+                      "py/id": 18
+                    }
+                  ]
+                },
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 35
+                    },
+                    {
+                      "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
+                      "x": 1,
+                      "y": 1,
+                      "z": 0
                     }
                   ]
                 },
@@ -1442,7 +1378,71 @@
                       "py/id": 17
                     },
                     {
-                      "py/id": 42
+                      "py/id": 95
+                    }
+                  ]
+                }
+              ],
+              "_Path__pipes": [
+                {
+                  "py/id": 13
+                },
+                {
+                  "py/id": 13
+                },
+                {
+                  "py/id": 13
+                }
+              ],
+              "_Path__cube_ids": null,
+              "_Path__cube_beams": null,
+              "_Path__total_beams_interrupted": null
+            },
+            {
+              "py/object": "topologiq.dzw.utils.path.Path",
+              "_Path__source_cube": 4,
+              "_Path__target_cube": -1,
+              "_Path__edge_type": {
+                "py/id": 13
+              },
+              "_Path__target_kind": {
+                "py/id": 17
+              },
+              "_Path__target_position": {
+                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
+                "x": 1,
+                "y": 0,
+                "z": 0
+              },
+              "_Path__proposed_cube_beams": null,
+              "_Path__cubes": [
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 17
+                    },
+                    {
+                      "py/id": 20
+                    }
+                  ]
+                },
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 35
+                    },
+                    {
+                      "py/id": 18
+                    }
+                  ]
+                },
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 35
+                    },
+                    {
+                      "py/id": 97
                     }
                   ]
                 },
@@ -1484,305 +1484,9 @@
               },
               "_Path__target_position": {
                 "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 0,
-                "y": 2,
-                "z": 1
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 39
-                    },
-                    {
-                      "py/id": 42
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 104
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 0,
-                "y": 1,
-                "z": 2
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 46
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 108
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 0,
-                "y": 0,
-                "z": 3
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 46
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 112
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 0,
-                "y": 0,
-                "z": 3
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 46
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 116
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
                 "x": 1,
                 "y": 0,
-                "z": 2
+                "z": 0
               },
               "_Path__proposed_cube_beams": null,
               "_Path__cubes": [
@@ -1825,7 +1529,7 @@
                       "py/id": 17
                     },
                     {
-                      "py/id": 120
+                      "py/id": 104
                     }
                   ]
                 }
@@ -1857,257 +1561,9 @@
               },
               "_Path__target_position": {
                 "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 1,
+                "x": 0,
                 "y": 0,
-                "z": 0
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 122
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 125
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 0,
-                "y": 2,
-                "z": 0
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 42
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 67
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 129
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 0,
-                "y": 2,
-                "z": 0
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 42
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 67
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 133
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 0,
-                "y": 1,
-                "z": 1
+                "z": 3
               },
               "_Path__proposed_cube_beams": null,
               "_Path__cubes": [
@@ -2147,25 +1603,12 @@
                       "py/id": 17
                     },
                     {
-                      "py/id": 108
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 137
+                      "py/id": 109
                     }
                   ]
                 }
               ],
               "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
                 {
                   "py/id": 13
                 },
@@ -2193,8 +1636,8 @@
               "_Path__target_position": {
                 "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
                 "x": 0,
-                "y": 2,
-                "z": 0
+                "y": 0,
+                "z": 3
               },
               "_Path__proposed_cube_beams": null,
               "_Path__cubes": [
@@ -2221,10 +1664,10 @@
                 {
                   "py/tuple": [
                     {
-                      "py/id": 17
+                      "py/id": 52
                     },
                     {
-                      "py/id": 42
+                      "py/id": 46
                     }
                   ]
                 },
@@ -2234,17 +1677,7 @@
                       "py/id": 17
                     },
                     {
-                      "py/id": 75
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 141
+                      "py/id": 113
                     }
                   ]
                 }
@@ -2253,6 +1686,77 @@
                 {
                   "py/id": 13
                 },
+                {
+                  "py/id": 13
+                },
+                {
+                  "py/id": 13
+                }
+              ],
+              "_Path__cube_ids": null,
+              "_Path__cube_beams": null,
+              "_Path__total_beams_interrupted": null
+            },
+            {
+              "py/object": "topologiq.dzw.utils.path.Path",
+              "_Path__source_cube": 4,
+              "_Path__target_cube": -1,
+              "_Path__edge_type": {
+                "py/id": 13
+              },
+              "_Path__target_kind": {
+                "py/id": 17
+              },
+              "_Path__target_position": {
+                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
+                "x": 1,
+                "y": 0,
+                "z": 2
+              },
+              "_Path__proposed_cube_beams": null,
+              "_Path__cubes": [
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 17
+                    },
+                    {
+                      "py/id": 20
+                    }
+                  ]
+                },
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 52
+                    },
+                    {
+                      "py/id": 25
+                    }
+                  ]
+                },
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 52
+                    },
+                    {
+                      "py/id": 106
+                    }
+                  ]
+                },
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 17
+                    },
+                    {
+                      "py/id": 117
+                    }
+                  ]
+                }
+              ],
+              "_Path__pipes": [
                 {
                   "py/id": 13
                 },
@@ -2311,7 +1815,7 @@
                       "py/id": 52
                     },
                     {
-                      "py/id": 33
+                      "py/id": 38
                     }
                   ]
                 },
@@ -2334,7 +1838,181 @@
                       "py/id": 17
                     },
                     {
-                      "py/id": 145
+                      "py/id": 121
+                    }
+                  ]
+                }
+              ],
+              "_Path__pipes": [
+                {
+                  "py/id": 13
+                },
+                {
+                  "py/id": 13
+                },
+                {
+                  "py/id": 13
+                },
+                {
+                  "py/id": 13
+                }
+              ],
+              "_Path__cube_ids": null,
+              "_Path__cube_beams": null,
+              "_Path__total_beams_interrupted": null
+            },
+            {
+              "py/object": "topologiq.dzw.utils.path.Path",
+              "_Path__source_cube": 4,
+              "_Path__target_cube": -1,
+              "_Path__edge_type": {
+                "py/id": 13
+              },
+              "_Path__target_kind": {
+                "py/id": 17
+              },
+              "_Path__target_position": {
+                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
+                "x": 1,
+                "y": 1,
+                "z": 0
+              },
+              "_Path__proposed_cube_beams": null,
+              "_Path__cubes": [
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 17
+                    },
+                    {
+                      "py/id": 20
+                    }
+                  ]
+                },
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 52
+                    },
+                    {
+                      "py/id": 25
+                    }
+                  ]
+                },
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 52
+                    },
+                    {
+                      "py/id": 106
+                    }
+                  ]
+                },
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 17
+                    },
+                    {
+                      "py/id": 104
+                    }
+                  ]
+                },
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 17
+                    },
+                    {
+                      "py/id": 126
+                    }
+                  ]
+                }
+              ],
+              "_Path__pipes": [
+                {
+                  "py/id": 13
+                },
+                {
+                  "py/id": 13
+                },
+                {
+                  "py/id": 13
+                },
+                {
+                  "py/id": 13
+                }
+              ],
+              "_Path__cube_ids": null,
+              "_Path__cube_beams": null,
+              "_Path__total_beams_interrupted": null
+            },
+            {
+              "py/object": "topologiq.dzw.utils.path.Path",
+              "_Path__source_cube": 4,
+              "_Path__target_cube": -1,
+              "_Path__edge_type": {
+                "py/id": 13
+              },
+              "_Path__target_kind": {
+                "py/id": 17
+              },
+              "_Path__target_position": {
+                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
+                "x": 1,
+                "y": 1,
+                "z": 0
+              },
+              "_Path__proposed_cube_beams": null,
+              "_Path__cubes": [
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 17
+                    },
+                    {
+                      "py/id": 20
+                    }
+                  ]
+                },
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 52
+                    },
+                    {
+                      "py/id": 25
+                    }
+                  ]
+                },
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 52
+                    },
+                    {
+                      "py/id": 106
+                    }
+                  ]
+                },
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 17
+                    },
+                    {
+                      "py/id": 104
+                    }
+                  ]
+                },
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 17
+                    },
+                    {
+                      "py/id": 130
                     }
                   ]
                 }
@@ -2388,7 +2066,7 @@
                 {
                   "py/tuple": [
                     {
-                      "py/id": 39
+                      "py/id": 35
                     },
                     {
                       "py/id": 18
@@ -2410,14 +2088,14 @@
                       ]
                     },
                     {
-                      "py/id": 85
+                      "py/id": 97
                     }
                   ]
                 },
                 {
                   "py/tuple": [
                     {
-                      "py/id": 39
+                      "py/id": 35
                     },
                     {
                       "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
@@ -2433,271 +2111,7 @@
                       "py/id": 17
                     },
                     {
-                      "py/id": 150
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 1,
-                "y": 1,
-                "z": 0
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 122
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 125
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 156
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 1,
-                "y": 0,
-                "z": 1
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 39
-                    },
-                    {
-                      "py/id": 42
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 39
-                    },
-                    {
-                      "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                      "x": 1,
-                      "y": 1,
-                      "z": 1
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 160
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 0,
-                "y": 1,
-                "z": 1
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 46
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 108
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 165
+                      "py/id": 134
                     }
                   ]
                 }
@@ -2773,7 +2187,7 @@
                       ]
                     },
                     {
-                      "py/id": 122
+                      "py/id": 106
                     }
                   ]
                 },
@@ -2796,7 +2210,97 @@
                       "py/id": 17
                     },
                     {
-                      "py/id": 169
+                      "py/id": 140
+                    }
+                  ]
+                }
+              ],
+              "_Path__pipes": [
+                {
+                  "py/id": 13
+                },
+                {
+                  "py/id": 13
+                },
+                {
+                  "py/id": 13
+                },
+                {
+                  "py/id": 13
+                }
+              ],
+              "_Path__cube_ids": null,
+              "_Path__cube_beams": null,
+              "_Path__total_beams_interrupted": null
+            },
+            {
+              "py/object": "topologiq.dzw.utils.path.Path",
+              "_Path__source_cube": 4,
+              "_Path__target_cube": -1,
+              "_Path__edge_type": {
+                "py/id": 13
+              },
+              "_Path__target_kind": {
+                "py/id": 17
+              },
+              "_Path__target_position": {
+                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
+                "x": 1,
+                "y": 0,
+                "z": 1
+              },
+              "_Path__proposed_cube_beams": null,
+              "_Path__cubes": [
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 17
+                    },
+                    {
+                      "py/id": 20
+                    }
+                  ]
+                },
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 17
+                    },
+                    {
+                      "py/id": 25
+                    }
+                  ]
+                },
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 35
+                    },
+                    {
+                      "py/id": 42
+                    }
+                  ]
+                },
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 35
+                    },
+                    {
+                      "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
+                      "x": 1,
+                      "y": 1,
+                      "z": 1
+                    }
+                  ]
+                },
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 17
+                    },
+                    {
+                      "py/id": 146
                     }
                   ]
                 }
@@ -2833,7 +2337,7 @@
                 "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
                 "x": 1,
                 "y": 1,
-                "z": 0
+                "z": 1
               },
               "_Path__proposed_cube_beams": null,
               "_Path__cubes": [
@@ -2863,7 +2367,7 @@
                       "py/id": 52
                     },
                     {
-                      "py/id": 122
+                      "py/id": 106
                     }
                   ]
                 },
@@ -2873,7 +2377,7 @@
                       "py/id": 17
                     },
                     {
-                      "py/id": 125
+                      "py/id": 104
                     }
                   ]
                 },
@@ -2883,54 +2387,7 @@
                       "py/id": 17
                     },
                     {
-                      "py/id": 175
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 0,
-                "y": 3,
-                "z": 0
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
+                      "py/id": 126
                     }
                   ]
                 },
@@ -2940,47 +2397,7 @@
                       "py/id": 17
                     },
                     {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 42
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 67
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 129
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 179
+                      "py/id": 151
                     }
                   ]
                 }
@@ -3018,7 +2435,107 @@
               },
               "_Path__target_position": {
                 "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 0,
+                "x": 1,
+                "y": 1,
+                "z": 1
+              },
+              "_Path__proposed_cube_beams": null,
+              "_Path__cubes": [
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 17
+                    },
+                    {
+                      "py/id": 20
+                    }
+                  ]
+                },
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 52
+                    },
+                    {
+                      "py/id": 25
+                    }
+                  ]
+                },
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 52
+                    },
+                    {
+                      "py/id": 106
+                    }
+                  ]
+                },
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 17
+                    },
+                    {
+                      "py/id": 104
+                    }
+                  ]
+                },
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 17
+                    },
+                    {
+                      "py/id": 126
+                    }
+                  ]
+                },
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 17
+                    },
+                    {
+                      "py/id": 155
+                    }
+                  ]
+                }
+              ],
+              "_Path__pipes": [
+                {
+                  "py/id": 13
+                },
+                {
+                  "py/id": 13
+                },
+                {
+                  "py/id": 13
+                },
+                {
+                  "py/id": 13
+                },
+                {
+                  "py/id": 13
+                }
+              ],
+              "_Path__cube_ids": null,
+              "_Path__cube_beams": null,
+              "_Path__total_beams_interrupted": null
+            },
+            {
+              "py/object": "topologiq.dzw.utils.path.Path",
+              "_Path__source_cube": 4,
+              "_Path__target_cube": -1,
+              "_Path__edge_type": {
+                "py/id": 13
+              },
+              "_Path__target_kind": {
+                "py/id": 17
+              },
+              "_Path__target_position": {
+                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
+                "x": 2,
                 "y": 1,
                 "z": 0
               },
@@ -3037,7 +2554,7 @@
                 {
                   "py/tuple": [
                     {
-                      "py/id": 17
+                      "py/id": 52
                     },
                     {
                       "py/id": 25
@@ -3047,10 +2564,20 @@
                 {
                   "py/tuple": [
                     {
-                      "py/id": 17
+                      "py/id": 142
                     },
                     {
-                      "py/id": 42
+                      "py/id": 106
+                    }
+                  ]
+                },
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 52
+                    },
+                    {
+                      "py/id": 143
                     }
                   ]
                 },
@@ -3060,7 +2587,7 @@
                       "py/id": 17
                     },
                     {
-                      "py/id": 67
+                      "py/id": 140
                     }
                   ]
                 },
@@ -3070,17 +2597,7 @@
                       "py/id": 17
                     },
                     {
-                      "py/id": 129
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 183
+                      "py/id": 159
                     }
                   ]
                 }
@@ -3118,8 +2635,8 @@
               },
               "_Path__target_position": {
                 "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 0,
-                "y": 3,
+                "x": 2,
+                "y": 1,
                 "z": 0
               },
               "_Path__proposed_cube_beams": null,
@@ -3137,7 +2654,7 @@
                 {
                   "py/tuple": [
                     {
-                      "py/id": 39
+                      "py/id": 35
                     },
                     {
                       "py/id": 18
@@ -3147,32 +2664,32 @@
                 {
                   "py/tuple": [
                     {
-                      "py/id": 39
+                      "py/id": 35
                     },
                     {
-                      "py/id": 85
+                      "py/id": 97
                     }
                   ]
                 },
                 {
                   "py/tuple": [
                     {
-                      "py/id": 39
+                      "py/id": 35
                     },
                     {
-                      "py/id": 83
+                      "py/id": 100
                     }
                   ]
                 },
                 {
                   "py/tuple": [
                     {
-                      "py/id": 39
+                      "py/id": 35
                     },
                     {
                       "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                      "x": 0,
-                      "y": 2,
+                      "x": 2,
+                      "y": 0,
                       "z": 0
                     }
                   ]
@@ -3183,813 +2700,7 @@
                       "py/id": 17
                     },
                     {
-                      "py/id": 187
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 0,
-                "y": 2,
-                "z": 1
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 46
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 108
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 137
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 192
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 0,
-                "y": 1,
-                "z": 0
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 46
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 108
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 137
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 196
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 0,
-                "y": 1,
-                "z": 2
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 171
-                    },
-                    {
-                      "py/id": 122
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 171
-                    },
-                    {
-                      "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                      "x": 1,
-                      "y": 1,
-                      "z": 1
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                      "x": 0,
-                      "y": 1,
-                      "z": 1
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 200
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 0,
-                "y": 1,
-                "z": 0
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 171
-                    },
-                    {
-                      "py/id": 122
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 171
-                    },
-                    {
-                      "py/id": 202
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 203
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 206
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 0,
-                "y": 1,
-                "z": 2
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 171
-                    },
-                    {
-                      "py/id": 122
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 171
-                    },
-                    {
-                      "py/id": 202
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 203
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 210
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 0,
-                "y": 1,
-                "z": 0
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 171
-                    },
-                    {
-                      "py/id": 122
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 171
-                    },
-                    {
-                      "py/id": 202
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 203
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 214
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 1,
-                "y": 2,
-                "z": 0
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 122
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 125
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 156
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 218
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 1,
-                "y": 1,
-                "z": 1
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 122
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 125
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 156
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 222
+                      "py/id": 163
                     }
                   ]
                 }
@@ -4046,107 +2757,7 @@
                 {
                   "py/tuple": [
                     {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 171
-                    },
-                    {
-                      "py/id": 122
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 172
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 169
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 226
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 2,
-                "y": 1,
-                "z": 0
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 39
+                      "py/id": 35
                     },
                     {
                       "py/id": 18
@@ -4156,113 +2767,30 @@
                 {
                   "py/tuple": [
                     {
-                      "py/id": 39
+                      "py/id": 35
                     },
                     {
-                      "py/id": 85
+                      "py/id": 97
                     }
                   ]
                 },
                 {
                   "py/tuple": [
                     {
-                      "py/id": 39
+                      "py/id": 35
                     },
                     {
-                      "py/id": 88
+                      "py/id": 100
                     }
                   ]
                 },
                 {
                   "py/tuple": [
                     {
-                      "py/id": 39
+                      "py/id": 35
                     },
                     {
-                      "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                      "x": 2,
-                      "y": 0,
-                      "z": 0
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 230
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 1,
-                "y": 2,
-                "z": 0
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 122
+                      "py/id": 165
                     }
                   ]
                 },
@@ -4272,630 +2800,7 @@
                       "py/id": 17
                     },
                     {
-                      "py/id": 125
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 156
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 235
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 1,
-                "y": 1,
-                "z": 1
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 122
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 125
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 156
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 239
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 1,
-                "y": 2,
-                "z": 0
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 122
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 125
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 39
-                    },
-                    {
-                      "py/id": 156
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 243
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 2,
-                "y": 1,
-                "z": 0
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 39
-                    },
-                    {
-                      "py/id": 18
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 39
-                    },
-                    {
-                      "py/id": 85
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 39
-                    },
-                    {
-                      "py/id": 88
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 39
-                    },
-                    {
-                      "py/id": 232
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 247
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 1,
-                "y": 0,
-                "z": 2
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 39
-                    },
-                    {
-                      "py/id": 42
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 39
-                    },
-                    {
-                      "py/id": 162
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 160
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 251
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 1,
-                "y": 0,
-                "z": 0
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 39
-                    },
-                    {
-                      "py/id": 42
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 39
-                    },
-                    {
-                      "py/id": 162
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 160
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 255
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 0,
-                "y": 0,
-                "z": 3
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 122
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 120
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                      "x": 0,
-                      "y": 0,
-                      "z": 2
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 259
+                      "py/id": 168
                     }
                   ]
                 }
@@ -4962,10 +2867,10 @@
                 {
                   "py/tuple": [
                     {
-                      "py/id": 171
+                      "py/id": 142
                     },
                     {
-                      "py/id": 122
+                      "py/id": 106
                     }
                   ]
                 },
@@ -4973,19 +2878,122 @@
                   "py/tuple": [
                     {
                       "py/id": 52
+                    },
+                    {
+                      "py/id": 143
+                    }
+                  ]
+                },
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 17
+                    },
+                    {
+                      "py/id": 140
+                    }
+                  ]
+                },
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 17
                     },
                     {
                       "py/id": 172
                     }
                   ]
+                }
+              ],
+              "_Path__pipes": [
+                {
+                  "py/id": 13
                 },
+                {
+                  "py/id": 13
+                },
+                {
+                  "py/id": 13
+                },
+                {
+                  "py/id": 13
+                },
+                {
+                  "py/id": 13
+                }
+              ],
+              "_Path__cube_ids": null,
+              "_Path__cube_beams": null,
+              "_Path__total_beams_interrupted": null
+            },
+            {
+              "py/object": "topologiq.dzw.utils.path.Path",
+              "_Path__source_cube": 4,
+              "_Path__target_cube": -1,
+              "_Path__edge_type": {
+                "py/id": 13
+              },
+              "_Path__target_kind": {
+                "py/id": 17
+              },
+              "_Path__target_position": {
+                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
+                "x": 2,
+                "y": 0,
+                "z": 1
+              },
+              "_Path__proposed_cube_beams": null,
+              "_Path__cubes": [
                 {
                   "py/tuple": [
                     {
                       "py/id": 17
                     },
                     {
-                      "py/id": 169
+                      "py/id": 20
+                    }
+                  ]
+                },
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 52
+                    },
+                    {
+                      "py/id": 25
+                    }
+                  ]
+                },
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 52
+                    },
+                    {
+                      "py/id": 106
+                    }
+                  ]
+                },
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 52
+                    },
+                    {
+                      "py/id": 104
+                    }
+                  ]
+                },
+                {
+                  "py/tuple": [
+                    {
+                      "py/id": 52
+                    },
+                    {
+                      "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
+                      "x": 2,
+                      "y": 0,
+                      "z": 0
                     }
                   ]
                 },
@@ -4995,7 +3003,7 @@
                       "py/id": 17
                     },
                     {
-                      "py/id": 264
+                      "py/id": 176
                     }
                   ]
                 }
@@ -5065,7 +3073,7 @@
                       "py/id": 52
                     },
                     {
-                      "py/id": 122
+                      "py/id": 106
                     }
                   ]
                 },
@@ -5075,7 +3083,7 @@
                       "py/id": 52
                     },
                     {
-                      "py/id": 125
+                      "py/id": 104
                     }
                   ]
                 },
@@ -5085,10 +3093,7 @@
                       "py/id": 52
                     },
                     {
-                      "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                      "x": 2,
-                      "y": 0,
-                      "z": 0
+                      "py/id": 178
                     }
                   ]
                 },
@@ -5098,1329 +3103,12 @@
                       "py/id": 17
                     },
                     {
-                      "py/id": 268
+                      "py/id": 181
                     }
                   ]
                 }
               ],
               "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 2,
-                "y": 0,
-                "z": 1
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 122
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 125
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 270
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 273
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 0,
-                "y": 2,
-                "z": 0
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 39
-                    },
-                    {
-                      "py/id": 42
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 152
-                    },
-                    {
-                      "py/id": 162
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 152
-                    },
-                    {
-                      "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                      "x": 1,
-                      "y": 1,
-                      "z": 0
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 39
-                    },
-                    {
-                      "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                      "x": 0,
-                      "y": 1,
-                      "z": 0
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 277
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 0,
-                "y": 2,
-                "z": 0
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 39
-                    },
-                    {
-                      "py/id": 42
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 152
-                    },
-                    {
-                      "py/id": 162
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 152
-                    },
-                    {
-                      "py/id": 279
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 39
-                    },
-                    {
-                      "py/id": 280
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 283
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 0,
-                "y": 2,
-                "z": 1
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 42
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 75
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 171
-                    },
-                    {
-                      "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                      "x": 1,
-                      "y": 1,
-                      "z": 0
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 171
-                    },
-                    {
-                      "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                      "x": 1,
-                      "y": 2,
-                      "z": 0
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                      "x": 0,
-                      "y": 2,
-                      "z": 0
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 287
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 1,
-                "y": 1,
-                "z": 1
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 122
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 125
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 171
-                    },
-                    {
-                      "py/id": 270
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 171
-                    },
-                    {
-                      "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                      "x": 2,
-                      "y": 1,
-                      "z": 0
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                      "x": 1,
-                      "y": 1,
-                      "z": 0
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 294
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 1,
-                "y": 2,
-                "z": 0
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 171
-                    },
-                    {
-                      "py/id": 122
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 172
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 169
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 39
-                    },
-                    {
-                      "py/id": 226
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 39
-                    },
-                    {
-                      "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                      "x": 1,
-                      "y": 1,
-                      "z": 0
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 300
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 1,
-                "y": 0,
-                "z": 0
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 171
-                    },
-                    {
-                      "py/id": 122
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 172
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 169
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 39
-                    },
-                    {
-                      "py/id": 226
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 39
-                    },
-                    {
-                      "py/id": 302
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 305
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 0,
-                "y": 1,
-                "z": 1
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 122
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 125
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 171
-                    },
-                    {
-                      "py/id": 270
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 171
-                    },
-                    {
-                      "py/id": 296
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 171
-                    },
-                    {
-                      "py/id": 297
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                      "x": 0,
-                      "y": 1,
-                      "z": 0
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 309
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 1,
-                "y": 1,
-                "z": 0
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 39
-                    },
-                    {
-                      "py/id": 42
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 39
-                    },
-                    {
-                      "py/id": 162
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 39
-                    },
-                    {
-                      "py/id": 160
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 152
-                    },
-                    {
-                      "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                      "x": 2,
-                      "y": 0,
-                      "z": 1
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 152
-                    },
-                    {
-                      "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                      "x": 2,
-                      "y": 0,
-                      "z": 0
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 39
-                    },
-                    {
-                      "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                      "x": 1,
-                      "y": 0,
-                      "z": 0
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 314
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                }
-              ],
-              "_Path__cube_ids": null,
-              "_Path__cube_beams": null,
-              "_Path__total_beams_interrupted": null
-            },
-            {
-              "py/object": "topologiq.dzw.utils.path.Path",
-              "_Path__source_cube": 4,
-              "_Path__target_cube": -1,
-              "_Path__edge_type": {
-                "py/id": 13
-              },
-              "_Path__target_kind": {
-                "py/id": 17
-              },
-              "_Path__target_position": {
-                "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                "x": 0,
-                "y": 1,
-                "z": 2
-              },
-              "_Path__proposed_cube_beams": null,
-              "_Path__cubes": [
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 20
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 25
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 42
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 52
-                    },
-                    {
-                      "py/id": 75
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 171
-                    },
-                    {
-                      "py/id": 289
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/reduce": [
-                        {
-                          "py/type": "topologiq.dzw.utils.components_bg.CubeKind"
-                        },
-                        {
-                          "py/tuple": [
-                            4
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                      "x": 1,
-                      "y": 0,
-                      "z": 0
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 152
-                    },
-                    {
-                      "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                      "x": 1,
-                      "y": 0,
-                      "z": 1
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 152
-                    },
-                    {
-                      "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                      "x": 1,
-                      "y": 0,
-                      "z": 2
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 39
-                    },
-                    {
-                      "py/object": "topologiq.dzw.utils.coordinates.Coordinates",
-                      "x": 0,
-                      "y": 0,
-                      "z": 2
-                    }
-                  ]
-                },
-                {
-                  "py/tuple": [
-                    {
-                      "py/id": 17
-                    },
-                    {
-                      "py/id": 321
-                    }
-                  ]
-                }
-              ],
-              "_Path__pipes": [
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
-                {
-                  "py/id": 13
-                },
                 {
                   "py/id": 13
                 },
@@ -6457,7 +3145,7 @@
       },
       "json://3": {
         "json://2": {
-          "py/id": 330
+          "py/id": 185
         }
       }
     },
@@ -6520,7 +3208,7 @@
       },
       "json://5": {
         "json://4": {
-          "py/id": 343
+          "py/id": 198
         }
       }
     },
@@ -6529,7 +3217,7 @@
       "py/object": "networkx.classes.reportviews.NodeView",
       "py/state": {
         "_nodes": {
-          "py/id": 338
+          "py/id": 193
         }
       }
     }

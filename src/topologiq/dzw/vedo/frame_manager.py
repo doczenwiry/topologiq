@@ -7,7 +7,7 @@ console = getLogger(__name__)
 
 FrameIndex = int
 
-class CumulativeFrameManager:
+class FrameManager:
     def __init__(self, plotter: Plotter):
         self.__plotter = plotter
         self.__frames: list[list[list[Mesh]]] = []
@@ -67,6 +67,7 @@ class CumulativeFrameManager:
         console.debug(f"> Frame {self.__frame_index + 1}/{len(self.__frames)} {subframe_notice}")
 
     def __move_frame_forward(self, count: int = 1):
+        self.__reset_subframe()
         frame_count = min(count, self.__frame_count - self.__frame_index - 1)
         console.debug(f"> Forward frame : {frame_count}")
         for frame in range(1, frame_count + 1):
@@ -74,6 +75,7 @@ class CumulativeFrameManager:
         self.__frame_index += frame_count
 
     def __move_frame_backward(self, count: int = 1):
+        self.__reset_subframe()
         frame_count = min(count, self.__frame_index)
         console.debug(f"> Backward frame : {frame_count}")
         for frame in range(frame_count):

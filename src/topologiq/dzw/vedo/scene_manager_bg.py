@@ -2,7 +2,7 @@ from vedo.plotter.runtime import Plotter
 
 from topologiq.dzw.utils.components_zx import EdgeType
 from topologiq.dzw.utils.path import Path
-from topologiq.dzw.vedo.frame_manager_cumulative import CumulativeFrameManager
+from topologiq.dzw.vedo.frame_manager import FrameManager
 
 from topologiq.dzw.utils.components_bg import CubeId
 from topologiq.dzw.utils.augmented_nx_graph import AugmentedNxGraph
@@ -19,8 +19,11 @@ class BgSceneManager:
         self.__cubes = dict()
         self.__pipes = dict()
 
+        self.__alternative_cubes = dict()
+        self.__alternative_pipes = dict()
+
         # Prepare all the components for the BG viewport (i.e. cubes and pipes)
-        self.__frame_manager = CumulativeFrameManager(self.__plotter)
+        self.__frame_manager = FrameManager(self.__plotter)
 
         for cube in nx_graph.get_cubes():
             node = self.__nx_graph.get_node(cube)
@@ -74,11 +77,20 @@ class BgSceneManager:
                 # Add alternative paths to subsequent subframes
                 for alternative in self.__nx_graph.get_edge_alternatives(source, target):
                     current_subframe = self.__frame_manager.create_next_subframe(current_frame)
+                    previous_cube = alternative.get_source_cube()
                     previous_kind, previous_position = alternative.get_cubes()[0]
                     for alternative_kind, alternative_position in alternative.get_cubes()[1:]:
-                        alternative_bg_cube = BgCube(alternative_kind, alternative_position)
-                        alternative_pipe = BgPipe(previous_kind, previous_position, alternative_kind, alternative_position, EdgeType.IDENTITY)
-                        self.__frame_manager.add_to_frame(current_frame, alternative_pipe, subframe_index = current_subframe)
+                        alternative_cube = len(self.__cubes) + len(self.__alternative_cubes)
+                        alternative_bg_cube = BgCube(alternative_kind, alternative_position, cube = alternative_cube)
+                        self.__alternative_cubes[alternative_cube] = alternative_bg_cube
+                        pipe = tuple(sorted((source, target)))
+                        alternative_bg_pipe = BgPipe(
+                            previous_kind, previous_position,
+                            alternative_kind, alternative_position,
+                            EdgeType.IDENTITY, source = previous_cube, target = alternative_cube
+                        )
+                        self.__alternative_pipes[pipe] = alternative_bg_pipe
+                        self.__frame_manager.add_to_frame(current_frame, alternative_bg_pipe, subframe_index = current_subframe)
                         self.__frame_manager.add_to_frame(current_frame, alternative_bg_cube, subframe_index = current_subframe)
                         previous_kind = alternative_kind
                         previous_position = alternative_position
