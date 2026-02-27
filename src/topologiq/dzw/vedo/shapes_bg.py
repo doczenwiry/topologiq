@@ -63,13 +63,13 @@ class BgCube(Assembly):
 
         self.__highlighted = False
 
-    def show_highlight(self):
-        self.__cube.linecolor('k5')
-        self.__cube.linewidth(6)
-
-    def hide_highlight(self):
-        self.__cube.linecolor('k')
-        self.__cube.linewidth(3)
+    def alter_appearance(self, highlight: bool = False):
+        if highlight:
+            self.__cube.linecolor('k5')
+            self.__cube.linewidth(6)
+        else:
+            self.__cube.linecolor('k')
+            self.__cube.linewidth(3)
 
     def __repr__(self):
         return str(self)
@@ -138,13 +138,13 @@ class BgPipe(Assembly):
 
         self.__highlighted = False
 
-    def show_highlight(self):
-        self.__pipe.linecolor('k5')
-        self.__pipe.linewidth(6)
-
-    def hide_highlight(self):
-        self.__pipe.linecolor('k')
-        self.__pipe.linewidth(3)
+    def alter_appearance(self, highlight: bool = False):
+        if highlight:
+            self.__pipe.linecolor('k5')
+            self.__pipe.linewidth(6)
+        else:
+            self.__pipe.linecolor('k')
+            self.__pipe.linewidth(3)
 
     def __repr__(self):
         return str(self)

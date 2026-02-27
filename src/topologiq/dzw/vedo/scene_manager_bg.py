@@ -80,6 +80,13 @@ class BgSceneManager:
         console.info(f"> {len(self.__cubes)} cubes, {len(self.__pipes)} pipes.")
         console.debug(f"> Actors : {self.__plotter.actors}")
         self.__frame_manager.log_frame_report()
+        self.__reset_camera()
+
+    def __reset_camera(self):
+        # Initialise the camera for the BG Graph
+        self.__plotter.camera.SetPosition(22, 14, 15)
+        self.__plotter.camera.SetFocalPoint(0, 0, 0)
+        self.__plotter.camera.SetViewUp(0, 0, 1)
 
     # def __make_subframes(self, source: CubeId, target: CubeId):
     #     subframes = []
@@ -105,19 +112,12 @@ class BgSceneManager:
     #             subframes.append(current_subframe)
     #     return subframes
 
-    def show_cube_highlight(self, cube: CubeId):
-        self.__cubes[ cube ].show_highlight()
+    def alter_cube_appearance(self, cube: CubeId, highlight: bool = False):
+        self.__cubes[cube].alter_appearance(highlight = highlight)
 
-    def hide_cube_highlight(self, cube: CubeId):
-        self.__cubes[ cube ].hide_highlight()
-
-    def show_pipe_highlight(self, source: CubeId, target: CubeId):
+    def alter_pipe_appearance(self, source: CubeId, target: CubeId, highlight: bool = False):
         pipe = tuple(sorted((source, target)))
-        self.__pipes[ pipe ].show_highlight()
-
-    def hide_pipe_highlight(self, source: CubeId, target: CubeId):
-        pipe = tuple(sorted((source, target)))
-        self.__pipes[ pipe ].hide_highlight()
+        self.__pipes[pipe].alter_appearance(highlight = highlight)
 
     def on_key_press(self, event):
         if   event.keypress == "Left":
@@ -128,10 +128,6 @@ class BgSceneManager:
             self.__frame_manager.set_current_frame(0)
         elif event.keypress == "End":
             self.__frame_manager.set_current_frame(self.__frame_manager.get_frame_count() - 1)
-        # elif event.keypress == "Up":
-        #     self.__frame_manager.move_subframe_forward()
-        # elif event.keypress == "Down":
-        #     self.__frame_manager.move_subframe_backward()
         actors = f"[{len(self.__plotter.actors)}]"
         console.debug(f"> Managed elements : {actors}")
 

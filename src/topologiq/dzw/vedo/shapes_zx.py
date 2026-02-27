@@ -32,18 +32,12 @@ class ZxNode(Assembly):
 
         super().__init__( [ self.__background, self.__disc, self.__disc_highlight, self.__text ] )
 
-        self.__highlighted = False
-        self.__disc_highlight.alpha(0.0)
+        # self.__highlighted = False
+        self.alter_appearance(highlight = False)
 
-    def toggle_highlight(self):
-        self.__highlighted = not self.__highlighted
-        if self.__highlighted:
-            self.__disc_highlight.alpha(1.0)
-        else:
-            self.__disc_highlight.alpha(0.0)
-
-    def show_highlight(self): self.__disc_highlight.alpha(1.0)
-    def hide_highlight(self): self.__disc_highlight.alpha(0.0)
+    def alter_appearance(self, highlight: bool = False):
+        if highlight: self.__disc_highlight.alpha(1.0)
+        else: self.__disc_highlight.alpha(0.0)
 
     def show_label(self): self.__text.alpha(1.0)
     def hide_label(self): self.__text.alpha(0.0)
@@ -81,17 +75,14 @@ class ZxEdge(Assembly):
         measures = [ abs(d) if d != 0 else 1.25 * ZxEdge.DIAMETER for d in distances ]
         self.__background = Box(pos = position.as_tuple(), size = measures, c = 'white')
 
-        self.hide_highlight()
+        self.alter_appearance(highlight = False)
 
         super().__init__( self.__background, self.__edge )
 
-    def show_highlight(self):
-        self.__edge.linecolor('k5')
-        self.__edge.linewidth(6)
-
-    def hide_highlight(self):
-        if self.edge_type == EdgeType.IDENTITY:
-            self.__edge.linecolor('k')
+    def alter_appearance(self, highlight: bool = False):
+        if highlight:
+            self.__edge.linecolor('k5')
+            self.__edge.linewidth(6)
         else:
-            self.__edge.linecolor('y4')
-        self.__edge.linewidth(3)
+            self.__edge.linecolor('k' if self.edge_type == EdgeType.IDENTITY else 'y4')
+            self.__edge.linewidth(3)

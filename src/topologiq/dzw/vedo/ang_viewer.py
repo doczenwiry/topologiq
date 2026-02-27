@@ -31,8 +31,6 @@ class AugmentedNxGraphViewer(Plotter):
         zx_camera.SetParallelProjection(True)
         zx_camera.SetViewUp(0, 1, 0)
 
-        self.__reset_camera()
-
         # Store the original AugmentedNxGraph
         self.__nx_graph = anx
 
@@ -48,114 +46,64 @@ class AugmentedNxGraphViewer(Plotter):
 
         self.__selected_object = None
 
-    def __reset_camera(self):
-        # Initialise the camera for the BG Graph
-        bg_camera = self.at(BG_VIEWPORT).camera
-        bg_camera.SetPosition(22, 14, 15)
-        bg_camera.SetFocalPoint(0, 0, 0)
-        bg_camera.SetViewUp(0, 0, 1)
-
-    def __on_key_pressed(self, event):
-        # Pass the key press to the BG scene manager
-        self.__bg_scene_manager.on_key_press(event)
-        if event.keypress == "Escape":
-            self.__reset_camera()
-
-        # Refresh the BG viewport
-        self.at(BG_VIEWPORT).render()
-
-    def __show_highlight(self, selected_object):
+    def __alter_highlighting(self, selected_object, highlighting: bool = True):
         if isinstance(selected_object, ZxNode):
             # Highlight the zx-node and its corresponding bg-cube
             zx_node = selected_object.zx_node
             bg_cube = self.__nx_graph.get_cube(zx_node)
-            self.__zx_scene_manager.show_node_highlight(zx_node)
-            self.__bg_scene_manager.show_cube_highlight(bg_cube)
+            self.__zx_scene_manager.alter_node_appearance(zx_node, highlight = highlighting)
+            self.__bg_scene_manager.alter_cube_appearance(bg_cube, highlight = highlighting)
         elif isinstance(selected_object, ZxEdge):
-            # Highlight all the pipes of that path
+            # Highlight the edge in the ZX-graph
             zx_source = selected_object.zx_source
             zx_target = selected_object.zx_target
-            self.__zx_scene_manager.show_node_highlight(zx_source)
-            self.__zx_scene_manager.show_node_highlight(zx_target)
-            self.__zx_scene_manager.show_edge_highlight(zx_source, zx_target)
+            self.__zx_scene_manager.alter_node_appearance(zx_source, highlight = highlighting)
+            self.__zx_scene_manager.alter_node_appearance(zx_target, highlight = highlighting)
+            self.__zx_scene_manager.alter_edge_appearance(zx_source, zx_target, highlight = highlighting)
+            # Highlight all the pipes of that path
             bg_source_cube = self.__nx_graph.get_cube(zx_source)
-            self.__bg_scene_manager.show_cube_highlight(bg_source_cube)
+            self.__bg_scene_manager.alter_cube_appearance(bg_source_cube, highlight = highlighting)
             previous_cube = bg_source_cube
             for extra_cube in self.__nx_graph.get_edge_realisation(zx_source, zx_target).get_extra_cubes():
-                self.__bg_scene_manager.show_cube_highlight(extra_cube)
-                self.__bg_scene_manager.show_pipe_highlight(previous_cube, extra_cube)
+                self.__bg_scene_manager.alter_cube_appearance(extra_cube, highlight = highlighting)
+                self.__bg_scene_manager.alter_pipe_appearance(previous_cube, extra_cube, highlight = highlighting)
                 previous_cube = extra_cube
             bg_target_cube = self.__nx_graph.get_cube(zx_target)
-            self.__bg_scene_manager.show_cube_highlight(bg_target_cube)
-            self.__bg_scene_manager.show_pipe_highlight(previous_cube, bg_target_cube)
+            self.__bg_scene_manager.alter_cube_appearance(bg_target_cube, highlight = highlighting)
+            self.__bg_scene_manager.alter_pipe_appearance(previous_cube, bg_target_cube, highlight = highlighting)
         elif isinstance(selected_object, BgCube):
             # Highlight the bg-cube and its corresponding zx-node
             bg_cube = selected_object.bg_cube
             zx_node = self.__nx_graph.get_node(bg_cube)
             if zx_node is not None:
-                self.__zx_scene_manager.show_node_highlight(zx_node)
-            self.__bg_scene_manager.show_cube_highlight(bg_cube)
+                self.__zx_scene_manager.alter_node_appearance(zx_node, highlight = highlighting)
+            self.__bg_scene_manager.alter_cube_appearance(bg_cube, highlight = highlighting)
         elif isinstance(selected_object, BgPipe):
             bg_source_cube = selected_object.bg_source
             bg_target_cube = selected_object.bg_target
-            self.__bg_scene_manager.show_cube_highlight(bg_source_cube)
-            self.__bg_scene_manager.show_cube_highlight(bg_target_cube)
-            self.__bg_scene_manager.show_pipe_highlight(bg_source_cube, bg_target_cube)
+            self.__bg_scene_manager.alter_cube_appearance(bg_source_cube, highlight = highlighting)
+            self.__bg_scene_manager.alter_cube_appearance(bg_target_cube, highlight = highlighting)
+            self.__bg_scene_manager.alter_pipe_appearance(bg_source_cube, bg_target_cube, highlight = highlighting)
             # Show the highlighting for the entire path this pipe belongs to
 
-    def __hide_highlight(self, selected_object):
-        if isinstance(selected_object, ZxNode):
-            zx_node = selected_object.zx_node
-            bg_cube = self.__nx_graph.get_cube(zx_node)
-            self.__zx_scene_manager.hide_node_highlight(zx_node)
-            self.__bg_scene_manager.hide_cube_highlight(bg_cube)
-        elif isinstance(selected_object, ZxEdge):
-            zx_source = selected_object.zx_source
-            zx_target = selected_object.zx_target
-            self.__zx_scene_manager.hide_node_highlight(zx_source)
-            self.__zx_scene_manager.hide_node_highlight(zx_target)
-            self.__zx_scene_manager.hide_edge_highlight(zx_source, zx_target)
-            bg_source_cube = self.__nx_graph.get_cube(zx_source)
-            self.__bg_scene_manager.hide_cube_highlight(bg_source_cube)
-            previous_cube = bg_source_cube
-            for extra_cube in self.__nx_graph.get_edge_realisation(zx_source, zx_target).get_extra_cubes():
-                self.__bg_scene_manager.hide_cube_highlight(extra_cube)
-                self.__bg_scene_manager.hide_pipe_highlight(previous_cube, extra_cube)
-                previous_cube = extra_cube
-            bg_target_cube = self.__nx_graph.get_cube(zx_target)
-            self.__bg_scene_manager.hide_cube_highlight(bg_target_cube)
-            self.__bg_scene_manager.hide_pipe_highlight(previous_cube, bg_target_cube)
-        elif isinstance(selected_object, BgCube):
-            bg_cube = selected_object.bg_cube
-            zx_node = self.__nx_graph.get_node(bg_cube)
-            self.__bg_scene_manager.hide_cube_highlight(bg_cube)
-            if zx_node is not None:
-                self.__zx_scene_manager.hide_node_highlight(zx_node)
-            else:
-                # Hide the highlighting for the entire path this cube belongs to
-                pass
-        elif isinstance(selected_object, BgPipe):
-            bg_source_cube = selected_object.bg_source
-            bg_target_cube = selected_object.bg_target
-            self.__bg_scene_manager.hide_pipe_highlight(bg_source_cube, bg_target_cube)
-            self.__bg_scene_manager.hide_cube_highlight(bg_source_cube)
-            self.__bg_scene_manager.hide_cube_highlight(bg_target_cube)
-            # Hide the highlighting for the entire path this cube belongs to
+    def __on_key_pressed(self, event):
+        # Pass the key press to the BG scene manager
+        self.__bg_scene_manager.on_key_press(event)
 
     def __on_mouse_move(self, event):
         if event.object != self.__selected_object:
             console.debug(f"Entered new object.")
 
             if self.__selected_object is not None:
-                self.__hide_highlight(self.__selected_object)
+                self.__alter_highlighting(self.__selected_object, highlighting = False)
 
             self.__selected_object = event.object
-            self.__show_highlight(self.__selected_object)
+            self.__alter_highlighting(self.__selected_object, highlighting = True)
 
         self.at(ZX_VIEWPORT).render()
         self.at(BG_VIEWPORT).render()
 
     def display(self):
-        self.at(ZX_VIEWPORT).show(resetcam = True)
-        self.at(BG_VIEWPORT).show(resetcam = True)
+        self.at(ZX_VIEWPORT).show()
+        self.at(BG_VIEWPORT).show()
         self.interactive().close()

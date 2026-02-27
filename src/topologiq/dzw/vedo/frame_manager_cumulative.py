@@ -12,7 +12,7 @@ class CumulativeFrameManager:
         self.__plotter = plotter
         self.__frames: list[list[list[Mesh]]] = []
         self.__frame_index = 0
-        self.__frame_count = 0
+        self.__frame_total = 0
         self.__subframe_index = 0
 
     def log_frame_report(self):
@@ -25,9 +25,9 @@ class CumulativeFrameManager:
 
     def create_next_frame(self) -> FrameIndex:
         self.__frames.append( [] )
-        frame_index = self.__frame_count
+        frame_index = self.__frame_total
         self.__frames[frame_index].append([])
-        self.__frame_count += 1
+        self.__frame_total += 1
         return frame_index
 
     def add_to_frame(self, frame_index, mesh: Mesh, subframe_index: int = 0):
@@ -41,9 +41,11 @@ class CumulativeFrameManager:
         return len(self.__frames[frame_index]) - 1
 
     def set_current_frame(self, frame_index: int, subframe_index: int = 0):
-        frame_count = frame_index - self.__frame_index + 1
-        console.debug(f"Last frame #{self.__frame_index} becomes frame #{frame_index+1} [count={frame_count}]")
-        self.move_frame(frame_count)
+        console.debug(f"Setting current frame to #{frame_index}")
+        self.__plotter.clear()
+        for f in range(frame_index + 1):
+            self.__plotter.show(self.__frames[f][0])
+        self.__frame_index = frame_index
 
     def move_frame(self, count: int = 0):
         if count < 0:
@@ -52,15 +54,13 @@ class CumulativeFrameManager:
             self.__move_frame_forward(count)
 
         subframe_notice = f"[SF:{self.__subframe_index + 1}/{len(self.__frames[self.__frame_index - 1])}]"
-
         console.debug(f"> Frame {self.__frame_index + 1}/{len(self.__frames)} {subframe_notice}")
-        # console.debug(f">> #elements = {sum(len(self.__frames[frame_index]) for frame_index in range(self.__frame_index+1) )}")
 
     def __move_frame_forward(self, count: int = 1):
-        frame_count = min(count, self.__frame_count - self.__frame_index)
+        frame_count = min(count, self.__frame_total - self.__frame_index - 1)
         console.debug(f"> Forward frame : {frame_count}")
         for frame in range(frame_count):
-            self.__plotter.show(self.__frames[self.__frame_index + frame][0])
+            self.__plotter.show(self.__frames[self.__frame_index + frame - 1][0])
         self.__frame_index += frame_count
 
     def __move_frame_backward(self, count: int = 1):

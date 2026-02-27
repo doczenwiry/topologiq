@@ -16,7 +16,6 @@ class ZxSceneManager:
         self.__edges = dict()
 
         # Prepare all the elements for the ZX scene (i.e. nodes and edges)
-        # self.elements = []
         for node in self.__nx_graph.get_nodes():
             zx_node = ZxNode(node, self.__nx_graph).z(+0.1)
             self.__nodes[ node ] = zx_node
@@ -30,17 +29,11 @@ class ZxSceneManager:
 
         self.__selected_object = None
 
-    def show_node_highlight(self, node: NodeId):
-        self.__nodes[ node ].show_highlight()
+    def alter_node_appearance(self, node: NodeId, highlight: bool = False):
+        self.__nodes[ node ].alter_appearance(highlight = highlight)
 
-    def hide_node_highlight(self, node: NodeId):
-        self.__nodes[ node ].hide_highlight()
-
-    def show_edge_highlight(self, source: NodeId, target: NodeId):
-        self.__edges[ source, target ].show_highlight()
-
-    def hide_edge_highlight(self, source: NodeId, target: NodeId):
-        self.__edges[ source, target ].hide_highlight()
+    def alter_edge_appearance(self, source: NodeId, target: NodeId, highlight: bool = False):
+        self.__edges[ source , target ].alter_appearance(highlight = highlight)
 
     # def on_left_click(self, event):
     #     if isinstance(event.object, ZxNode):
