@@ -32,6 +32,14 @@ if __name__ == "__main__":
         test2 = beam1.intersected_by(beam2)
         if test1 != test2:
             print(f"{beam1} x {beam2} : {test1} != {test2}")
+            direction_lineup = np.dot(beam1.direction, beam2.direction)
+            sigma = beam2.source - beam1.source
+            position_lineup = np.dot(sigma, beam1.direction)
+            cross = np.linalg.cross(beam1.direction, beam2.direction)
+            delta = np.dot(cross, cross)
+            print(f"> Delta : {delta}, sigma : {sigma}")
+            print(f"> Directions : {direction_lineup}")
+            print(f"> Positions : {position_lineup}")
             count += 1
         cases += 1
     print(f"Erroneous intersections : {count}/{cases}\n")

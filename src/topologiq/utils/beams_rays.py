@@ -37,15 +37,20 @@ class RayBeam:
     # TODO: expand to 3D.
     def intersected_by(self, that):
         cross = np.linalg.cross(self.direction, that.direction)
+
         delta = np.dot(cross, cross)
-
-        if delta == 0:
-            return False
-
         sigma = that.source - self.source
 
-        common = np.linalg.cross(sigma, cross)
+        if delta == 0:
+            # Refine this; return True when sigma and self.direction point in the same way and that.direction
+            direction_lineup = np.dot(self.direction, that.direction)
+            colinear_vector = np.cross(sigma, self.direction)
+            colinear = np.dot(colinear_vector, colinear_vector) == 0
+            position_lineup = np.dot(sigma, self.direction)
+            return colinear and (position_lineup > 0 or np.sign(direction_lineup) != np.sign(position_lineup))
+            # return False
 
+        common = np.linalg.cross(sigma, cross)
 
         t1 = - np.dot(common, self.direction) / delta
         t2 = - np.dot(common, that.direction) / delta
@@ -65,8 +70,7 @@ class RayBeam:
     def intersected_by_array(self, that):
         array1 = self.to_array()
         array2 = that.to_array()
-        return not RayBeam.__colinear(self.source, that.source) and sum(
-            1 for p1 in array1 if any(np.array_equal(p1, p2) for p2 in array2)) == 1
+        return sum(1 for p1 in array1 if any(np.array_equal(p1, p2) for p2 in array2)) > 0
 
     @staticmethod
     def __inner_determinant(v1: Coordinates, v2: Coordinates, v3: Coordinates):
