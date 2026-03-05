@@ -43,8 +43,12 @@ class RayBeam:
             return False
 
         sigma = that.source - self.source
-        t1 = - np.linalg.det(np.column_stack( (sigma, cross, self.direction) )) / delta
-        t2 = - np.linalg.det(np.column_stack( (sigma, cross, that.direction) )) / delta
+
+        common = np.linalg.cross(sigma, cross)
+
+
+        t1 = - np.dot(common, self.direction) / delta
+        t2 = - np.dot(common, that.direction) / delta
         # dt = np.linalg.det(sigma, self.direction, that.direction) / delta
 
         condition = t1 >= 1 and t2 >= 1
