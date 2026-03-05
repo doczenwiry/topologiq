@@ -1,9 +1,8 @@
 import networkx as nx
 
-from topologiq.core.graph_manager.beams_checking_sympy import NX_GRAPH_CUBE_BEAMS
+from topologiq.core.graph_manager.beams_checking import NX_GRAPH_CUBE_BEAMS
 from topologiq.core.pathfinder.utils import get_manhattan
 from topologiq.core.pathfinder.symbolic import check_is_exit, check_unobstructed
-from topologiq.utils.beams_sympy import SympyBeam
 
 from topologiq.utils.classes import StandardCoord, Coordinates, CubeId, CubeList, CubeBeams
 

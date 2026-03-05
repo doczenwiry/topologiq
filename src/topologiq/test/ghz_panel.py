@@ -202,7 +202,7 @@ if __name__ == "__main__":
     print(Colors.BLUE, "\n===> E2E QASM Test Suite. START.", Colors.RESET)
 
     # Circuits
-    n_qubits = [16] # [16, 200]
+    n_qubits = [50] # [16, 200]
 
     # Adjustable parameters
     reduce_input_circuit = True

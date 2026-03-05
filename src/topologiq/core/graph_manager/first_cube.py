@@ -9,7 +9,7 @@ import random
 
 import networkx as nx
 
-from topologiq.core.graph_manager.beams_checking_sympy import NX_GRAPH_CUBE_BEAMS, compute_beams, validate_beams, \
+from topologiq.core.graph_manager.beams_checking import NX_GRAPH_CUBE_BEAMS, compute_beams, validate_beams, \
     validate_all_beams
 from topologiq.core.pathfinder.symbolic import check_exits
 from topologiq.utils.classes import StandardBlock, StandardCoord

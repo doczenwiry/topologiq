@@ -12,7 +12,7 @@ from pathlib import Path
 
 import networkx as nx
 
-from topologiq.core.graph_manager.beams_checking_sympy import NX_GRAPH_CUBE_BEAMS, validate_beams, validate_all_beams
+from topologiq.core.graph_manager.beams_checking import NX_GRAPH_CUBE_BEAMS, validate_beams, validate_all_beams
 from topologiq.core.pathfinder.spatial import get_taken_coords
 from topologiq.input.simple_graphs import check_zx_types, get_zx_type_fam
 from topologiq.utils.classes import (
@@ -385,7 +385,7 @@ def prune_beams(nx_g: nx.Graph, taken: list[StandardCoord]) -> nx.Graph:
         for n_id in nx_g.nodes():
             new_beams = []
             new_beams_short = []
-            new_beams_sympy = []
+            new_beams_fixed = []
             if nx_g.nodes[n_id]["completed"] == []:
                 pass
             elif nx_g.nodes[n_id]["completed"] >= get_node_degree(nx_g, n_id):
@@ -395,7 +395,7 @@ def prune_beams(nx_g: nx.Graph, taken: list[StandardCoord]) -> nx.Graph:
             else:
                 old_beams = nx_g.nodes[n_id]["beams"]
                 old_beams_short = nx_g.nodes[n_id]["beams_short"]
-                old_sympy_beams = nx_g.nodes[n_id][NX_GRAPH_CUBE_BEAMS]
+                old_fixed_beams = nx_g.nodes[n_id][NX_GRAPH_CUBE_BEAMS]
 
                 if old_beams:
                     for single_beam in old_beams:
@@ -409,11 +409,11 @@ def prune_beams(nx_g: nx.Graph, taken: list[StandardCoord]) -> nx.Graph:
                             new_beams_short += [single_beam_short]
                     nx_g.nodes[n_id]["beams_short"] = new_beams_short
 
-                if old_sympy_beams:
-                    for sympy_beam in old_sympy_beams:
-                        if not any([sympy_beam.interrupted_by(Coordinates(coord[0], coord[1], coord[2])) for coord in taken]):
-                            new_beams_sympy += [sympy_beam]
-                    nx_g.nodes[n_id][NX_GRAPH_CUBE_BEAMS] = new_beams_sympy
+                if old_fixed_beams:
+                    for fixed_beam in old_fixed_beams:
+                        if not any([fixed_beam.interrupted_by(Coordinates(coord[0], coord[1], coord[2])) for coord in taken]):
+                            new_beams_fixed += [fixed_beam]
+                    nx_g.nodes[n_id][NX_GRAPH_CUBE_BEAMS] = new_beams_fixed
 
     except (IndexError, ValueError, LookupError, KeyError):
         pass

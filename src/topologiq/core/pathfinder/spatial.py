@@ -8,7 +8,7 @@ Usage:
 import networkx as nx
 #from topologiq.core.pathfinder.beams import check_critical_beams
 from topologiq.core.pathfinder.beams import check_critical_beams
-from topologiq.core.pathfinder.beams_checking_sympy import check_beams_critical_intersections
+from topologiq.core.pathfinder.beams_checking import check_beams_critical_intersections
 from topologiq.utils.classes import CubeBeams, StandardBlock, StandardCoord, Coordinates
 
 
