@@ -7,9 +7,9 @@ Coordinates = np.ndarray
 class RayBeam:
     ORIGIN = np.zeros(3)
 
-    def __init__(self, source: StandardCoord, direction: StandardCoord):
-        self.source = np.array( source )
-        self.direction = np.array( direction )
+    def __init__(self, source: np.ndarray, direction: np.ndarray):
+        self.source = source
+        self.direction = direction
 
     @staticmethod
     def colinear_distance(v1: Coordinates, v2: Coordinates):
