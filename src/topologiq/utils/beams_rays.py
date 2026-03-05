@@ -37,17 +37,15 @@ class RayBeam:
     # TODO: expand to 3D.
     def intersected_by(self, that):
         cross = np.linalg.cross(self.direction, that.direction)
-        delta = self.__inner_determinant(self.direction, cross, -that.direction)
+        delta = np.dot(cross, cross)
 
         if delta == 0:
             return False
 
         sigma = that.source - self.source
-        t1 = np.linalg.det(np.column_stack( (sigma, self.direction, cross) )) / delta
-        t2 = np.linalg.det(np.column_stack( (sigma, that.direction, cross) )) / delta
-        # t1 = self.__inner_determinant(sigma, self.direction, cross) / delta
-        # t2 = self.__inner_determinant(sigma, that.direction, cross) / delta
-        # dt = self.__inner_determinant(sigma, self.direction, that.direction) / delta
+        t1 = - np.linalg.det(np.column_stack( (sigma, cross, self.direction) )) / delta
+        t2 = - np.linalg.det(np.column_stack( (sigma, cross, that.direction) )) / delta
+        # dt = np.linalg.det(sigma, self.direction, that.direction) / delta
 
         condition = t1 >= 1 and t2 >= 1
         if condition != self.intersected_by_array(that):
