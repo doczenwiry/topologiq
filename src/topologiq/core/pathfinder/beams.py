@@ -58,7 +58,7 @@ def check_critical_beams(
 
         # Look for clashes against path
         broken_beams = [
-            any([out_beam.contains(coord) for coord in full_path_coords])
+            any([out_beam.interrupted_by(coord) for coord in full_path_coords])
             for out_beam in out_beams_short
         ]
 
@@ -70,7 +70,7 @@ def check_critical_beams(
                 in_clash_tracker = 0
                 for in_beam in in_beams_short:
                     intersections = [
-                        out_beam.intersects(in_beam, 9) for out_beam in out_beams_short
+                        out_beam.intersected_by(in_beam, 9) for out_beam in out_beams_short
                     ]
                     # out_clash_tracker = out_clash_tracker + np.array(intersections)
                     in_clash_tracker += any(intersections)
@@ -164,7 +164,7 @@ def check_unbreakable_beams(
     for node_id, (_, _, _, node_beams_short) in unbreakable_beams.items():
         broken_beams = 0
         for single_beam in node_beams_short:
-            clash_coords = [coord for coord in full_path_coords if single_beam.contains(coord)]
+            clash_coords = [coord for coord in full_path_coords if single_beam.interrupted_by(coord)]
             if clash_coords:
                 # Reject if beam is of nodes other src and tgt
                 if node_id not in src_tgt_ids:
@@ -205,7 +205,7 @@ def check_negotiable_beams(
         # For each beam of current cube, check if path breaks the beam
         out_broken_beams = 0
         for single_beam in cube_beams_short:
-            if any([single_beam.contains(coord) for coord in full_path_coords]):
+            if any([single_beam.interrupted_by(coord) for coord in full_path_coords]):
                 out_broken_beams += 1
 
             # If beam is broken, add pre-existing beam-to-beam clashes to consider previously-used allowances
@@ -218,7 +218,7 @@ def check_negotiable_beams(
                 adjust = 1 if other_node_id in src_tgt_ids else 0
                 manhattan_between = get_manhattan(node_coords, other_node_coords)
                 intersections = [
-                    single_beam.intersects(negotiable_beam, manhattan_between)
+                    single_beam.intersected_by(negotiable_beam, manhattan_between)
                     for negotiable_beam in other_cube_beams_short
                 ]
                 if intersections:

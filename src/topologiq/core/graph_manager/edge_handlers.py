@@ -12,7 +12,7 @@ import matplotlib
 import networkx as nx
 
 from topologiq.core.graph_manager.beams import check_path_to_beam_clashes, check_tgt_beam_clashes
-from topologiq.core.graph_manager.beams_sympy import check_beams_critical_interruptions, Coordinates, \
+from topologiq.core.graph_manager.beams_checking_sympy import check_beams_critical_interruptions, Coordinates, \
     check_beams_critical_intersections, compute_beams, validate_all_beams, validate_beams
 from topologiq.core.graph_manager.callers import call_debug_vis, call_pathfinder
 from topologiq.core.graph_manager.utils import get_node_degree, prune_beams, update_edge_paths

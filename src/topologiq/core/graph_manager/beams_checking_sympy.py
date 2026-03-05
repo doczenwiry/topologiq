@@ -2,7 +2,7 @@ import networkx as nx
 
 from topologiq.core.pathfinder.symbolic import check_is_exit, check_unobstructed
 from topologiq.utils.classes import StandardCoord, Coordinates, CubeId, CubeList, CubeBeams
-from topologiq.utils.beams import RayBeam
+from topologiq.utils.beams_sympy import SympyBeam
 
 #TODO: SymPy seems to be quite slow due to its symbolic nature; replace with a numerical alternative (SciPy or NumPy)
 NX_GRAPH_CUBE_BEAMS = "beams_rays"
@@ -41,7 +41,7 @@ def check_beams_critical_interruptions(
     total_beams_interrupted_by_path = 0
 
     for cube in nx_g.nodes(): # CubeId
-        cube_beams: list[RayBeam] = nx_g.nodes[cube][NX_GRAPH_CUBE_BEAMS]
+        cube_beams: list[SympyBeam] = nx_g.nodes[cube][NX_GRAPH_CUBE_BEAMS]
 
         if cube_beams is None:
             continue
@@ -67,7 +67,7 @@ def check_beams_critical_interruptions(
 
         cube_beams_interrupted = sum(
             1 for beam in cube_beams
-            if any(beam.contains(position) for position in path_coordinates)
+            if any(beam.interrupted_by(position) for position in path_coordinates)
         )
 
         total_beams_interrupted_by_path += cube_beams_interrupted
@@ -83,7 +83,7 @@ def check_beams_critical_intersections(
     nx_g: nx.Graph,
     source: CubeId,
     target: CubeId,
-    target_beams: list[RayBeam] = None,
+    target_beams: list[SympyBeam] = None,
 ) -> int:
     if target_beams is None: target_beams = []
 
@@ -93,7 +93,7 @@ def check_beams_critical_intersections(
     if len(target_beams) == 0:
         return cubes_with_critical_intersections
 
-    target_beams_intersected: set[RayBeam] = set()
+    target_beams_intersected: set[SympyBeam] = set()
 
     # Check target against beams of each other cube in 3D space
     for cube in nx_g.nodes():
@@ -101,7 +101,7 @@ def check_beams_critical_intersections(
             continue
 
         # Count intersections with beams of other cubes
-        cube_beams: list[RayBeam] = nx_g.nodes[cube][NX_GRAPH_CUBE_BEAMS]
+        cube_beams: list[SympyBeam] = nx_g.nodes[cube][NX_GRAPH_CUBE_BEAMS]
         if not cube_beams:
             continue
 
@@ -110,7 +110,7 @@ def check_beams_critical_intersections(
         cube_unrealised_edges = cube_number_of_edges - cube_realised_edges
         cube_beams_remaining = sum(
             1 for beam in cube_beams
-            if all( not beam.intersects(target_beam) for target_beam in target_beams)
+            if all(not beam.intersected_by(target_beam) for target_beam in target_beams)
         )
 
         if cube_beams_remaining < cube_unrealised_edges:
@@ -118,7 +118,7 @@ def check_beams_critical_intersections(
 
         target_beams_intersected.update(
             filter(
-                lambda target_beam: any(target_beam.intersects(beam) for beam in cube_beams),
+                lambda target_beam: any(target_beam.intersected_by(beam) for beam in cube_beams),
                 target_beams
             )
         )
@@ -133,8 +133,8 @@ def compute_beams(
     source_kind: str | None,
     taken: list[StandardCoord],
     coords_in_path: list[StandardCoord],
-) -> list[RayBeam]:
-    cube_beams: list[RayBeam] = []
+) -> list[SympyBeam]:
+    cube_beams: list[SympyBeam] = []
 
     diffs = [
         (1, 0, 0),
@@ -155,7 +155,7 @@ def compute_beams(
         if check_is_exit(source, source_kind, tgt_c):
             is_unobstr, single_beam, single_beam_short = check_unobstructed(source, tgt_c, taken)
             if is_unobstr and not any([single_beam.contains(coord) for coord in coords_in_path]):
-                cube_beams.append(RayBeam(source, d))
+                cube_beams.append(SympyBeam(source, d))
 
     return cube_beams
 
@@ -169,10 +169,10 @@ def compute_beams(
 def validate_all_beams(nx_g: nx.Graph, label: str = ""):
     for cube in nx_g.nodes():
         old_beams: CubeBeams = nx_g.nodes[cube]["beams"]
-        new_beams: list[RayBeam] = nx_g.nodes[cube][NX_GRAPH_CUBE_BEAMS]
+        new_beams: list[SympyBeam] = nx_g.nodes[cube][NX_GRAPH_CUBE_BEAMS]
         validate_beams(cube, old_beams, new_beams, label = label)
 
-def validate_beams(cube: CubeId, old_beams: CubeBeams, new_beams: list[RayBeam], label: str = ""):
+def validate_beams(cube: CubeId, old_beams: CubeBeams, new_beams: list[SympyBeam], label: str = ""):
     if old_beams is None: old_beams = []
     if new_beams is None: new_beams = []
 
@@ -181,7 +181,7 @@ def validate_beams(cube: CubeId, old_beams: CubeBeams, new_beams: list[RayBeam],
         two_points = obeam.to_array(3)
         source = two_points[0]
         direction = (two_points[1][0] - source[0], two_points[1][1] - source[1], two_points[1][2] - source[2])
-        conv_beams.append(RayBeam(source, direction))
+        conv_beams.append(SympyBeam(source, direction))
     if conv_beams != new_beams:
         new_string = str(new_beams)
         old_string = ""

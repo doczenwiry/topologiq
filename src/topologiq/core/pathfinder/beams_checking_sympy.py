@@ -1,9 +1,9 @@
 import networkx as nx
 
-from topologiq.core.graph_manager.beams_sympy import NX_GRAPH_CUBE_BEAMS
+from topologiq.core.graph_manager.beams_checking_sympy import NX_GRAPH_CUBE_BEAMS
 from topologiq.core.pathfinder.utils import get_manhattan
 from topologiq.core.pathfinder.symbolic import check_is_exit, check_unobstructed
-from topologiq.utils.beams import RayBeam
+from topologiq.utils.beams_sympy import SympyBeam
 
 from topologiq.utils.classes import StandardCoord, Coordinates, CubeId, CubeList, CubeBeams
 
@@ -23,7 +23,7 @@ def check_beams_critical_intersections(
 
         cube_beams_interrupted = sum(
             1 for beam in available_beams
-            if any(beam.contains(position) for position in path_coordinates)
+            if any(beam.interrupted_by(position) for position in path_coordinates)
         )
 
         if cube_beams_interrupted > 0 and nxt_coords == tgt_coords and cube not in (source,target):
@@ -31,7 +31,7 @@ def check_beams_critical_intersections(
                 other_beams = nx_g.nodes[other][NX_GRAPH_CUBE_BEAMS]
                 other_beams_intersected = sum(
                     1 for other_beam in other_beams
-                    if any( other_beam.intersects(beam) for beam in available_beams)
+                    if any(other_beam.intersected_by(beam) for beam in available_beams)
                 )
                 other_unrealised_edges = nx_g.degree[cube] - nx_g.nodes[other]["completed"]
                 src_tgt_adjust = 1 if other in (source,target) else 0

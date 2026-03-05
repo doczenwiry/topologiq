@@ -23,15 +23,15 @@ print(r1.intersection(r3))
 
 # print(r1.is_on_ray(Point3D(2, 0, 0)))
 
-from topologiq.utils.beams import RayBeam
+from topologiq.utils.beams_sympy import SympyBeam
 
 source1 = Coordinates(0, 0, 0)
 direction1 = Coordinates(1, 0, 0)
-b1 = RayBeam(source1, direction1)
+b1 = SympyBeam(source1, direction1)
 
 source2 = Coordinates(0, 0, 0)
 direction2 = Coordinates(1, 0, 0)
-b2 = RayBeam(source2, direction2)
+b2 = SympyBeam(source2, direction2)
 
 print(f"Beam 1 : {b1}")
 print(f"Beam 2 : {b2}")

@@ -12,7 +12,7 @@ from pathlib import Path
 
 import networkx as nx
 
-from topologiq.core.graph_manager.beams_sympy import NX_GRAPH_CUBE_BEAMS, validate_beams, validate_all_beams
+from topologiq.core.graph_manager.beams_checking_sympy import NX_GRAPH_CUBE_BEAMS, validate_beams, validate_all_beams
 from topologiq.core.pathfinder.spatial import get_taken_coords
 from topologiq.input.simple_graphs import check_zx_types, get_zx_type_fam
 from topologiq.utils.classes import (
@@ -411,7 +411,7 @@ def prune_beams(nx_g: nx.Graph, taken: list[StandardCoord]) -> nx.Graph:
 
                 if old_sympy_beams:
                     for sympy_beam in old_sympy_beams:
-                        if not any([sympy_beam.contains(Coordinates(coord[0], coord[1], coord[2])) for coord in taken]):
+                        if not any([sympy_beam.interrupted_by(Coordinates(coord[0], coord[1], coord[2])) for coord in taken]):
                             new_beams_sympy += [sympy_beam]
                     nx_g.nodes[n_id][NX_GRAPH_CUBE_BEAMS] = new_beams_sympy
 
