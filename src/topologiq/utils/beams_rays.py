@@ -74,6 +74,8 @@ class RayBeam:
             report += f"> R:{intersecting_rays}/A:{intersecting_arrays}"
             raise Exception(report)
 
+        print(report)
+
         return intersecting_rays
 
     def intersected_by_array(self, that):

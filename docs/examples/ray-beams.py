@@ -27,7 +27,7 @@ if __name__ == "__main__":
     countP = 0
     countM = 0
     countZ = 0
-    cases = list(product(all_beams2, all_beams2))
+    cases = list(product(all_beams1, all_beams2))
     total = len(cases)
     print(f"Total cases: {total}")
     for beam1, beam2 in cases:
@@ -42,3 +42,9 @@ if __name__ == "__main__":
             raise e
         # cases += 1
     print(f"Erroneous intersections : M{countM} + Z{countZ} + P{countP}/{total}\n")
+
+    # Exception('INTERSECTION inconsistency. ([3 => 3), [3 => 3), [3 => 12)) vs ([0 => 9), [3 => 3), [3 => 3)) [False/True].'), '\n')
+
+    extra_beam1 = RayBeam( np.array([3, 3, 3], dtype = np.int32) , np.array([0, 0, 1], dtype = np.int32) )
+    extra_beam2 = RayBeam( np.array([0, 3, 3], dtype = np.int32) , np.array([1, 0, 0], dtype = np.int32) )
+    extra_beam1.intersected_by(extra_beam2)
