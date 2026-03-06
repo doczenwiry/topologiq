@@ -17,29 +17,28 @@ if __name__ == "__main__":
         ( 0,  0, -1),
     ]
 
-    all_positions = list(filter(lambda p : not np.array_equal(p, RayBeam.ORIGIN), [ np.array(step1) + np.array(step2) for step1, step2 in product(steps, steps) ]))
-    all_beams1 = [ RayBeam(RayBeam.ORIGIN, np.array(direction)) for direction in steps ]
-    all_beams2 = [ RayBeam(source, np.array(direction)) for source in all_positions for direction in steps ]
+    all_positions = list(filter(
+        lambda p : not np.array_equal(p, RayBeam.ORIGIN),
+        [ np.add(np.array(step1), np.array(step2), dtype = np.int32) for step1, step2 in product(steps, steps) ])
+    )
+    all_beams1 = [ RayBeam(RayBeam.ORIGIN, np.array(direction, dtype = np.int32)) for direction in steps ]
+    all_beams2 = [ RayBeam(source, np.array(direction, dtype = np.int32)) for source in all_positions for direction in steps ]
 
-    print(f"All positions :")
-    for position in all_positions:
-        print(f"> Position : {position}")
-
-    count = 0
-    cases = 0
-    for beam1, beam2 in product(all_beams1, all_beams2):
-        test1 = beam1.intersected_by_array(beam2)
-        test2 = beam1.intersected_by(beam2)
-        if test1 != test2:
-            print(f"{beam1} x {beam2} : {test1} != {test2}")
-            direction_lineup = np.dot(beam1.direction, beam2.direction)
-            sigma = beam2.source - beam1.source
-            position_lineup = np.dot(sigma, beam1.direction)
-            cross = np.linalg.cross(beam1.direction, beam2.direction)
-            delta = np.dot(cross, cross)
-            print(f"> Delta : {delta}, sigma : {sigma}")
-            print(f"> Directions : {direction_lineup}")
-            print(f"> Positions : {position_lineup}")
-            count += 1
-        cases += 1
-    print(f"Erroneous intersections : {count}/{cases}\n")
+    countP = 0
+    countM = 0
+    countZ = 0
+    cases = list(product(all_beams2, all_beams2))
+    total = len(cases)
+    print(f"Total cases: {total}")
+    for beam1, beam2 in cases:
+        try:
+            beam1.intersected_by(beam2)
+        except Exception as e:
+            dot = np.dot(beam1.direction, beam2.direction)
+            if   dot == -1: countM += 1
+            elif dot == +1: countP += 1
+            elif dot ==  0: countZ += 1
+            else: raise Exception("Something went awfully wrong.")
+            raise e
+        # cases += 1
+    print(f"Erroneous intersections : M{countM} + Z{countZ} + P{countP}/{total}\n")
