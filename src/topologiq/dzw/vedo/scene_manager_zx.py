@@ -1,7 +1,7 @@
 from vedo.plotter.runtime import Plotter
 
-from topologiq.dzw.utils.augmented_nx_graph import AugmentedNxGraph
-from topologiq.dzw.utils.components_zx import NodeId
+from topologiq.dzw.augmented_nx_graph import AugmentedNxGraph
+from topologiq.dzw.common.components_zx import NodeId
 from topologiq.dzw.vedo.shapes_zx import ZxNode, ZxEdge
 
 from logging import getLogger

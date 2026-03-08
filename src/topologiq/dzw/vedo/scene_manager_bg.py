@@ -1,11 +1,11 @@
 from vedo.plotter.runtime import Plotter
 
-from topologiq.dzw.utils.components_zx import EdgeType
-from topologiq.dzw.utils.path import Path
+from topologiq.dzw.common.components_zx import EdgeType
+from topologiq.dzw.common.path import Path
 from topologiq.dzw.vedo.frame_manager import FrameManager
 
-from topologiq.dzw.utils.components_bg import CubeId
-from topologiq.dzw.utils.augmented_nx_graph import AugmentedNxGraph
+from topologiq.dzw.common.components_bg import CubeId
+from topologiq.dzw.augmented_nx_graph import AugmentedNxGraph
 from topologiq.dzw.vedo.shapes_bg import BgCube, BgPipe
 
 from logging import getLogger

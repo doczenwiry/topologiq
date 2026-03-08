@@ -1,6 +1,6 @@
 import pyzx as zx
 
-from topologiq.dzw.utils.augmented_nx_graph import AugmentedNxGraph
+from topologiq.dzw.augmented_nx_graph import AugmentedNxGraph
 from topologiq.dzw.vedo.ang_viewer import AugmentedNxGraphViewer
 
 import logging
@@ -21,6 +21,8 @@ def ang_read(label: str):
 if __name__ == '__main__':
     name = "vw-experimental"
     anx: AugmentedNxGraph = ang_read(label = name)
+
+    print(type(anx))
 
     viewer = AugmentedNxGraphViewer(anx, label = name)
     viewer.display()

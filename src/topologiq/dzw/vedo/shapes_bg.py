@@ -2,9 +2,9 @@ from numpy import array
 from vedo import Assembly, Cube, Box, Text3D
 
 from topologiq.dzw.helpers.spacetime import Spacetime
-from topologiq.dzw.utils.components_bg import CubeId, CubeKind
-from topologiq.dzw.utils.components_zx import NodeId, EdgeType
-from topologiq.dzw.utils.coordinates import Coordinates
+from topologiq.dzw.common.components_bg import CubeId, CubeKind
+from topologiq.dzw.common.components_zx import NodeId, EdgeType
+from topologiq.dzw.common.coordinates import Coordinates
 from topologiq.dzw.vedo.color_scheme import COLOR_RGBS
 
 GLOBAL_SPACING_FACTOR = 3.0

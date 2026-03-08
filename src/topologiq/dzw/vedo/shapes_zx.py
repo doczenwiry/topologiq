@@ -1,8 +1,8 @@
 from vedo import Assembly, Disc, Line, Text3D, Box
 
-from topologiq.dzw.utils.augmented_nx_graph import AugmentedNxGraph
-from topologiq.dzw.utils.components_zx import NodeId, NodeType, EdgeType
-from topologiq.dzw.utils.coordinates import Coordinates
+from topologiq.dzw.augmented_nx_graph import AugmentedNxGraph
+from topologiq.dzw.common.components_zx import NodeId, NodeType, EdgeType
+from topologiq.dzw.common.coordinates import Coordinates
 
 from topologiq.dzw.vedo.color_scheme import COLOR_NAMES
 

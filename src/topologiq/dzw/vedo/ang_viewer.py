@@ -1,4 +1,4 @@
-from topologiq.dzw.utils.augmented_nx_graph import AugmentedNxGraph
+from topologiq.dzw.augmented_nx_graph import AugmentedNxGraph
 
 from vedo import settings, Plotter
 
