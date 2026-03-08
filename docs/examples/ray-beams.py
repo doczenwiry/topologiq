@@ -27,19 +27,36 @@ if __name__ == "__main__":
     countP = 0
     countM = 0
     countZ = 0
-    cases = list(product(all_beams1, all_beams2))
+    cases = list(product(all_beams2, all_beams2))
     total = len(cases)
     print(f"Total cases: {total}")
     for beam1, beam2 in cases:
-        try:
-            beam1.intersected_by(beam2)
-        except Exception as e:
-            dot = np.dot(beam1.direction, beam2.direction)
-            if   dot == -1: countM += 1
-            elif dot == +1: countP += 1
-            elif dot ==  0: countZ += 1
+        if beam1.intersected_by(beam2) != beam1.intersected_by_array(beam2):
+            relative = np.dot(beam1.direction, beam2.direction)
+            report = f"INTERSECTION inconsistency detected: {beam1} / {beam2}\n"
+            report += f"> Relative orientation : {relative}\n"
+            report += f"> Beam 1 : {beam1.to_array()}\n"
+            report += f"> Beam 2 : {beam2.to_array()}\n"
+
+            sigma = beam2.source - beam1.source
+            cross = np.cross(beam1.direction, sigma)
+            basis = beam1.direction - beam2.direction
+            intra = np.all( (basis != 0) | (sigma == 0) )
+            joint = np.sign(sigma) * np.sign(basis)
+            pos_q = np.count_nonzero(joint < 0) == 0
+
+            report += f"> Sigma : {sigma}\n"
+            report += f"> Basis : {basis}\n"
+            report += f"> Cross : {cross}\n"
+            report += f"> Intra : {intra}\n"
+            report += f"> Joint : {joint}\n"
+            report += f"> Pos Q : {pos_q}\n"
+
+            if   relative == -1: countM += 1
+            elif relative == +1: countP += 1
+            elif relative ==  0: countZ += 1
             else: raise Exception("Something went awfully wrong.")
-            raise e
+            raise Exception(f"Intersection inconsistency detected.\n{report}")
         # cases += 1
     print(f"Erroneous intersections : M{countM} + Z{countZ} + P{countP}/{total}\n")
 
