@@ -16,19 +16,9 @@ class RayBeam:
         return v2 - v1 if agreement == 2 else RayBeam.ORIGIN
 
     def interrupted_by(self, that: Coordinates):
-        # Check whether that - self.source is colinear with self.direction
-        difference = that - self.source
-
-        if np.array_equal(RayBeam.ORIGIN, difference):
-            return False
-
-        cross = np.linalg.cross(difference, self.direction)
-
-        condition = np.dot(difference, self.direction) > 1 and np.array_equal(RayBeam.ORIGIN, cross)
-        if condition != self.interrupted_by_array(that):
-            raise Exception(f"INTERRUPTION inconsistency detected: {self} / {that}")
-
-        return np.dot(difference, self.direction) > 1 and np.array_equal(RayBeam.ORIGIN, cross)
+        sigma = that - self.source
+        cross = np.cross(self.direction, sigma)
+        return np.dot(cross, cross) == 0 and np.dot(self.direction, sigma) >= 0
 
     def interrupted_by_array(self, that):
         return any(np.array_equal(pos, that) for pos in self.to_array())
