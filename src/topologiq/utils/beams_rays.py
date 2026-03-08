@@ -36,21 +36,19 @@ class RayBeam:
     def intersected_by(self, that):
         relative_orientation = np.dot(self.direction, that.direction)
 
-        # Based on the relative orientation, the source of the other beam must be located in the correct subspace.
+        # Based on the relative orientation, the source of that beam must be located in the correct quadrant.
         sigma = that.source - self.source
         if relative_orientation == 0:
-            # Beams are in orthogonal directions
-            # Check that the source of the other beam is in the positive quadrant of the subspace spanned by { self.direction, -that.direction }
+            # Beams are orthogonal; source of the other beam must be in the positive quadrant
+            # of the subspace spanned by { self.direction, -that.direction }
             basis = self.direction - that.direction
             intersecting_rays = np.all( (sigma == 0) | (np.sign(sigma) == np.sign(basis)) )
         else:
-            # Beams are in identical or opposite directions
-            # The source of the other beam must lie on the same line as the direction of this beam either way
+            # Beams are parallel; source of that beam must be on the same line as the direction of this beam
             cross = np.cross(self.direction, sigma)
             intersecting_rays = np.dot(cross, cross) == 0
             if relative_orientation == -1:
-                # Beams are in opposite directions
-                # The source of the other beam cannot be behind the source of this beam
+                # Beams are in opposite directions; source of that beam cannot be behind the source of this beam
                 intersecting_rays &= np.dot(self.direction, sigma) >= 0
 
         return intersecting_rays
