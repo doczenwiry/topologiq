@@ -43,6 +43,8 @@ class AugmentedNxGraphViewer(Plotter):
 
         # Prepare the scene manager for the BG-graph
         self.__bg_scene_manager = BgSceneManager(self.__nx_graph, self.at(BG_VIEWPORT))
+        self.__min_bg_cube_id = self.__nx_graph.number_of_nodes()
+        self.__max_bg_cube_id = self.__min_bg_cube_id + self.__nx_graph.number_of_cubes() - 1
 
         self.__selected_object = None
 
@@ -72,15 +74,18 @@ class AugmentedNxGraphViewer(Plotter):
             self.__bg_scene_manager.alter_cube_appearance(bg_target_cube, highlight = highlighting)
             self.__bg_scene_manager.alter_pipe_appearance(previous_cube, bg_target_cube, highlight = highlighting)
         elif isinstance(selected_object, BgCube):
-            # Highlight the bg-cube and its corresponding zx-node
+            # Highlight the bg-cube and its corresponding zx-node if it has one
             bg_cube = selected_object.bg_cube
-            zx_node = self.__nx_graph.get_node(bg_cube)
-            if zx_node is not None:
-                self.__zx_scene_manager.alter_node_appearance(zx_node, highlight = highlighting)
+            console.debug(f"> BgCube #{bg_cube}")
+            if self.__min_bg_cube_id <= bg_cube <= self.__max_bg_cube_id:
+                zx_node = self.__nx_graph.get_node(bg_cube)
+                if zx_node is not None:
+                    self.__zx_scene_manager.alter_node_appearance(zx_node, highlight = highlighting)
             self.__bg_scene_manager.alter_cube_appearance(bg_cube, highlight = highlighting)
         elif isinstance(selected_object, BgPipe):
             bg_source_cube = selected_object.bg_source
             bg_target_cube = selected_object.bg_target
+            console.debug(f"> BgPipe #{bg_source_cube}-#{bg_target_cube}")
             self.__bg_scene_manager.alter_cube_appearance(bg_source_cube, highlight = highlighting)
             self.__bg_scene_manager.alter_cube_appearance(bg_target_cube, highlight = highlighting)
             self.__bg_scene_manager.alter_pipe_appearance(bg_source_cube, bg_target_cube, highlight = highlighting)

@@ -80,10 +80,10 @@ class BgSceneManager:
                     previous_cube = alternative.get_source_cube()
                     previous_kind, previous_position = alternative.get_cubes()[0]
                     for alternative_kind, alternative_position in alternative.get_cubes()[1:]:
-                        alternative_cube = len(self.__cubes) + len(self.__alternative_cubes)
+                        alternative_cube = self.__nx_graph.number_of_nodes() + self.__nx_graph.number_of_cubes() + len(self.__alternative_cubes)
                         alternative_bg_cube = BgCube(alternative_kind, alternative_position, cube = alternative_cube)
                         self.__alternative_cubes[alternative_cube] = alternative_bg_cube
-                        pipe = tuple(sorted((source, target)))
+                        pipe = tuple(sorted((previous_cube, alternative_cube)))
                         alternative_bg_pipe = BgPipe(
                             previous_kind, previous_position,
                             alternative_kind, alternative_position,
@@ -92,6 +92,7 @@ class BgSceneManager:
                         self.__alternative_pipes[pipe] = alternative_bg_pipe
                         self.__frame_manager.add_to_frame(current_frame, alternative_bg_pipe, subframe_index = current_subframe)
                         self.__frame_manager.add_to_frame(current_frame, alternative_bg_cube, subframe_index = current_subframe)
+                        previous_cube = alternative_cube
                         previous_kind = alternative_kind
                         previous_position = alternative_position
 
@@ -112,11 +113,21 @@ class BgSceneManager:
         self.__plotter.camera.SetViewUp(0, 0, 1)
 
     def alter_cube_appearance(self, cube: CubeId, highlight: bool = False):
-        self.__cubes[cube].alter_appearance(highlight = highlight)
+        if cube in self.__cubes:
+            self.__cubes[cube].alter_appearance(highlight = highlight)
+        elif cube in self.__alternative_cubes:
+            self.__alternative_cubes[cube].alter_appearance(highlight=highlight)
+        else:
+            console.error(f"Cube #{cube} not found in BG-scene.")
 
     def alter_pipe_appearance(self, source: CubeId, target: CubeId, highlight: bool = False):
         pipe = tuple(sorted((source, target)))
-        self.__pipes[pipe].alter_appearance(highlight = highlight)
+        if pipe in self.__pipes:
+            self.__pipes[pipe].alter_appearance(highlight = highlight)
+        elif pipe in self.__alternative_pipes:
+            self.__alternative_pipes[pipe].alter_appearance(highlight=highlight)
+        else:
+            console.error(f"Pipe {pipe} not found in BG-scene.")
 
     def on_key_press(self, event):
         if   event.keypress == "Left":
