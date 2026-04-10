@@ -10,7 +10,7 @@ from topologiq.utils.classes import StandardCoord
 from topologiq.dzw.helpers.spacetime import Spacetime
 from topologiq.dzw.helpers.blockgraph import BlockGraphHelper
 
-from topologiq.dzw.common.components_zx import NodeId, NodeType, EdgeType
+from topologiq.dzw.common.components_zx import NodeId, NodeType, EdgeId, EdgeType
 from topologiq.dzw.common.components_bg import CubeId, CubeKind
 from topologiq.dzw.common.path import Path
 
@@ -56,15 +56,15 @@ class AugmentedNxGraph(nx.Graph):
     def __init__(self, nodes: Iterable[tuple[NodeId, NodeType]], edges: Iterable[tuple[tuple[NodeId, NodeId], EdgeType]]):
         # Separate ZX-graph and BG-graph
         super(AugmentedNxGraph, self).__init__()
-        self.__bg_graph = nx.Graph()
+        self.__bg_graph: nx.Graph = nx.Graph()
 
         # Keeps track of which nodes appear on which qubit-line or layer of the ZX-graph
         self.__zx_qubits: dict[QubitId, list[NodeId]] = defaultdict(list)
         self.__zx_layers: dict[LayerId, list[NodeId]] = defaultdict(list)
 
         # Tracks the order in which nodes and edges from the ZX graph were realised into the Blockgraph
-        self.__zx_node_realisation_order = []
-        self.__zx_edge_realisation_order = []
+        self.__zx_node_realisation_order: list[NodeId] = []
+        self.__zx_edge_realisation_order: list[EdgeId] = []
 
         # Keeps track of the coordinates in 3D that are occupied by some cube
         self.occupied: set[StandardCoord] = set()
@@ -89,7 +89,7 @@ class AugmentedNxGraph(nx.Graph):
         if self.number_of_nodes() > 0:
             _, max_degree = max(self.degree, key=lambda entry: entry[1])
             if max_degree > 4:
-                raise NotImplemented("Enforcement of no-more-than-four-legs condition not implemented.")
+                raise NotImplementedError("Enforcement of no-more-than-four-legs condition not implemented.")
 
     @staticmethod
     def from_pyzx_graph(zx_graph: zx.graph.base.BaseGraph):
@@ -100,11 +100,11 @@ class AugmentedNxGraph(nx.Graph):
 
         # Add qubit and layer information
         for node in zx_graph.vertices():
-            node_qubit = zx_graph.qubit(node)
+            node_qubit = int(zx_graph.qubit(node))
             ang.nodes[node][AugmentedNxGraph.KEY_ZX_NODE_QUBIT] = node_qubit
             ang.__zx_qubits[node_qubit].append(node)
 
-            node_layer = zx_graph.row(node)
+            node_layer = int(zx_graph.row(node))
             ang.nodes[node][AugmentedNxGraph.KEY_ZX_NODE_LAYER] = node_layer
             ang.__zx_layers[node_layer].append(node)
 
@@ -289,7 +289,7 @@ class AugmentedNxGraph(nx.Graph):
     def is_edge_realised(self, source: NodeId, target: NodeId) -> bool:
         return self.get_edge_data(source, target)[AugmentedNxGraph.KEY_ZX_BG_PATH] is not None
 
-    def realise_edge(self, source: NodeId, target: NodeId, proposed_path: Path, alternative_paths: list[Path] = None):
+    def realise_edge(self, source: NodeId, target: NodeId, proposed_path: Path, alternative_paths: list[Path] | None = None):
         if not self.is_node_realised(source):
             raise Exception(f"{source} is not placed; cannot connect with a path.")
 
